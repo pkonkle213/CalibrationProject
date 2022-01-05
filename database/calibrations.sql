@@ -72,6 +72,7 @@ INSERT INTO Options (option_value) VALUES ('100%');
 INSERT INTO Options (option_value) VALUES ('75%');
 INSERT INTO Options (option_value) VALUES ('50%');
 INSERT INTO Options (option_value) VALUES ('0%');
+INSERT INTO Options (option_value) VALUES ('N/A');
 GO
 
 
@@ -133,13 +134,14 @@ CREATE TABLE Calibrations (
 	tm_first_name varchar(100) NOT NULL,
 	tm_last_name varchar(100) NOT NULL,
 	form_id int NOT NULL,
+	isOpen BIT NOT NULL,
 	CONSTRAINT PK_Calibrations PRIMARY KEY (calibration_id),
 	CONSTRAINT FK_Calibrations_Forms FOREIGN KEY (form_id) references Forms (form_id),
 	CONSTRAINT FK_Calibrations_Contacts FOREIGN KEY (contact_type) references Contacts (contact_id),
 )
 
-INSERT INTO Calibrations (calibration_date,contact_type,tm_first_name,tm_last_name,form_id) VALUES ('2022/01/04',2,'John','Doe',1);
-INSERT INTO Calibrations (calibration_date,contact_type,tm_first_name,tm_last_name,form_id) VALUES ('2022/01/04',4,'Jane','Doe',1);
+INSERT INTO Calibrations (calibration_date,contact_type,tm_first_name,tm_last_name,form_id,isOpen) VALUES ('2022/01/04',2,'John','Doe',1,1);
+INSERT INTO Calibrations (calibration_date,contact_type,tm_first_name,tm_last_name,form_id,isOpen) VALUES ('2022/01/04',4,'Jane','Doe',1,1);
 
 CREATE TABLE Answers (
 	result_id int IDENTITY,
@@ -160,7 +162,7 @@ INSERT INTO Answers (calibration_id,user_id,question_id,option_id) VALUES (1,2,1
 INSERT INTO Answers (calibration_id,user_id,question_id,option_id) VALUES (1,2,1,4);
 GO
 
-CREATE TABLE Users_Calibrations(
+CREATE TABLE Users_Calibrations (
 	user_id int NOT NULL,
 	calibration_id int NOT NULL,
 	CONSTRAINT PK_Users_Calibrations PRIMARY KEY (user_id,calibration_id),
@@ -168,13 +170,25 @@ CREATE TABLE Users_Calibrations(
 	CONSTRAINT FK_Users_Calibrations_Calibrations FOREIGN KEY (calibration_id) references Calibrations (calibration_id),
 )
 
-CREATE TABLE Forms_Categories(
-	category_id int NOT NULL,
+INSERT INTO Users_Calibrations (user_id,calibration_id) VALUES (1,1);
+INSERT INTO Users_Calibrations (user_id,calibration_id) VALUES (2,1);
+INSERT INTO Users_Calibrations (user_id,calibration_id) VALUES (1,2);
+INSERT INTO Users_Calibrations (user_id,calibration_id) VALUES (2,2);
+GO
+
+CREATE TABLE Forms_Categories (
 	form_id int NOT NULL,
-	CONSTRAINT Forms_Categories PRIMARY KEY (category_id,form_id),
+	category_id int NOT NULL,
+	CONSTRAINT PK_Forms_Categories PRIMARY KEY (category_id,form_id),
 	CONSTRAINT FK_Forms_Categories_Forms FOREIGN KEY (form_id) references Forms (form_id),
 	CONSTRAINT FK_Forms_Categories_Categories FOREIGN KEY (category_id) references Categories (category_id),
 )
+
+INSERT INTO Forms_Categories (form_id,category_id) VALUES (1,1);
+INSERT INTO Forms_Categories (form_id,category_id) VALUES (1,2);
+INSERT INTO Forms_Categories (form_id,category_id) VALUES (1,3);
+INSERT INTO Forms_Categories (form_id,category_id) VALUES (1,4);
+GO
 
 CREATE TABLE Questions_Options(
 	question_id int NOT NULL,
@@ -183,3 +197,6 @@ CREATE TABLE Questions_Options(
 	CONSTRAINT FK_Questions_Options_Questions FOREIGN KEY (question_id) references Questions (question_id),
 	CONSTRAINT FK_Questions_Options_Options FOREIGN KEY (option_id) references Options (option_id),
 )
+
+INSERT INTO Questions_Options (question_id,option_id) VALUES (1,1);
+INSERT INTO Questions_Options (question_id,option_id) VALUES (1,2);
