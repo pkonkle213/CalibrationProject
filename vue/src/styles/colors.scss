@@ -1,0 +1,15 @@
+// SASS variables
+$accentDark: #457B9D;
+$accentLight: #A8DADC;
+$highlight: #E63946;
+$dark: #1D3557;
+$light: #F1FAEE;
+
+// Override bootstrap styles here. 
+// See https://getbootstrap.com/docs/4.0/getting-started/theming/#theme-colors for some pointers
+$primary: $accentDark;
+$danger: $highlight;
+$secondary: $accentLight;
+$warning: #414016;
+$info: $accentLight;
+$success: #459d49;

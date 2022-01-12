@@ -149,6 +149,7 @@ CREATE TABLE Answers (
 	user_id int NOT NULL,
 	question_id int NOT NULL,
 	option_id int NOT NULL,
+	comments varchar(500) NOT NULL,
 	CONSTRAINT PK_Answers PRIMARY KEY (result_id),
 	CONSTRAINT FK_Answers_Calibrations FOREIGN KEY (calibration_id) references Calibrations (calibration_id),
 	CONSTRAINT FK_Answers_Users FOREIGN KEY (user_id) references Users (user_id),

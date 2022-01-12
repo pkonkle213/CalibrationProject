@@ -25,7 +25,27 @@
       "ProjectGuid": "e6ecafec-5288-4f0c-9945-3caa2e76b3fd",
       "DisplayName": "CalibrationApp",
       "ColorIndex": 4
+    },
+    "840abfc7-8c15-4914-9c38-4151133c7924": {
+      "ProjectGuid": "840abfc7-8c15-4914-9c38-4151133c7924",
+      "DisplayName": "Calibration",
+      "ColorIndex": 5
+    },
+    "68403c7c-087f-4833-8725-2ed8262971ab": {
+      "ProjectGuid": "68403c7c-087f-4833-8725-2ed8262971ab",
+      "DisplayName": "CalibrationApp",
+      "ColorIndex": 6
+    },
+    "7bba064d-a3dd-4e52-8cea-b36769adcf22": {
+      "ProjectGuid": "7bba064d-a3dd-4e52-8cea-b36769adcf22",
+      "DisplayName": "CapstoneTest",
+      "ColorIndex": 7
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 8
 }

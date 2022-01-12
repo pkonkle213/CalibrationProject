@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Capstone</name>
+    </assembly>
+    <members>
+        <member name="M:Capstone.Controllers.LoginController.Ready">
+            <summary>
+            A test endpoint to ensure that the server is running.
+            </summary>
+        </member>
+        <member name="M:Capstone.Controllers.LoginController.Confirm">
+            <summary>
+            A test endpoint requiring authorization to ensure that authorization is working.
+            </summary>
+        </member>
+        <member name="M:Capstone.Controllers.LoginController.ConfirmAdmin">
+            <summary>
+            A test endpoint requiring authorization and the role of 'admin' to ensure that authorization is working.
+            </summary>
+        </member>
+        <member name="M:Capstone.Controllers.LoginController.Authenticate(Capstone.Models.LoginUser)">
+            <summary>
+            Authenticates the user and returns a result including their authenticated token
+            </summary>
+            <param name="userParam">The login request</param>
+        </member>
+        <member name="M:Capstone.Controllers.LoginController.Register(Capstone.Models.RegisterUser)">
+            <summary>
+            Registers a new user.
+            </summary>
+            <param name="userParam">The new user to create</param>
+        </member>
+        <member name="T:Capstone.Models.LoginResponse">
+            <summary>
+            Model to return upon successful login (user data + token)
+            </summary>
+        </member>
+        <member name="T:Capstone.Models.LoginUser">
+            <summary>
+            Model to accept login parameters
+            </summary>
+        </member>
+        <member name="T:Capstone.Models.RegisterUser">
+            <summary>
+            Model to accept registration parameters
+            </summary>
+        </member>
+        <member name="T:Capstone.Models.ReturnUser">
+            <summary>
+            Model of user data to return upon successful login
+            </summary>
+        </member>
+        <member name="T:Capstone.Security.IPasswordHasher">
+            <summary>
+            Represents a password hasher.
+            </summary>
+        </member>
+        <member name="M:Capstone.Security.IPasswordHasher.ComputeHash(System.String)">
+            <summary>
+            Given a clear text password, hash the password and return a Password Hash object.
+            </summary>
+            <param name="plainTextPassword">the password as given by the user.</param>
+            <returns>A hashed password object.</returns>
+        </member>
+        <member name="M:Capstone.Security.IPasswordHasher.VerifyHashMatch(System.String,System.String,System.String)">
+            <summary>
+            Verifies a match of an existing hashed password against a user input.
+            </summary>
+            <param name="existingHashedPassword">The existing hashed password.</param>
+            <param name="plainTextPassword">The password as typed in by the user</param>
+            <param name="salt">The salt used to compute the original hash.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Capstone.Security.ITokenGenerator.GenerateToken(System.Int32,System.String)">
+            <summary>
+            Generates a new authentication token.
+            </summary>
+            <param name="userId">The user ID to generate the token for</param>
+            <param name="username">The user's username</param>
+            <returns></returns>
+        </member>
+        <member name="M:Capstone.Security.ITokenGenerator.GenerateToken(System.Int32,System.String,System.String)">
+            <summary>
+            Generates a new authentication token.
+            </summary>
+            <param name="userId">The user ID to generate the token for</param>
+            <param name="username">The user's username</param>
+            <param name="role">The user's role</param>
+            <returns></returns>
+        </member>
+        <member name="T:Capstone.Security.Models.PasswordHash">
+            <summary>
+            Represents a hashed password.
+            </summary>
+        </member>
+        <member name="M:Capstone.Security.Models.PasswordHash.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new hashed password.
+            </summary>
+            <param name="password">The hashed password</param>
+            <param name="salt">The salt used to get the hashed password.</param>
+        </member>
+        <member name="P:Capstone.Security.Models.PasswordHash.Password">
+            <summary>
+            The hashed password
+            </summary>
+        </member>
+        <member name="P:Capstone.Security.Models.PasswordHash.Salt">
+            <summary>
+            The salt used to get the hashed password.
+            </summary>
+        </member>
+        <member name="T:Capstone.Security.PasswordHasher">
+            <summary>
+            The hash provider provides functionality to hash a plain text password and validate
+            an existing password against its hash.
+            </summary>
+        </member>
+        <member name="M:Capstone.Security.PasswordHasher.ComputeHash(System.String)">
+            <summary>
+            Hashes a plain text password.
+            </summary>
+            <param name="plainTextPassword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Capstone.Security.PasswordHasher.VerifyHashMatch(System.String,System.String,System.String)">
+            <summary>
+            Verifies if an existing hashed password matches a plaintext password (+salt).
+            </summary>
+            <param name="existingHashedPassword">The password we are comparing to.</param>
+            <param name="plainTextPassword">The plaintext password being validated.</param>
+            <param name="salt">The salt used to get the existing hashed password.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
