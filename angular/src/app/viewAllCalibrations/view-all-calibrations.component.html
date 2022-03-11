@@ -1,0 +1,23 @@
+<div>
+    <h2>All Calibrations</h2>
+    <table>
+        <tr>
+            <th>Calibration Id</th>
+            <th>Team Member Name</th>
+            <th>Channel</th>
+            <th>Your Score</th>
+            <th>View</th>
+        </tr>
+        <tr *ngFor="let calibration of calibrations">
+            <td>{{calibration.id}}</td>
+            <td>{{calibration.calibrationDate | date}}</td>
+            <td>{{calibration.repFirstName}} {{calibration.repLastName}}</td>
+            <td>{{calibration.contactChannel}}</td>
+            <td>{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
+            <td>
+                <button *ngIf="calibration.isOpen" [routerLink]="['/view/{{calibration.id}}']">Click to Edit</button>
+                <button *ngIf="!calibration.isOpen" [routerLink]="['/view/{{calibration.id}}']">Click to View</button>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,62 @@
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    display: grid;
+    column-gap: 2px;
+    row-gap: 2px;
+    
+
+    grid-template-areas:
+        "navBar navBar"
+        "menu main";
+
+
+    grid-template-columns:
+        1fr 5fr;
+}
+
+header {
+    grid-area: navBar;
+    border: solid black 1px;
+
+    display: grid;
+    grid-template-areas:
+        "title login";
+}
+
+h1 {
+    grid-area: title;
+}
+
+nav#left-nav {
+    grid-area: menu;
+    border: solid black 1px;
+}
+
+main {
+    grid-area: main;
+    border: solid black 1px;
+}
+
+nav#top-nav ul {
+    grid-area: login;
+    padding-left: 10;
+    text-align-last: right;
+}
+
+nav#top-nav li {
+    display: inline-block;
+    list-style: none;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+nav#left-nav li {
+    padding-top: 10px;;
+}
+
+main {
+    padding: 0px 10px;
+}

@@ -51,6 +51,9 @@ namespace CalibrationApp
 
             string connectionString = Configuration.GetConnectionString("Project");
             services.AddTransient<IUserDAO>(sp => new SqlUserDAO(connectionString));
+            services.AddTransient<IAnswerDAO>(sp => new SqlAnswerDAO(connectionString));
+            services.AddTransient<IQuestionDAO>(sp => new SqlQuestionDAO(connectionString));
+            services.AddTransient<ICalibrationDAO>(sp => new SqlCalibrationDAO(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

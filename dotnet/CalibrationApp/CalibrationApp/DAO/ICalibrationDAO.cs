@@ -4,9 +4,13 @@ namespace CalibrationApp.DAO
 {
     public interface ICalibrationDAO
     {
-        int CreateCalibration(Calibration calibration);
+        // Calibration CreateCalibration(DateTime date, int type, string contactId, string first, string last);
 
-        List<Calibration> GetOpenCalibrations();
+        Calibration GetCalibration(int calibrationId);
+
+        List<Calibration> GetAllCalibrations(); 
+
+        Calibration GetCalibrationResults(int id);
 
         void SwitchCalibrationIsOpen(int calibrationId);
     }

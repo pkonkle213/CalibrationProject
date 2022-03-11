@@ -1,0 +1,26 @@
+<div class="container">
+  <header>
+    <h1>Fernando's calibration app</h1>
+    <nav id="top-nav">
+      <ul>
+        <li>Login (if not already)</li>
+        <li>Welcome (name of person logged in)!</li>
+        <li>Logout (if not already)</li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav id="left-nav">
+    <ul>
+      <li><a [routerLink]="['/view']">View Calibrations</a></li>
+      <li>View Your Calibration Stats</li>
+      <li>Create a New Calibration (Leaders only)</li>
+      <li>Submit a Group Score (Leaders only)</li>
+      <li>Edit Users (Admin only)</li>
+      <li>View All Stats (Admin only)</li>
+    </ul>
+  </nav>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

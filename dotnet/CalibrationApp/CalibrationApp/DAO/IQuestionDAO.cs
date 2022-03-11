@@ -5,6 +5,9 @@ namespace CalibrationApp.DAO
     public interface IQuestionDAO
     {
         List<Question> GetQuestions(int calibrationId);
-        List<Option> GetOptions(int questionId);
+
+        List<Option> GetOptions(int questionId, bool isCategory);
+
+        void SubmitAnswers(List<Answer> answers);
     }
 }

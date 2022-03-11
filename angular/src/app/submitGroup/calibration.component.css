@@ -1,0 +1,10 @@
+td {
+    width: 100px;
+    padding: 5px;
+    border: solid black 2px;
+    text-align: center;
+}
+
+button {
+    margin: 15px 5px;
+}

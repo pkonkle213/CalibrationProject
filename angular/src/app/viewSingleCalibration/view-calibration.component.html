@@ -1,0 +1,27 @@
+<div>
+    <h2>Calibration for: {{calibration.repName}}</h2>
+    <h3>Channel: {{calibration.contactChannel}}</h3>
+    <h3>Date: {{calibration.calibrationDate | date}}</h3>
+    <h3>Contact Id: {{calibration.contactId}}</h3>
+
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>Your Score</th>
+        </tr>
+        <tr *ngFor="let question of questions; index as i">
+            <td>{{question.question}}</td>
+            <td *ngIf="calibration.isOpen">
+                <select [(ngModel)]="answerSubmit[i].option">
+                    <option value="Meets">Meets</option>
+                    <option value="Does Not Meet">Does Not Meet</option>
+                </select>
+                <br>
+                <input [(ngModel)]="answerSubmit[i].comment" *ngIf="CheckForDeduction(i)" placeholder="Why did you deduct?"/>
+            </td>
+            <td *ngIf="!calibration.isOpen">{{answers.details[i].option}}</td>
+        </tr>
+    </table>
+
+    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isOpen">Submit Your Answers</button>
+</div>

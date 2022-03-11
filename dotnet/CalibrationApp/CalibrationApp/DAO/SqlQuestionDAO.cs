@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 
 namespace CalibrationApp.DAO
 {
-    public class SQLQuestionDAO : IQuestionDAO
+    public class SqlQuestionDAO : IQuestionDAO
     {
         private readonly string connectionString;
 
-        public SQLQuestionDAO(string dbConnectionString)
+        public SqlQuestionDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
@@ -16,7 +16,7 @@ namespace CalibrationApp.DAO
         {
             List<Question> questions = new List<Question>();
 
-            const string sql = "SELECT q.question_id,q.question,q.isCategory,q.points_possible " +
+            const string sqlQuestion = "SELECT q.question_id,q.question,q.isCategory,q.points_possible " +
                 "FROM Questions q " +
                 "INNER JOIN Forms f ON f.form_id = q.form_id " +
                 "INNER JOIN Calibrations c ON c.form_id = f.form_id " +
@@ -26,7 +26,7 @@ namespace CalibrationApp.DAO
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sqlQuestion, conn))
                 {
                     command.Parameters.AddWithValue("@calibrationId", calibrationId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -35,11 +35,14 @@ namespace CalibrationApp.DAO
                         {
                             Question question = new Question();
 
-                            question.Id = Convert.ToInt32(reader["q.question_id"]);
-                            question.QuestionText = Convert.ToString(reader["q.question"]);
-                            question.IsCategory = Convert.ToBoolean(reader["q.isCategory"]); // I think this should work?
-                            question.PointsPossible = Convert.ToInt32(reader["q.points_possible"]);
-                            question.Options = GetOptions(question.Id);
+                            question.Id = Convert.ToInt32(reader["question_id"]);
+                            question.QuestionText = Convert.ToString(reader["question"]);
+                            question.IsCategory = Convert.ToBoolean(reader["isCategory"]); // I think this should work?
+                            if (question.IsCategory)
+                            {
+                                question.PointsPossible = Convert.ToInt32(reader["points_possible"]);
+                            }
+                            question.Options = GetOptions(question.Id, question.IsCategory);
 
                             questions.Add(question);
                         }
@@ -50,7 +53,7 @@ namespace CalibrationApp.DAO
             return questions;
         }
 
-        public List<Option> GetOptions(int questionId)
+        public List<Option> GetOptions(int questionId, bool isCategory)
         {
             List<Option> options = new List<Option>();
 
@@ -72,9 +75,12 @@ namespace CalibrationApp.DAO
                         {
                             Option option = new Option();
 
-                            option.Id = Convert.ToInt32(reader["o.option_id"]);
-                            option.OptionValue= Convert.ToString(reader["o.option_value"]);
-                            option.PointsEarned = Convert.ToDecimal(reader["o.points_earned"]);
+                            option.Id = Convert.ToInt32(reader["option_id"]);
+                            option.OptionValue = Convert.ToString(reader["option_value"]);
+                            if (isCategory)
+                            {
+                                option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
+                            }
 
                             options.Add(option);
                         }
@@ -83,6 +89,32 @@ namespace CalibrationApp.DAO
                 }
             }
             return options;
+        }
+
+        public void SubmitAnswers(List<Answer> answers)
+        {
+            const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
+                         "VALUES(@calibration_id, @user_id, @question_id, @option_id,@comment)";
+
+            foreach (Answer answer in answers)
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand command = new SqlCommand(sql, conn))
+                    {
+                        command.Parameters.AddWithValue("@calibration_id", answer.CalibrationId);
+                        command.Parameters.AddWithValue("@user_id", answer.UserId);
+                        command.Parameters.AddWithValue("@question_id", answer.QuestionId);
+                        command.Parameters.AddWithValue("@option_id", answer.OptionId);
+                        command.Parameters.AddWithValue("@comment", answer.Comment);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+            }
         }
     }
 }

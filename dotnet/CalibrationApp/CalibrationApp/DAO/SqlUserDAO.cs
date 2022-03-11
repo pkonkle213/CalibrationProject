@@ -9,13 +9,14 @@ namespace CalibrationApp.DAO
     public class SqlUserDAO : IUserDAO
     {
 
-        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name " +
+        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, t.team_name " +
             "FROM Users u " +
             "INNER JOIN Roles r ON r.role_id=u.role_id " +
-            "WHERE username = @username";
+            "INNER JOIN Teams t ON t.team_id=u.team_id " +
+            "WHERE u.username = @username";
 
-        private string sqlAddUser = "INSERT INTO users (username, password_hash, salt, user_role) VALUES " +
-            "(@username, @password_hash, @salt, @user_role)";
+        private string sqlAddUser = "INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id, team_id) VALUES " +
+            "(@username, @password_hash, @salt, @first_name, @last_name, @role_id, @team_id)";
 
         private readonly string connectionString;
         public SqlUserDAO(string dbConnectionString)
@@ -31,20 +32,83 @@ namespace CalibrationApp.DAO
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand(sqlGetUser, conn);
-                cmd.Parameters.AddWithValue("@username", username);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.HasRows && reader.Read())
+                using (SqlCommand command = new SqlCommand(sqlGetUser, conn))
                 {
-                    returnUser = GetUserFromReader(reader);
+                    command.Parameters.AddWithValue("@username", username);
+                    
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows && reader.Read())
+                    {
+                        returnUser = GetUserFromReader(reader);
+                    }
                 }
             }
 
             return returnUser;
         }
 
-        public User AddUser(string username, string password, string role)
+        private List<Team> GetTeams()
+        {
+            List<Team> teams = new List<Team>();
+            string sql = "SELECT team_id, team_name " +
+                         "FROM Teams";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Team team = new Team();
+
+                            team.Id = Convert.ToInt32(reader["team_id"]);
+                            team.Name = Convert.ToString(reader["team_name"]);
+
+                            teams.Add(team);
+                        }
+                    }
+                }
+            }
+
+            return teams;
+        }
+
+        private List<Role> GetRoles()
+        {
+            List<Role> roles = new List<Role>();
+            string sql = "SELECT role_id, role_name " +
+                         "FROM Roles";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Role role = new Role();
+
+                            role.Id = Convert.ToInt32(reader["role_id"]);
+                            role.Name = Convert.ToString(reader["role_name"]);
+
+                            roles.Add(role);
+                        }
+                    }
+                }
+            }
+
+            return roles;
+        }
+
+        public User AddUser(string username, string password, int role_id, int team_id, string firstName, string lastName)
         {
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(password);
@@ -57,7 +121,10 @@ namespace CalibrationApp.DAO
                 cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@password_hash", hash.Password);
                 cmd.Parameters.AddWithValue("@salt", hash.Salt);
-                cmd.Parameters.AddWithValue("@user_role", role);
+                cmd.Parameters.AddWithValue("@first_name", firstName);
+                cmd.Parameters.AddWithValue("@last_name", lastName);
+                cmd.Parameters.AddWithValue("@role_id", role_id);
+                cmd.Parameters.AddWithValue("@team_id", team_id);
                 cmd.ExecuteNonQuery();
             }
 
@@ -72,7 +139,8 @@ namespace CalibrationApp.DAO
                 Username = Convert.ToString(reader["username"]),
                 PasswordHash = Convert.ToString(reader["password_hash"]),
                 Salt = Convert.ToString(reader["salt"]),
-                Role = Convert.ToString(reader["user_role"]),
+                Role = Convert.ToString(reader["role_name"]),
+                Team = Convert.ToString(reader["team_name"]),
             };
 
             return u;

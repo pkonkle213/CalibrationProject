@@ -3,10 +3,13 @@
     public class Calibration
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public string Type { get; set; }
+        public string RepFirstName { get; set; }
+        public string RepLastName { get; set; }
+        public decimal GroupScoreEarned { get; set; }
+        public decimal GroupScorePossible { get; set; }
+        public string ContactChannel { get; set; }
+        public DateTime CalibrationDate { get; set; }
         public string ContactId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public Boolean IsActive { get; set; }
     }
 }
