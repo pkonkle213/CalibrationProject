@@ -15,8 +15,7 @@
             <td>{{calibration.contactChannel}}</td>
             <td>{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
             <td>
-                <button *ngIf="calibration.isOpen" [routerLink]="['/view/{{calibration.id}}']">Click to Edit</button>
-                <button *ngIf="!calibration.isOpen" [routerLink]="['/view/{{calibration.id}}']">Click to View</button>
+                <button (click)="PushToOne(calibration.id)">Click to {{calibration.isActive===true ? 'Edit' : 'View'}}</button>
             </td>
         </tr>
     </table>

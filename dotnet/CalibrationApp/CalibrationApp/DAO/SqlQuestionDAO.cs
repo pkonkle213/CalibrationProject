@@ -90,31 +90,5 @@ namespace CalibrationApp.DAO
             }
             return options;
         }
-
-        public void SubmitAnswers(List<Answer> answers)
-        {
-            const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
-                         "VALUES(@calibration_id, @user_id, @question_id, @option_id,@comment)";
-
-            foreach (Answer answer in answers)
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    using (SqlCommand command = new SqlCommand(sql, conn))
-                    {
-                        command.Parameters.AddWithValue("@calibration_id", answer.CalibrationId);
-                        command.Parameters.AddWithValue("@user_id", answer.UserId);
-                        command.Parameters.AddWithValue("@question_id", answer.QuestionId);
-                        command.Parameters.AddWithValue("@option_id", answer.OptionId);
-                        command.Parameters.AddWithValue("@comment", answer.Comment);
-
-                        command.ExecuteNonQuery();
-                    }
-
-                }
-            }
-        }
     }
 }

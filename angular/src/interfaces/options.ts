@@ -1,4 +1,5 @@
 export interface IOption {
-    questionId: number,
-    options: string[],
+    id: number,
+    optionValue:string,
+    pointsEarned:number,
 }

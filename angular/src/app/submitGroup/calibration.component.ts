@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { IAnswer } from 'src/interfaces/answer';
 import { ICalibration } from 'src/interfaces/calibration';
-import { IDetail } from 'src/interfaces/detail';
+import { IAnswer } from 'src/interfaces/answer';
 import { IParticipant } from 'src/interfaces/participant';
 import { IQuestion } from 'src/interfaces/question';
 import { CalibrationService } from 'src/services/calibration.service';
@@ -19,7 +19,7 @@ export class CompletedCalibrationComponent {
     calibration:any; // I can't apply ICalibration to it due to it maybe being null
     // groupScore:IAnswer;
 
-    groupSubmit:IDetail[] = [];
+    groupSubmit:IAnswer[] = [];
 
     constructor(private _calibrationService: CalibrationService) {
         // this.answers = this._calibrationService.getAnswers(1);
@@ -30,8 +30,10 @@ export class CompletedCalibrationComponent {
         for(let i=0;i<this.questions.length;i++)
         {
             this.groupSubmit.push({
-                option:"Meets",
-                comment:""
+                calibrationId:3,
+                optionValue:"Meets",
+                comment:"",
+                pointsEarned:0,
             })
         }
     }
@@ -53,7 +55,7 @@ export class CompletedCalibrationComponent {
     }
 
     CheckForDeduction(index:number) {
-        if (this.groupSubmit[index].option==='Does Not Meet') {
+        if (this.groupSubmit[index].optionValue==='Does Not Meet') {
             return true;
         }
 

@@ -1,5 +1,5 @@
 <div>
-    <div>
+    <!-- <div>
         <h2>Calibration for: {{calibration.repName}}</h2>
         <h3>Channel: {{calibration.contactChannel}}</h3>
         <h3>Date: {{calibration.calibrationDate | date}}</h3>
@@ -21,10 +21,10 @@
                 </select>
                 <input [(ngModel)]="groupSubmit[i].comment" *ngIf="CheckForDeduction(i)" />
             </td>
-            <!-- <td *ngIf="!calibration.isOpen">{{groupScore.details[i].option}}</td>
-            <td *ngFor="let answer of answers">{{answer.details[i].option}}</td>  -->
+            <td *ngIf="!calibration.isOpen">{{groupScore.details[i].option}}</td>
+            <td *ngFor="let answer of answers">{{answer.details[i].option}}</td> 
         </tr>
     </table>
 
-    <button type="submit" (click)="SubmitGroupAnswer()" *ngIf="calibration.isOpen">Submit Group Answers</button>
+    <button type="submit" (click)="SubmitGroupAnswer()" *ngIf="calibration.isOpen">Submit Group Answers</button> -->
 </div>

@@ -3,9 +3,9 @@
     public class Answer
     {
         public int CalibrationId { get; set; }
-        public int UserId { get; set; }
+        public string OptionValue { get; set; }
         public int QuestionId { get; set; }
-        public int OptionId { get; set; }
         public string Comment { get; set; }
+        public decimal PointsEarned { get; set; }
     }
 }

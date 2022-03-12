@@ -1,6 +1,7 @@
-import { IDetail } from "./detail";
-
 export interface IAnswer {
-    participantId: number;
-    details: IDetail[];
+    calibrationId: number;
+    questionId: number;
+    optionValue: string;
+    comment: string;
+    pointsEarned: number;
 }

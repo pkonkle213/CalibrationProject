@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { CompletedCalibrationComponent } from './submitGroup/calibration.component';
 import { CalibrationService } from 'src/services/calibration.service';
 import { ViewAllCalibrations } from './viewAllCalibrations/view-all-calibrations.component';
 import { ViewSingleCalibrationComponent } from './viewSingleCalibration/view-calibration.component';
@@ -14,7 +13,6 @@ import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [
     AppComponent,
-    CompletedCalibrationComponent,
     ViewAllCalibrations,
     ViewSingleCalibrationComponent
   ],

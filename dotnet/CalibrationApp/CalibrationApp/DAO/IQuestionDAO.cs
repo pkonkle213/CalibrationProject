@@ -7,7 +7,5 @@ namespace CalibrationApp.DAO
         List<Question> GetQuestions(int calibrationId);
 
         List<Option> GetOptions(int questionId, bool isCategory);
-
-        void SubmitAnswers(List<Answer> answers);
     }
 }

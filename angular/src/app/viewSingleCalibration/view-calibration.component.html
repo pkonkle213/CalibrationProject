@@ -1,8 +1,10 @@
 <div>
-    <h2>Calibration for: {{calibration.repName}}</h2>
+    <h2>Calibration for: {{calibration.repFirstName}} {{calibration.repLastName}}</h2>
     <h3>Channel: {{calibration.contactChannel}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
+    <h4>Current status: {{calibration.isActive ? "Open" : "Closed"}}</h4>
+    <h5>Current Score: 2%</h5>
 
     <table>
         <tr>
@@ -10,18 +12,17 @@
             <th>Your Score</th>
         </tr>
         <tr *ngFor="let question of questions; index as i">
-            <td>{{question.question}}</td>
-            <td *ngIf="calibration.isOpen">
-                <select [(ngModel)]="answerSubmit[i].option">
-                    <option value="Meets">Meets</option>
-                    <option value="Does Not Meet">Does Not Meet</option>
+            <td>{{question.questionText}}</td>
+            <td *ngIf="calibration.isActive">
+                <select [(ngModel)]="answerSubmit[i].optionValue">
+                    <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
                 </select>
                 <br>
-                <input [(ngModel)]="answerSubmit[i].comment" *ngIf="CheckForDeduction(i)" placeholder="Why did you deduct?"/>
+                <input [(ngModel)]="answerSubmit[i].comment" placeholder="Why this score was entered"/>
             </td>
-            <td *ngIf="!calibration.isOpen">{{answers.details[i].option}}</td>
+            <td *ngIf="!calibration.isActive">{{answers.details[i].option}}</td>
         </tr>
     </table>
 
-    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isOpen">Submit Your Answers</button>
+    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isActive">Submit Your Answers</button>
 </div>

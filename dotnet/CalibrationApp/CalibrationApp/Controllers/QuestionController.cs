@@ -17,17 +17,16 @@ namespace CalibrationApp.Controllers
             this.dao = questionDAO;
         }
 
+        /// <summary>
+        /// Gets all questions linked to the calibration
+        /// </summary>
+        /// <param name="calibrationId">Calibration ID</param>
+        /// <returns>A list of Questions</returns>
         [HttpGet]
+        [Route("{calibrationId}")]
         public ActionResult GetQuestions(int calibrationId)
         {
             return Ok(dao.GetQuestions(calibrationId));
-        }
-
-        [HttpPost]
-        public ActionResult SubmitAnswers(List<Answer> answers)
-        {
-            dao.SubmitAnswers(answers);
-            return Ok();
         }
     }
 }

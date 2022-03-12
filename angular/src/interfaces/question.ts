@@ -1,4 +1,9 @@
+import { IOption } from "./options";
+
 export interface IQuestion {
     id: number,
-    question: string;
+    questionText: string;
+    isCategory: boolean;
+    pointsPossible: number;
+    options:IOption[];
 }

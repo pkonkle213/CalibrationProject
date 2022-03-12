@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string OptionValue { get; set; }
-        public decimal? PointsEarned { get; set; }
+        public decimal PointsEarned { get; set; }
     }
 }

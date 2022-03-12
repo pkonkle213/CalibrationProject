@@ -11,31 +11,91 @@ namespace CalibrationApp.DAO
             connectionString = dbConnectionString;
         }
 
-        public Answer SubmitAnswer(Answer answer)
+        private int GetOption(string value)
+        {
+            List<Option> options = new List<Option>();
+
+            const string sql = "SELECT option_id,option_value " +
+                "FROM Options";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Option option = new Option();
+
+                            option.Id = Convert.ToInt32(reader["option_id"]);
+                            option.OptionValue = Convert.ToString(reader["option_value"]);
+
+                            options.Add(option);
+                        }
+                    }
+                }
+            }
+
+            foreach(Option option in options)
+            {
+                if(option.OptionValue == value)
+                {
+                    return option.Id;
+                }
+            }
+
+            return -1;
+        }
+
+        public void SubmitAnswers(List<Answer> answers, int userId)
+        {
+            foreach (Answer answer in answers)
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
+                        "VALUES(@calibrationId, @userId, @questionId, @optionId, @comment)";
+
+                    using (SqlCommand command = new SqlCommand(sql, conn))
+                    {
+                        command.Parameters.AddWithValue("@calibrationId", answer.CalibrationId);
+                        command.Parameters.AddWithValue("@userId", userId);
+                        command.Parameters.AddWithValue("@questionId", answer.QuestionId);
+                        int optionId = GetOption(answer.OptionValue);
+                        command.Parameters.AddWithValue("@optionId", optionId);
+                        command.Parameters.AddWithValue("@comment", answer.Comment);
+
+                        command.ExecuteScalar();
+                    }
+                }
+            }
+        }
+
+        public void DeleteAnswers(int calibrationId, int userId)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
-                    "VALUES(@calibrationId, @userId, @questionId, @optionId, @comment)";
+                const string sql = "DELETE FROM Answers " +
+                    "WHERE(calibration_id = @calibrationId AND user_id = @userId)";
 
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    command.Parameters.AddWithValue("@calibrationId", answer.CalibrationId);
-                    command.Parameters.AddWithValue("@userId", answer.UserId);
-                    command.Parameters.AddWithValue("@questionId", answer.QuestionId);
-                    command.Parameters.AddWithValue("@optionId", answer.OptionId);
-                    command.Parameters.AddWithValue("@comment", answer.Comment);
+                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
+                    command.Parameters.AddWithValue("@userId", userId);
 
                     command.ExecuteScalar();
                 }
             }
-
-            return answer;
         }
 
-        public List<Answer> GetAnswersForCalibration(int calibrationId)
+        /*
+        public List<Answer> GetAllAnswersForCalibration(int calibrationId)
         {
             List<Answer> answers = new List<Answer>();
 
@@ -69,7 +129,8 @@ namespace CalibrationApp.DAO
 
             return answers;
         }
-
+        */
+        /*
         public List<User> GetParticipatingUsers(int calibrationId)
         {
             List<User> users = new List<User>();
@@ -110,6 +171,46 @@ namespace CalibrationApp.DAO
             }
 
             return users;
+        }
+        */
+
+        public List<Answer> GetMyAnswers(int calibrationId)
+        {
+            List<Answer> answers = new List<Answer>();
+            int userId = 2;
+
+            const string sql = "SELECT a.calibration_id,a.user_id,a.question_id,o.option_value,a.comment,o.points_earned " +
+                "FROM Answers a " +
+                "INNER JOIN Options o ON o.option_id = a.option_id " +
+                "WHERE (a.calibration_id = @calibrationId AND a.user_id = @userId)";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Answer answer = new Answer();
+
+                            answer.CalibrationId = Convert.ToInt32(reader["calibration_id"]);
+                            answer.OptionValue = Convert.ToString(reader["option_value"]);
+                            answer.QuestionId = Convert.ToInt32(reader["question_id"]);
+                            answer.Comment = Convert.ToString(reader["comment"]);
+                            answer.PointsEarned = Convert.ToInt32(reader["points_earned"]);
+
+                            answers.Add(answer);
+                        }
+                    }
+                }
+            }
+
+            return answers;
         }
     }
 }
