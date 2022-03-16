@@ -4,25 +4,32 @@
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
     <h4>Current status: {{calibration.isActive ? "Open" : "Closed"}}</h4>
-    <h5>Current Score: 2%</h5>
+    <h5>Current Score: {{CalculateScore()}}%</h5>
 
     <table>
-        <tr>
-            <th>Question</th>
-            <th>Your Score</th>
-        </tr>
-        <tr *ngFor="let question of questions; index as i">
-            <td>{{question.questionText}}</td>
-            <td *ngIf="calibration.isActive">
-                <select [(ngModel)]="answerSubmit[i].optionValue">
-                    <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
-                </select>
-                <br>
-                <input [(ngModel)]="answerSubmit[i].comment" placeholder="Why this score was entered"/>
-            </td>
-            <td *ngIf="!calibration.isActive">{{answers.details[i].option}}</td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Your Score</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let question of questions; index as i">
+                <td>{{question.questionText}}</td>
+                <td *ngIf="calibration.isActive">
+                    <select [(ngModel)]="answerSubmit[i].optionValue" (change)="onChange($event,i)">
+                        <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
+                    </select>
+                </td>
+                <td *ngIf="calibration.isActive">
+                    <input [(ngModel)]="answerSubmit[i].comment" placeholder="Why this score was entered"/>
+                </td>
+                <td *ngIf="!calibration.isActive">{{answers[i].optionValue}}</td>
+                <td *ngIf="!calibration.isActive">{{answers[i].comment}}</td>
+            </tr>
+        </tbody>
     </table>
-
+    
     <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isActive">Submit Your Answers</button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICalibration } from 'src/interfaces/calibration';
 import { CalibrationService } from 'src/services/calibration.service';
@@ -22,10 +22,14 @@ export class ViewAllCalibrations {
     }
 
     ConvertToPercent(earned:number, possible: number) {
-        return earned/possible*100;
+        return earned / possible * 100;
     }
 
     PushToOne(id:number) {
         this.router.navigate(['/view/',id]);
+    }
+
+    PushToGroup(id:number) {
+        this.router.navigate(['/group/',id]);
     }
 }

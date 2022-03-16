@@ -8,4 +8,6 @@ export interface ICalibration {
     calibrationDate: Date;
     contactId: string;
     isActive: boolean;
+    indivPointsEarned: number;
+    indivPointsPossible: number;
 }

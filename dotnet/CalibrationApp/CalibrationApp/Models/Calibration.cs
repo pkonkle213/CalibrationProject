@@ -11,5 +11,7 @@
         public DateTime CalibrationDate { get; set; }
         public string ContactId { get; set; }
         public Boolean IsActive { get; set; }
+        public decimal IndivPointsEarned { get; set; }
+        public decimal IndivPointsPossible { get; set; }
     }
 }

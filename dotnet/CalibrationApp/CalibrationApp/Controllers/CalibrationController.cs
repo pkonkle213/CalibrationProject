@@ -43,7 +43,8 @@ namespace CalibrationApp.Controllers
         [Route("{calibrationId}")]
         public ActionResult<Calibration> GetSpecificCalibrations(int calibrationId)
         {
-            Calibration calibration = dao.GetCalibration(calibrationId);
+            int userId = 2;
+            Calibration calibration = dao.GetCalibration(calibrationId, userId);
             if (calibration == null)
             {
                 return BadRequest("No calibration found");
@@ -62,7 +63,8 @@ namespace CalibrationApp.Controllers
         [Route("All")]
         public ActionResult<List<Calibration>> GetAllCalibrations()
         {
-            List<Calibration> calibrations = dao.GetAllCalibrations();
+            int userId = 2;
+            List<Calibration> calibrations = dao.GetAllCalibrations(userId);
             if (calibrations == null || calibrations.Count == 0)
             {
                 return BadRequest("No calibrations found");

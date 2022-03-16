@@ -10,7 +10,6 @@ import { IAnswer } from "src/interfaces/answer";
 @Injectable()
 export class CalibrationService {
     private url: string = "https://localhost:44329/";
-    // handleError = '';
     
     constructor(private http:HttpClient){}
     
@@ -50,7 +49,9 @@ export class CalibrationService {
     }
 
     updateMyAnswer(answers:IAnswer[]) {
+        let options = { headers: new HttpHeaders({'Content-Type': 'application/json'})};
         let submit = this.url + "Answer";
-        return this.http.put(submit,answers, )
+        return this.http.put(submit,answers,options)
+
     }
 }

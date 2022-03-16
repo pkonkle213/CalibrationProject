@@ -11,7 +11,7 @@ namespace CalibrationApp.Controllers
     public class AnswerController : ControllerBase
     {
         private readonly IAnswerDAO dao;
-        private const int userId = 2;
+        private const int userId = 2; //Only needed until I can use a logged in user
 
         public AnswerController(IAnswerDAO answerDAO)
         {
@@ -19,11 +19,11 @@ namespace CalibrationApp.Controllers
         }
 
         /// <summary>
-        /// Submit a new round of answers
+        /// Submit answers for a calibration and a user
         /// </summary>
         /// <param name="answers">A List of answers</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("Answer")]
         public ActionResult SubmitAnswers(List<Answer> answers)
         {
             //UserId = int.Parse(this.User.FindFirst("sub").Value);
@@ -31,16 +31,31 @@ namespace CalibrationApp.Controllers
             return Created("Answers submitted!",answers);
         }
 
+        [HttpPost("Score")]
+        public ActionResult SubmitScore(Score score)
+        {
+            dao.SubmitScore(score, userId);
+            return Ok();
+        }
+
         /// <summary>
         /// Updating a round of answers
         /// </summary>
         /// <param name="answers">A list of Answers</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("Answer")]
         public ActionResult UpdateAnswers(List<Answer> answers)
         {
             dao.DeleteAnswers(answers[0].CalibrationId, userId);
             dao.SubmitAnswers(answers, userId);
+            return Ok();
+        }
+
+        [HttpPut("Score")]
+        public ActionResult UpdateScore(Score score)
+        {
+            dao.DeleteScore(score, userId);
+            dao.SubmitScore(score, userId);
             return Ok();
         }
 
@@ -67,7 +82,8 @@ namespace CalibrationApp.Controllers
         [HttpGet("{calibrationId}")]
         public ActionResult GetMyAnswers(int calibrationId)
         {
-            return Ok(dao.GetMyAnswers(calibrationId));
+            int userId = 2;
+            return Ok(dao.GetMyAnswers(calibrationId, userId));
         }
     }
 }

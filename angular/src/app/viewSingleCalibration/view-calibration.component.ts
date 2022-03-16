@@ -1,30 +1,28 @@
 import { Component } from "@angular/core";
-import { IQuestion } from "src/interfaces/question";
-import { CalibrationService } from "src/services/calibration.service";
-import { ActivatedRoute } from "@angular/router";
-import { IAnswer } from "src/interfaces/answer";
 import { Router } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
+import { CalibrationService } from "src/services/calibration.service";
+import { IAnswer } from "src/interfaces/answer";
 
 @Component ({
     selector: 'view-single-calibration',
-    templateUrl: './view-calibration.component.html'
+    templateUrl: './view-calibration.component.html',
+    styleUrls:['./view-calibration.component.css']
 })
 
 export class ViewSingleCalibrationComponent {
     userId:number = 2;
-    calibration:any = [];
-    questions:any = [];
-    answers:any = [];
+    calibration:any;
+    questions:any;
+    answers:any;
     answerSubmit:IAnswer[] = [];
-    updatingAnswer:boolean = false;
-    score:number = 0;
+    updating:boolean = false;
 
     constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router) {
         this.userId=2;
-
     }
 
-    ngOnInit() {
+    ngOnInit() {  
         this._calibrationService.getCalibration(this._route.snapshot.params['id']).subscribe(data => {
             this.calibration = data;
         });
@@ -45,15 +43,20 @@ export class ViewSingleCalibrationComponent {
                         optionValue: this.questions[i].options[0].optionValue,
                         comment: '',
                         pointsEarned: this.questions[i].options[0].pointsEarned,
-                    })
+                    });
                 }
             }
             else {
                 this.answerSubmit=this.answers;
-                this.updatingAnswer=true;
+                this.updating=true;
             }
         });
    
+    }
+
+    onChange(event:any,i:number) {
+        let q = this.questions[i].options.find((x: { optionValue: any; }) => x.optionValue===event.target.value)
+        this.answerSubmit[i].pointsEarned = q.pointsEarned;
     }
 
     CalculateScore() {
@@ -68,17 +71,15 @@ export class ViewSingleCalibrationComponent {
     }
 
     SubmitAnswer() {
-        if(this.updatingAnswer) {
-            console.log("update");
+        if(this.updating) {
             this._calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {
                 this._router.navigate(['/view']);
             });
         }
         else {
-            console.log("submit");
-            this._calibrationService.submitMyAnswer(this.answerSubmit);
+            this._calibrationService.submitMyAnswer(this.answerSubmit).subscribe(() => {
+                this._router.navigate(['/view']);
+            });
         }
-
-        this._router.navigate(['/view']);
     }
 }

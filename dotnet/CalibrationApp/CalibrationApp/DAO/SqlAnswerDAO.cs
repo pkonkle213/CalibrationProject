@@ -49,6 +49,27 @@ namespace CalibrationApp.DAO
             return -1;
         }
 
+        public void SubmitScore(Score score, int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) " +
+                    "VALUES (@user_id,@calibration_id,@points_earned,@points_possible)";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    command.Parameters.AddWithValue("@calibration_id", score.calibrationId);
+                    command.Parameters.AddWithValue("@points_earned", score.pointsEarned);
+                    command.Parameters.AddWithValue("@points_possible", score.pointsPossible);
+
+                    command.ExecuteScalar();
+                }
+            }
+        }
+
         public void SubmitAnswers(List<Answer> answers, int userId)
         {
             foreach (Answer answer in answers)
@@ -71,6 +92,27 @@ namespace CalibrationApp.DAO
 
                         command.ExecuteScalar();
                     }
+                }
+            }
+        }
+
+
+
+        public void DeleteScore(Score score, int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "DELETE FROM Scores " +
+                    "WHERE(calibration_id = @calibrationId AND user_id = @userId)";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@calibrationId", score.calibrationId);
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    command.ExecuteScalar();
                 }
             }
         }
@@ -174,10 +216,10 @@ namespace CalibrationApp.DAO
         }
         */
 
-        public List<Answer> GetMyAnswers(int calibrationId)
+        public List<Answer> GetMyAnswers(int calibrationId,int userId)
         {
             List<Answer> answers = new List<Answer>();
-            int userId = 2;
+
 
             const string sql = "SELECT a.calibration_id,a.user_id,a.question_id,o.option_value,a.comment,o.points_earned " +
                 "FROM Answers a " +

@@ -6,7 +6,7 @@
     <members>
         <member name="M:CalibrationApp.Controllers.AnswerController.SubmitAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
             <summary>
-            Submit a new round of answers
+            Submit answers for a calibration and a user
             </summary>
             <param name="answers">A List of answers</param>
             <returns></returns>
