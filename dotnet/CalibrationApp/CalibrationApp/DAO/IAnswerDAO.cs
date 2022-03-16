@@ -10,10 +10,10 @@ namespace CalibrationApp.DAO
         /*
         List<Answer> GetAllAnswersForCalibration(int calibrationId);
         */
-        /*
-        List<User> GetParticipatingUsers(int calibrationId);
-        */
 
+
+
+        List<User> GetParticipatingUsers(int calibrationid);
         List<Answer> GetMyAnswers(int calibrationId, int userId);
         void SubmitAnswers(List<Answer> answers, int userId);
         void DeleteAnswers(int calibrationId, int userId);

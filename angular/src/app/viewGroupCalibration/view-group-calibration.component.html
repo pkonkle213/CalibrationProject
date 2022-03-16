@@ -1,3 +1,24 @@
 <div>
+    <h2>Calibration for: {{calibration.repFirstName}} {{calibration.repLastName}}</h2>
+    <h3>Channel: {{calibration.contactChannel}}</h3>
+    <h3>Date: {{calibration.calibrationDate | date}}</h3>
+    <h3>Contact Id: {{calibration.contactId}}</h3>
+    <h5>Current Score: 0%</h5>
 
+    <table>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Group Score</th>
+                <th *ngFor="let person of participants">{{person.firstName}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let question of questions; index as i ">
+                <td>{{question.questionText}}</td>
+                <td>{{answers[i].optionValue}}</td>
+                <td *ngFor="let person of participants">{{person.answers[i].optionValue}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

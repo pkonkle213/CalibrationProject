@@ -54,7 +54,7 @@ namespace CalibrationApp.DAO
         {
             Calibration calibration = new Calibration();
 
-            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,uc.points_earned,uc.points_possible " +
+            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,s.points_earned,s.points_possible " +
                 "FROM Calibrations c " +
                 "INNER JOIN Contacts con ON con.contact_id = c.contact_type " +
                 "INNER JOIN Scores s ON s.calibration_id = c.calibration_id " +
@@ -87,11 +87,11 @@ namespace CalibrationApp.DAO
         {
             List<Calibration> calibrations = new List<Calibration>();
 
-            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,uc.points_earned,uc.points_possible " +
+            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,s.points_earned,s.points_possible " +
                 "FROM Calibrations c " +
                 "INNER JOIN Contacts con ON con.contact_id = c.contact_type " +
-                "INNER JOIN Users_Calibrations uc ON uc.calibration_id = c.calibration_id " +
-                "WHERE uc.user_id = @userId " +
+                "INNER JOIN Scores s ON s.calibration_id = c.calibration_id " +
+                "WHERE s.user_id = @userId " +
                 "ORDER BY c.calibration_date DESC";
 
             using (SqlConnection conn = new SqlConnection(connectionString))

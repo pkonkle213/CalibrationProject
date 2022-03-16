@@ -1,11 +1,10 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http"
 import { catchError, Observable, of } from "rxjs";
 import { Injectable } from "@angular/core";
-import { IParticipant } from '../interfaces/participant';
 import { IQuestion } from '../interfaces/question';
 import { ICalibration } from '../interfaces/calibration';
-import { IUser } from "src/interfaces/user";
 import { IAnswer } from "src/interfaces/answer";
+import { IUser } from "src/interfaces/user";
 
 @Injectable()
 export class CalibrationService {
@@ -13,12 +12,12 @@ export class CalibrationService {
     
     constructor(private http:HttpClient){}
     
-        private handleError<T> (operation = 'operation', result?: T){
-            return (error: any): Observable<T> => {
-                console.error(error);
-                return of (result as T);
-            }
+    private handleError<T> (operation = 'operation', result?: T){
+        return (error: any): Observable<T> => {
+            console.error(error);
+            return of (result as T);
         }
+    }
     
     getAllCalibrations():Observable<ICalibration[]> {
         let calibrations = this.url + "Calibration/All"
@@ -53,5 +52,15 @@ export class CalibrationService {
         let submit = this.url + "Answer";
         return this.http.put(submit,answers,options)
 
+    }
+
+    getParticipants(calibrationId:number) {
+        let participants = this.url + "Answer/Participants/" + calibrationId;
+        return this.http.get(participants);
+    }
+
+    getGroupAnswers(calibrationId:number) {
+        let groupAnswer = this.url + "Answer/Group/" + calibrationId;
+        return this.http.get(groupAnswer);
     }
 }

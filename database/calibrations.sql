@@ -154,28 +154,36 @@ CREATE TABLE Answers (
 	CONSTRAINT FK_Answers_Options FOREIGN KEY (option_id) references Options (option_id),
 )
 
-INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,1,5,'stuff');
-INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,2,1,'words');
-INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,3,6,'things');
-INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,4,2,'yay');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,0,1,7,'idk');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,0,2,1,'something');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,0,3,7,'sounds good');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,0,4,2,'w00t');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,1,1,5,'stuff');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,1,2,1,'words');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,1,3,6,'things');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,1,4,2,'yay');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,1,4,'stuff');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,2,2,'words');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,3,7,'things');
+INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (1,2,4,1,'yay');
 INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (2,2,1,5,'Because I dislike this rep');
 INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (2,2,2,1,'Didn''t ask for the name');
 INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (2,2,3,6,'Didn''t do something right');
 INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) VALUES (2,2,4,2,'Needs more empathy');
 GO
 
-CREATE TABLE Users_Calibrations(
+CREATE TABLE Scores(
 	user_id int NOT NULL,
 	calibration_id int NOT NULL,
 	points_earned decimal(5,2) NOT NULL,
 	points_possible decimal(5,2) NOT NULL,
-	CONSTRAINT PK_Users_Calibrations PRIMARY KEY (user_id,calibration_id),
-	CONSTRAINT FK_Users_Calibrations_Users FOREIGN KEY (user_id) references Users (user_id),
-	CONSTRAINT FK_Users_Calibrations_Calibrations FOREIGN KEY (calibration_id) references Calibrations (calibration_id),
+	CONSTRAINT PK_Scores PRIMARY KEY (user_id,calibration_id),
+	CONSTRAINT FK_Scores_Users FOREIGN KEY (user_id) references Users (user_id),
+	CONSTRAINT FK_Scores_Calibrations FOREIGN KEY (calibration_id) references Calibrations (calibration_id),
 )
 
-INSERT INTO Users_Calibrations (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,70,85);
-INSERT INTO Users_Calibrations (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
+INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,70,85);
+INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
 
 CREATE TABLE Questions_Options(
 	question_id int NOT NULL,

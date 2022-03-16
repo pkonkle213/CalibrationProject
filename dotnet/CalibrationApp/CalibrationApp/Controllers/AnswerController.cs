@@ -11,7 +11,7 @@ namespace CalibrationApp.Controllers
     public class AnswerController : ControllerBase
     {
         private readonly IAnswerDAO dao;
-        private const int userId = 2; //Only needed until I can use a logged in user
+        private int userId = 2; //Only needed until I can use a logged in user
 
         public AnswerController(IAnswerDAO answerDAO)
         {
@@ -28,7 +28,7 @@ namespace CalibrationApp.Controllers
         {
             //UserId = int.Parse(this.User.FindFirst("sub").Value);
             dao.SubmitAnswers(answers, userId);
-            return Created("Answers submitted!",answers);
+            return Created("Answers submitted!", answers);
         }
 
         [HttpPost("Score")]
@@ -59,20 +59,20 @@ namespace CalibrationApp.Controllers
             return Ok();
         }
 
-        /*
-        [HttpGet("participants")]
+
+        [HttpGet("Participants/{calibrationId}")]
         public ActionResult GetParticipatingUsers(int calibrationId)
         {
             return Ok(dao.GetParticipatingUsers(calibrationId));
         }
-        */
-        /*
-        [HttpGet]
+
+        [HttpGet("Group/{calibrationId}")]
         public ActionResult GetAnswersForCalibration(int calibrationId)
         {
-            return Ok(dao.GetAllAnswersForCalibration(calibrationId));
+            userId = 0;
+            return Ok(dao.GetMyAnswers(calibrationId, userId));
         }
-        */
+        
 
         /// <summary>
         /// Gets the set of answers for the logged in user

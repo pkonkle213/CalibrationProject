@@ -10,5 +10,6 @@
         public string Team { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public List<Answer> Answers { get; set; }
     }
 }

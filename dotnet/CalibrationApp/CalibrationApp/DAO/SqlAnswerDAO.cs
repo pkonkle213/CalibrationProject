@@ -96,8 +96,6 @@ namespace CalibrationApp.DAO
             }
         }
 
-
-
         public void DeleteScore(Score score, int userId)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -172,7 +170,7 @@ namespace CalibrationApp.DAO
             return answers;
         }
         */
-        /*
+
         public List<User> GetParticipatingUsers(int calibrationId)
         {
             List<User> users = new List<User>();
@@ -181,11 +179,11 @@ namespace CalibrationApp.DAO
                 "FROM Users u " +
                 "INNER JOIN Roles r ON u.role_id = r.role_id " +
                 "INNER JOIN Teams t ON u.team_id = t.team_id " +
-                "WHERE u.user_id IN " +
+                "WHERE (u.user_id <> 0 AND u.user_id IN " +
                 "(SELECT user_id " +
                 "FROM Answers " +
                 "WHERE calibration_id = @calibrationId " +
-                "GROUP BY user_id)";
+                "GROUP BY user_id))";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -212,9 +210,14 @@ namespace CalibrationApp.DAO
                 }
             }
 
+            foreach(User user in users)
+            {
+                user.Answers = GetMyAnswers(calibrationId, user.UserId);
+            }
+
             return users;
         }
-        */
+
 
         public List<Answer> GetMyAnswers(int calibrationId,int userId)
         {
