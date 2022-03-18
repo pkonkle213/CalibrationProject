@@ -4,25 +4,25 @@ import { Injectable } from "@angular/core";
 import { IQuestion } from '../interfaces/question';
 import { ICalibration } from '../interfaces/calibration';
 import { IAnswer } from "src/interfaces/answer";
-import { IUser } from "src/interfaces/user";
 
 @Injectable()
 export class CalibrationService {
-    private url: string = "https://localhost:44329/";
+    private url:string = "https://localhost:44329/";
     
-    constructor(private http:HttpClient){}
-    
-    private handleError<T> (operation = 'operation', result?: T){
-        return (error: any): Observable<T> => {
-            console.error(error);
-            return of (result as T);
-        }
+    constructor(private http:HttpClient){
+
     }
+    
+    // private handleError<T> (operation = 'operation', result?: T){
+    //     return (error: any): Observable<T> => {
+    //         console.error(error);
+    //         return of (result as T);
+    //     }
+    // }
     
     getAllCalibrations():Observable<ICalibration[]> {
         let calibrations = this.url + "Calibration/All"
-        return this.http.get<ICalibration[]>(calibrations)
-            .pipe(catchError(this.handleError<ICalibration[]>('getAllCalibrations',[])));
+        return this.http.get<ICalibration[]>(calibrations);
     }
     
     getCalibration(calibrationId:number) {
@@ -42,14 +42,13 @@ export class CalibrationService {
 
     submitMyAnswer(answers:IAnswer[]) {
         let options = { headers: new HttpHeaders({'Content-Type': 'application/json'})};
-        let submit = this.url + "Answer";
-        return this.http.post(submit,answers,options)
-            .pipe(catchError(this.handleError<IAnswer>('submitMyAnswer')));
+        let submit = this.url + "Answer/Answer";
+        return this.http.post(submit,answers,options);
     }
 
     updateMyAnswer(answers:IAnswer[]) {
         let options = { headers: new HttpHeaders({'Content-Type': 'application/json'})};
-        let submit = this.url + "Answer";
+        let submit = this.url + "Answer/Answer";
         return this.http.put(submit,answers,options)
 
     }

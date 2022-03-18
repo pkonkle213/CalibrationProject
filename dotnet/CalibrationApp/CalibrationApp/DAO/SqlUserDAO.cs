@@ -9,7 +9,7 @@ namespace CalibrationApp.DAO
     public class SqlUserDAO : IUserDAO
     {
 
-        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, t.team_name " +
+        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, t.team_name, u.first_name, u.last_name " +
             "FROM Users u " +
             "INNER JOIN Roles r ON r.role_id=u.role_id " +
             "INNER JOIN Teams t ON t.team_id=u.team_id " +
@@ -141,6 +141,8 @@ namespace CalibrationApp.DAO
                 Salt = Convert.ToString(reader["salt"]),
                 Role = Convert.ToString(reader["role_name"]),
                 Team = Convert.ToString(reader["team_name"]),
+                FirstName = Convert.ToString(reader["first_name"]),
+                LastName = Convert.ToString(reader["last_name"]),
             };
 
             return u;

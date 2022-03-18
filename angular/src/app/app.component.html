@@ -3,21 +3,20 @@
     <h1>Fernando's calibration app</h1>
     <nav id="top-nav">
       <ul>
-        <li>Login (if not already)</li>
-        <li>Welcome (name of person logged in)!</li>
-        <li>Logout (if not already)</li>
+        <li *ngIf="!authService.isAuthenticated()"><a [routerLink]="['user/login']">Login</a></li>
+        <li *ngIf="authService.isAuthenticated()" [routerLink]="['user/profile']">Welcome {{authService.currentUser.firstName}}!</li>
+        <li *ngIf="authService.isAuthenticated()"><button (click)="logout()">Logout</button></li>
       </ul>
     </nav>
   </header>
-
   <nav id="left-nav">
     <ul>
-      <li><a [routerLink]="['/view']">View Calibrations</a></li>
-      <li>View Your Calibration Stats</li>
-      <li>Create a New Calibration (Leaders only)</li>
-      <li>Submit a Group Score (Leaders only)</li>
-      <li>Edit Users (Admin only)</li>
-      <li>View All Stats (Admin only)</li>
+      <li *ngIf="authService.isAuthenticated()"><a [routerLink]="['/view']">View Calibrations</a></li>
+      <li *ngIf="authService.isAuthenticated()">View Your Calibration Stats</li>
+      <li *ngIf="leaderCheck()">Create a New Calibration</li>
+      <li *ngIf="leaderCheck()">Submit a Group Score</li>
+      <li *ngIf="adminCheck()">Edit Users</li>
+      <li *ngIf="adminCheck()">View All Stats</li>
     </ul>
   </nav>
   <main>

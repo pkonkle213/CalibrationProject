@@ -9,7 +9,7 @@
         public string Username { get; set; }
         public string Role { get; set; }
         public string Team { get; set; }
-        public string First { get; set; }
-        public string Last { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

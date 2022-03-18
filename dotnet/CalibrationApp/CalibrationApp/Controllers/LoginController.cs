@@ -77,7 +77,10 @@ namespace CalibrationApp.Controllers
                     {
                         UserId = user.UserId,
                         Username = user.Username,
-                        Role = user.Role
+                        Role = user.Role,
+                        Team = user.Team,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
                     },
                     Token = token
                 };

@@ -11,6 +11,8 @@ import { ViewAllCalibrations } from './viewAllCalibrations/view-all-calibrations
 import { ViewSingleCalibrationComponent } from './viewSingleCalibration/view-calibration.component';
 import { appRoutes } from './routes';
 import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-calibration.component';
+import { AuthService } from 'src/services/auth.service';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-cal
     ViewAllCalibrations,
     ViewSingleCalibrationComponent,
     GroupCalibrationComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,12 @@ import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-cal
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
   ],
-  providers: [CalibrationService],
-  bootstrap: [AppComponent]
+  providers: [
+    CalibrationService,
+    AuthService,
+  ],
+  bootstrap: [
+    AppComponent,
+  ]
 })
 export class AppModule { }
