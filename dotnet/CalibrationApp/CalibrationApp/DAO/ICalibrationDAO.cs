@@ -4,7 +4,8 @@ namespace CalibrationApp.DAO
 {
     public interface ICalibrationDAO
     {
-        // Calibration CreateCalibration(DateTime date, int type, string contactId, string first, string last);
+        List<ContactType> GetContactTypes();
+        Calibration CreateCalibration(Calibration calibration);
 
         Calibration GetCalibration(int calibrationId, int userId);
 

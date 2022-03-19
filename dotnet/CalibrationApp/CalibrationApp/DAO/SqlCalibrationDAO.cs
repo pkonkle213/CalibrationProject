@@ -11,44 +11,82 @@ namespace CalibrationApp.DAO
             connectionString = dbConnectionString;
         }
 
-        private List<Contact> GetAllContactTypes()
+        private int GetTypeId(string name)
         {
-            List <Contact> contacts = new List<Contact>();
-            return contacts;
+            List<ContactType> contactTypes = GetContactTypes();
+
+            foreach(ContactType contactType in contactTypes)
+            {
+                if(contactType.Name == name)
+                {
+                    return contactType.Id;
+                }
+            }
+
+            return -1;
         }
 
+        public List<ContactType> GetContactTypes()
+        {
+            List<ContactType> contactTypes = new List<ContactType>();
 
-        //public Calibration CreateCalibration(DateTime date, int type, string contactId, string first, string last)
-        //{
-        //    Calibration calibration = new Calibration();
-        //    calibration.CalibrationDate = date;
-        //    calibration.TypeId = type;
-        //    calibration.ContactId = contactId;
-        //    calibration.RepFirstName = first;
-        //    calibration.RepLastName = last;
+            const string sql = "SELECT contact_id,type " +
+                "FROM Contacts";
 
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
 
-        //        const string sql = "INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,form_id,isOpen) " +
-        //            "VALUES (@date,@type,@id,@first,@last,@form_id,@isOpen); " +
-        //            "SELECT @@IDENTITY";
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            contactTypes.Add(BuildContactType(reader));
+                        }
+                    }
+                }
+            }
+            return contactTypes;
+        }
 
-        //        using (SqlCommand command = new SqlCommand(sql, conn))
-        //        {
-        //            command.Parameters.AddWithValue("@date", calibration.CalibrationDate);
-        //            command.Parameters.AddWithValue("@type", calibration.TypeId);
-        //            command.Parameters.AddWithValue("@id", calibration.ContactId);
-        //            command.Parameters.AddWithValue("@first", calibration.RepFirstName);
-        //            command.Parameters.AddWithValue("@last", calibration.RepLastName);
-        //            command.Parameters.AddWithValue("@form_id", 1);
-        //            command.Parameters.AddWithValue("@isOpen", 1);
-        //            calibration.Id = Convert.ToInt32(command.ExecuteScalar());
-        //        }
-        //    }
-        //    return calibration;
-        //}
+        private ContactType BuildContactType(SqlDataReader reader)
+        {
+            ContactType contact = new ContactType();
+
+            contact.Id = Convert.ToInt32(reader["contact_id"]);
+            contact.Name = Convert.ToString(reader["type"]);
+
+            return contact;
+        }
+
+        public Calibration CreateCalibration(Calibration calibration)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,form_id,isOpen,group_score_earned,group_score_possible) " +
+                    "VALUES (@date,@type,@id,@first,@last,@form_id,@isOpen,@earned,@possible); " +
+                    "SELECT @@IDENTITY";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@date", calibration.CalibrationDate);
+                    command.Parameters.AddWithValue("@type", GetTypeId(calibration.ContactChannel));
+                    command.Parameters.AddWithValue("@id", calibration.ContactId);
+                    command.Parameters.AddWithValue("@first", calibration.RepFirstName);
+                    command.Parameters.AddWithValue("@last", calibration.RepLastName);
+                    command.Parameters.AddWithValue("@form_id", 1);
+                    command.Parameters.AddWithValue("@isOpen", 1);
+                    command.Parameters.AddWithValue("@earned", 0);
+                    command.Parameters.AddWithValue("@possible", 0);
+                    calibration.Id = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            return calibration;
+        }
 
         public Calibration GetCalibration(int calibrationId, int userId)
         {

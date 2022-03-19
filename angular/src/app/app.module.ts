@@ -13,6 +13,7 @@ import { appRoutes } from './routes';
 import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-calibration.component';
 import { AuthService } from 'src/services/auth.service';
 import { LoginComponent } from './login/login.component';
+import { CreateCalibration } from './createCalibration/create-calibration.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { LoginComponent } from './login/login.component';
     ViewSingleCalibrationComponent,
     GroupCalibrationComponent,
     LoginComponent,
+    CreateCalibration,
   ],
   imports: [
     BrowserModule,

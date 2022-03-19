@@ -5,7 +5,7 @@ import { CalibrationService } from 'src/services/calibration.service';
 
 @Component ({
     templateUrl: 'view-all-calibrations.component.html',
-    styleUrls: ['view-all-calibrations.component.css']
+    styleUrls: ['view-all-calibrations.component.css'],
 })
 
 export class ViewAllCalibrations {

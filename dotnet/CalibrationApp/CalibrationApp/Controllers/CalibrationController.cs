@@ -18,21 +18,26 @@ namespace CalibrationApp.Controllers
             this.dao = calibrationDAO;
         }
 
-        /* 
+        [HttpGet("Types")]
+        public ActionResult<List<ContactType>> GetContactTypes()
+        {
+            return Ok(dao.GetContactTypes());
+        }
+
         [HttpPost]
         //[Authorize(Roles = "Admin")]
         public ActionResult<Calibration> CreateCalibration(Calibration calibration)
         {
             try
             {
-                return Created("Calibration created!", dao.CreateCalibration(calibration.CalibrationDate, calibration.TypeId, calibration.ContactId, calibration.RepFirstName, calibration.RepLastName));
+                return Created("Calibration created!", dao.CreateCalibration(calibration));
             }
             catch (Exception ex)
             {
                 return BadRequest("Could not create calibration: " + ex.Message);
             }
         }
-        */
+        
 
         /// <summary>
         /// Gets a specific calibration by its CalibrationID number

@@ -1,4 +1,4 @@
-import { IOption } from "./options";
+import { IOption } from "./calibrationOptions";
 
 export interface IQuestion {
     id: number,

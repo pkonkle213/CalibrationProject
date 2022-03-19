@@ -108,7 +108,7 @@ namespace CalibrationApp.DAO
             return roles;
         }
 
-        public User AddUser(string username, string password, int role_id, int team_id, string firstName, string lastName)
+        public User AddUser(string username, string password, string role, string team, string firstName, string lastName)
         {
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(password);

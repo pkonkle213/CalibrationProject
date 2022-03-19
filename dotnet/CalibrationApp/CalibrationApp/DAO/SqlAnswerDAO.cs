@@ -134,43 +134,6 @@ namespace CalibrationApp.DAO
             }
         }
 
-        /*
-        public List<Answer> GetAllAnswersForCalibration(int calibrationId)
-        {
-            List<Answer> answers = new List<Answer>();
-
-            const string sql = "SELECT user_id,question_id,option_id,comment " +
-                "FROM Answers " +
-                "WHERE calibration_id = @calibrationId";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Answer answer = new Answer();
-
-                            answer.CalibrationId = calibrationId;
-                            answer.UserId = Convert.ToInt32(reader["@user_id"]);
-                            answer.UserId = Convert.ToInt32(reader["@question_id"]);
-                            answer.UserId = Convert.ToInt32(reader["@option_id"]);
-                            answer.UserId = Convert.ToInt32(reader["@comment"]);
-
-                            answers.Add(answer);
-                        }
-                    }
-                }
-            }
-
-            return answers;
-        }
-        */
-
         public List<User> GetParticipatingUsers(int calibrationId)
         {
             List<User> users = new List<User>();
@@ -217,7 +180,6 @@ namespace CalibrationApp.DAO
 
             return users;
         }
-
 
         public List<Answer> GetMyAnswers(int calibrationId,int userId)
         {

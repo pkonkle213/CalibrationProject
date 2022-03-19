@@ -1,0 +1,33 @@
+<div>
+    <p>Create a new calibration</p>
+    <table>
+        <tr>
+            <td>Team Member's First Name</td>
+            <td><input [(ngModel)]="calibration.repFirstName" type="text" id="repFirstName"></td>
+        </tr>
+        <tr>
+            <td>Team Member's Last Name</td>
+            <td><input [(ngModel)]="calibration.repLastName" type="text" id="repLastName"></td>
+        </tr>
+        <tr>
+            <td>Channel</td>
+            <td>
+                <select [(ngModel)]="calibration.contactChannel">
+                    <option value="option1">option1</option>
+                    <option value="option2">option2</option>
+                    <option value="option3">option3</option>
+                    <option value="option4">option4</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Calibration Date</td>
+            <td><input type="date" [(ngModel)]="calibration.calibrationDate"></td>
+        </tr>
+        <tr>
+            <td>Contact ID</td>
+            <td><input [(ngModel)]="calibration.contactId" type="text" id="contactId"></td>
+        </tr>
+    </table>
+    <button>Submit</button>
+</div>

@@ -4,15 +4,6 @@ namespace CalibrationApp.DAO
 {
     public interface IAnswerDAO
     {
-        /*
-        Answer SubmitAnswer(Answer answer);
-        */
-        /*
-        List<Answer> GetAllAnswersForCalibration(int calibrationId);
-        */
-
-
-
         List<User> GetParticipatingUsers(int calibrationid);
         List<Answer> GetMyAnswers(int calibrationId, int userId);
         void SubmitAnswers(List<Answer> answers, int userId);
