@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from "@angular/router";
 import { CalibrationService } from "src/services/calibration.service";
 import { IAnswer } from "src/interfaces/answer";
+import { retry } from "rxjs";
+import { IScore } from "src/interfaces/score";
 
 @Component ({
     selector: 'view-single-calibration',
@@ -17,12 +19,17 @@ export class ViewSingleCalibrationComponent {
     answers:any;
     answerSubmit:IAnswer[] = [];
     updating:boolean = false;
+    score:IScore = {
+        calibrationId: 0,
+        pointsEarned: 0,
+        pointsPossible: 0
+    };
 
     constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router) {
-        this.userId=2;
+
     }
 
-    ngOnInit() {  
+    ngOnInit() {
         this._calibrationService.getCalibration(this._route.snapshot.params['id']).subscribe(data => {
             this.calibration = data;
         });
@@ -51,7 +58,6 @@ export class ViewSingleCalibrationComponent {
                 this.updating=true;
             }
         });
-   
     }
 
     onChange(event:any,i:number) {
@@ -59,25 +65,47 @@ export class ViewSingleCalibrationComponent {
         this.answerSubmit[i].pointsEarned = q.pointsEarned;
     }
 
-    CalculateScore() {
+    Earned() {
         let earned = 0;
-        let possible = 0;
         for(let i=0;i<this.questions.length;i++) {
             earned += this.answerSubmit[i].pointsEarned * this.questions[i].pointsPossible;
+        }
+
+        return earned;
+    }
+
+    Possible() {
+        let possible = 0;
+        for(let i=0;i<this.questions.length;i++) {
             possible += this.questions[i].pointsPossible
         }
 
-        return earned / possible * 100;
+        return possible;
+    }
+
+    CalculateScore() {
+        return this.Earned() / this.Possible() * 100;
+    }
+
+    BuildScore():IScore {
+        this.score.calibrationId = this._route.snapshot.params['id'];
+        this.score.pointsEarned = this.Earned();
+        this.score.pointsPossible = this.Possible();
+        console.log(this.score);
+        return this.score;
     }
 
     SubmitAnswer() {
+        console.log(this.BuildScore());
         if(this.updating) {
-            this._calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {
+            this._calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {});
+            this._calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
                 this._router.navigate(['/view']);
             });
         }
         else {
-            this._calibrationService.submitMyAnswer(this.answerSubmit).subscribe(() => {
+            this._calibrationService.submitMyAnswer(this.answerSubmit).subscribe(() => {});
+            this._calibrationService.submitMyScore(this.BuildScore()).subscribe(() => {
                 this._router.navigate(['/view']);
             });
         }

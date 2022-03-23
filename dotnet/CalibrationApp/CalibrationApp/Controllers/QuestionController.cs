@@ -7,7 +7,7 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionDAO dao;

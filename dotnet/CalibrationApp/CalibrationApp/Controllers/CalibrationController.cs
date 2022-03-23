@@ -8,7 +8,7 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CalibrationController : ControllerBase
     {
         private readonly ICalibrationDAO dao;
@@ -22,6 +22,19 @@ namespace CalibrationApp.Controllers
         public ActionResult<List<ContactType>> GetContactTypes()
         {
             return Ok(dao.GetContactTypes());
+        }
+
+        private int GetCurrentUserID()
+        {
+            var user = this.User;
+            int id = 0;
+            if (user.Identity.Name != null)
+            {
+                var idClaim = user.FindFirst("sub");
+                string idString = idClaim.Value;
+                id = int.Parse(idString);
+            }
+            return id;
         }
 
         [HttpPost]
@@ -48,7 +61,7 @@ namespace CalibrationApp.Controllers
         [Route("{calibrationId}")]
         public ActionResult<Calibration> GetSpecificCalibrations(int calibrationId)
         {
-            int userId = 2;
+            int userId = GetCurrentUserID();
             Calibration calibration = dao.GetCalibration(calibrationId, userId);
             if (calibration == null)
             {
@@ -68,7 +81,7 @@ namespace CalibrationApp.Controllers
         [Route("All")]
         public ActionResult<List<Calibration>> GetAllCalibrations()
         {
-            int userId = 2;
+            int userId = GetCurrentUserID();
             List<Calibration> calibrations = dao.GetAllCalibrations(userId);
             if (calibrations == null || calibrations.Count == 0)
             {
@@ -90,6 +103,14 @@ namespace CalibrationApp.Controllers
         {
             dao.SwitchCalibrationIsOpen(calibrationId);
             return Ok("Switched!");
+        }
+
+        [HttpGet("Scores")]
+        public ActionResult GetMyScores()
+        {
+            int userId = GetCurrentUserID();
+            //int userId = 2;
+            return Ok(dao.GetMyScores(userId));
         }
     }
 }

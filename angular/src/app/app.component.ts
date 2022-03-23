@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  isLoggedIn: boolean = false;
   constructor(public authService:AuthService,  private router:Router) {
 
   }
@@ -19,10 +18,10 @@ export class AppComponent {
   }
 
   leaderCheck() {
-    return (this.authService.currentUser.role==="Leader" || this.authService.currentUser.role==="Admin")
+    return (this.authService.currentUser.user.role==="Leader" || this.authService.currentUser.user.role==="Admin")
   }
 
   adminCheck() {
-    return (this.authService.currentUser.role==="Admin")
+    return (this.authService.currentUser.user.role==="Admin")
   }
 }

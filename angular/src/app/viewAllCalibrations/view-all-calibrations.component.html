@@ -18,7 +18,8 @@
             <td *ngIf="!calibration.isActive">{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
             <td *ngIf="!calibration.isActive"><button (click)="PushToGroup(calibration.id)">Click to view</button></td>
             <td *ngIf="calibration.isActive" colspan="2">Awaiting Group Results</td>
-            <td>{{calibration.indivPointsEarned}}/{{calibration.indivPointsPossible}} ({{ConvertToPercent(calibration.indivPointsEarned,calibration.indivPointsPossible) | number:'1.0-0'}}%)</td>
+            <td *ngIf="!!FindPossible(calibration.id)">{{FindEarned(calibration.id)}}/{{FindPossible(calibration.id)}} ({{ConvertToPercent(FindEarned(calibration.id),FindPossible(calibration.id)) | number:'1.0-0'}}%)</td>
+            <td *ngIf="!FindPossible(calibration.id)">Awaiting participation</td>
             <td><button (click)="PushToOne(calibration.id)">Click to {{calibration.isActive===true ? 'Edit' : 'View'}}</button></td>
         </tr>
     </table>

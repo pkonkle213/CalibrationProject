@@ -44,7 +44,7 @@ namespace CalibrationApp.Controllers
         /// <summary>
         /// A test endpoint requiring authorization and the role of 'admin' to ensure that authorization is working.
         /// </summary>
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("confirmadmin")]
         public string ConfirmAdmin()
         {

@@ -4,7 +4,7 @@
     <nav id="top-nav">
       <ul>
         <li *ngIf="!authService.isAuthenticated()"><a [routerLink]="['login']">Login</a></li>
-        <li *ngIf="authService.isAuthenticated()">Welcome {{authService.currentUser.firstName}}!</li>
+        <li *ngIf="authService.isAuthenticated()">Welcome {{authService.currentUser.user.firstName}}!</li>
         <li *ngIf="authService.isAuthenticated()"><button (click)="logout()">Logout</button></li>
       </ul>
     </nav>

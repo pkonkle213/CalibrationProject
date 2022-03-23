@@ -78,6 +78,36 @@ namespace CalibrationApp.DAO
             return teams;
         }
 
+        private int GetRoleId(string roleString)
+        {
+            List<Role> roles = GetRoles();
+
+            foreach (Role role in roles)
+            {
+                if (role.Name == roleString)
+                {
+                    return role.Id;
+                }
+            }
+
+            return -1;
+        }
+
+        private int GetTeamId(string teamString)
+        {
+            List<Team> teams = GetTeams();
+
+            foreach (Team team in teams)
+            {
+                if (team.Name == teamString)
+                {
+                    return team.Id;
+                }
+            }
+
+            return -1;
+        }
+
         private List<Role> GetRoles()
         {
             List<Role> roles = new List<Role>();
@@ -123,8 +153,8 @@ namespace CalibrationApp.DAO
                 cmd.Parameters.AddWithValue("@salt", hash.Salt);
                 cmd.Parameters.AddWithValue("@first_name", firstName);
                 cmd.Parameters.AddWithValue("@last_name", lastName);
-                cmd.Parameters.AddWithValue("@role_id", role_id);
-                cmd.Parameters.AddWithValue("@team_id", team_id);
+                cmd.Parameters.AddWithValue("@role_id", GetRoleId(role));
+                cmd.Parameters.AddWithValue("@team_id", GetTeamId(team));
                 cmd.ExecuteNonQuery();
             }
 

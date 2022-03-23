@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import { ICalibration } from "src/interfaces/calibration";
+import { CalibrationService } from "src/services/calibration.service";
 
 @Component({
     templateUrl: 'create-calibration.component.html',
@@ -7,6 +9,7 @@ import { ICalibration } from "src/interfaces/calibration";
 })
 
 export class CreateCalibration {
+    options:any;
     calibration:ICalibration = {
         id:0,
         repFirstName: "",
@@ -17,7 +20,21 @@ export class CreateCalibration {
         calibrationDate: new Date('8/20/1987'),
         contactId: "",
         isActive: true,
-        indivPointsEarned: 0,
-        indivPointsPossible: 0,
+    }
+
+    constructor(private _calibrationService:CalibrationService, private router:Router) {
+
+    }
+
+    ngOnInit() {
+        this._calibrationService.getAllContactTypes().subscribe(data => {
+            this.options = data;
+        })
+    }
+
+    CreateCalibration() {
+        this._calibrationService.createCalibration(this.calibration).subscribe(() => {
+            this.router.navigate(['/view/']);
+        });
     }
 }

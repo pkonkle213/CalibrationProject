@@ -7,15 +7,27 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AnswerController : ControllerBase
     {
         private readonly IAnswerDAO dao;
-        private int userId = 2; //Only needed until I can use a logged in user
 
         public AnswerController(IAnswerDAO answerDAO)
         {
             this.dao = answerDAO;
+        }
+
+        private int GetCurrentUserID()
+        {
+            var user = this.User;
+            int id = 0;
+            if (user.Identity.Name != null)
+            {
+                var idClaim = user.FindFirst("sub");
+                string idString = idClaim.Value;
+                id = int.Parse(idString);
+            }
+            return id;
         }
 
         /// <summary>
@@ -26,7 +38,7 @@ namespace CalibrationApp.Controllers
         [HttpPost("Answer")]
         public ActionResult SubmitAnswers(List<Answer> answers)
         {
-            //UserId = int.Parse(this.User.FindFirst("sub").Value);
+            int userId = GetCurrentUserID();
             dao.SubmitAnswers(answers, userId);
             return Created("Answers submitted!", answers);
         }
@@ -34,6 +46,7 @@ namespace CalibrationApp.Controllers
         [HttpPost("Score")]
         public ActionResult SubmitScore(Score score)
         {
+            int userId = GetCurrentUserID();
             dao.SubmitScore(score, userId);
             return Ok();
         }
@@ -46,6 +59,7 @@ namespace CalibrationApp.Controllers
         [HttpPut("Answer")]
         public ActionResult UpdateAnswers(List<Answer> answers)
         {
+            int userId = GetCurrentUserID();
             dao.DeleteAnswers(answers[0].CalibrationId, userId);
             dao.SubmitAnswers(answers, userId);
             return Ok();
@@ -54,6 +68,7 @@ namespace CalibrationApp.Controllers
         [HttpPut("Score")]
         public ActionResult UpdateScore(Score score)
         {
+            int userId = GetCurrentUserID();
             dao.DeleteScore(score, userId);
             dao.SubmitScore(score, userId);
             return Ok();
@@ -69,7 +84,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("Group/{calibrationId}")]
         public ActionResult GetAnswersForCalibration(int calibrationId)
         {
-            userId = 0;
+            int userId = 0;
             return Ok(dao.GetMyAnswers(calibrationId, userId));
         }
         
@@ -82,7 +97,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("{calibrationId}")]
         public ActionResult GetMyAnswers(int calibrationId)
         {
-            int userId = 2;
+            int userId = GetCurrentUserID();
             return Ok(dao.GetMyAnswers(calibrationId, userId));
         }
     }

@@ -13,10 +13,7 @@
             <td>Channel</td>
             <td>
                 <select [(ngModel)]="calibration.contactChannel">
-                    <option value="option1">option1</option>
-                    <option value="option2">option2</option>
-                    <option value="option3">option3</option>
-                    <option value="option4">option4</option>
+                    <option *ngFor="let option of options" value="{{option.name}}">{{option.name}}</option>
                 </select>
             </td>
         </tr>
@@ -29,5 +26,5 @@
             <td><input [(ngModel)]="calibration.contactId" type="text" id="contactId"></td>
         </tr>
     </table>
-    <button>Submit</button>
+    <button (click)="CreateCalibration()">Submit</button>
 </div>

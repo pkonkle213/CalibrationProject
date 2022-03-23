@@ -2,17 +2,21 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http"
 import { IUser } from "src/interfaces/user";
 import { catchError, of, tap } from "rxjs";
+import { IReturn } from "src/interfaces/returnUser";
 
 @Injectable()
 export class AuthService {
-    currentUser:IUser={
-        userId: 0,
-        role: "",
-        team: "",
-        username: "",
-        firstName: "",
-        lastName: ""
-    };
+    currentUser:IReturn = {
+        user: {
+            userId: 0,
+            role: "",
+            team: "",
+            username: "",
+            firstName: "",
+            lastName: ""
+        },
+        token: "",
+    }
     private url:string = "https://localhost:44329/";
 
     constructor(private http:HttpClient) {
@@ -25,7 +29,7 @@ export class AuthService {
         let sendUser = { username: userName, password: password}
         return this.http.post<any>(login,sendUser,options)
             .pipe(tap(data => {
-                this.currentUser = <IUser>data['user'];
+                this.currentUser = <IReturn>data;
             }))
             .pipe(catchError(err => {
                 return of(false)
@@ -33,18 +37,21 @@ export class AuthService {
     }
 
     isAuthenticated() {
-        return this.currentUser.userId>0;
+        return this.currentUser.user.userId>0;
     }
 
     logOutUser() {
         this.currentUser={
-            userId: 0,
-            role: "",
-            team: "",
-            username: "",
-            firstName: "",
-            lastName: "",
-            answers: [],
+            user: {
+                userId: 0,
+                role: "",
+                team: "",
+                username: "",
+                firstName: "",
+                lastName: "",
+                answers: [],
+            },
+            token: "",
         }; 
     }
 }

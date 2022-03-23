@@ -209,7 +209,7 @@ namespace CalibrationApp.DAO
                             answer.OptionValue = Convert.ToString(reader["option_value"]);
                             answer.QuestionId = Convert.ToInt32(reader["question_id"]);
                             answer.Comment = Convert.ToString(reader["comment"]);
-                            answer.PointsEarned = Convert.ToInt32(reader["points_earned"]);
+                            answer.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
 
                             answers.Add(answer);
                         }

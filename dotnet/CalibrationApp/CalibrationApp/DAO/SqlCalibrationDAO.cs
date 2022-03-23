@@ -92,11 +92,10 @@ namespace CalibrationApp.DAO
         {
             Calibration calibration = new Calibration();
 
-            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,s.points_earned,s.points_possible " +
+            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen " +
                 "FROM Calibrations c " +
                 "INNER JOIN Contacts con ON con.contact_id = c.contact_type " +
-                "INNER JOIN Scores s ON s.calibration_id = c.calibration_id " +
-                "WHERE (c.calibration_id=@calibrationId AND s.user_id=@userId)";
+                "WHERE c.calibration_id=@calibrationId";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -105,7 +104,6 @@ namespace CalibrationApp.DAO
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@calibrationId",calibrationId);
-                    command.Parameters.AddWithValue("@userId", userId);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -125,11 +123,9 @@ namespace CalibrationApp.DAO
         {
             List<Calibration> calibrations = new List<Calibration>();
 
-            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen,s.points_earned,s.points_possible " +
+            const string sql = "SELECT c.calibration_id,c.tm_first_name,c.tm_last_name,c.group_score_earned,c.group_score_possible,con.type,c.calibration_date,c.contact_id,c.isOpen " +
                 "FROM Calibrations c " +
                 "INNER JOIN Contacts con ON con.contact_id = c.contact_type " +
-                "INNER JOIN Scores s ON s.calibration_id = c.calibration_id " +
-                "WHERE s.user_id = @userId " +
                 "ORDER BY c.calibration_date DESC";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -153,7 +149,42 @@ namespace CalibrationApp.DAO
             return calibrations;
         }
 
-        private static Calibration BuildCalibration(SqlDataReader reader)
+        public List<Score> GetMyScores(int userId)
+        {
+            List<Score> scores = new List<Score>();
+
+            const string sql = "SELECT calibration_id,points_earned,points_possible " +
+                "FROM Scores " +
+                "WHERE user_id=@userId";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Score score = new Score();
+
+                            score.calibrationId = Convert.ToInt32(reader["calibration_id"]);
+                            score.pointsEarned = Convert.ToDecimal(reader["points_earned"]);
+                            score.pointsPossible = Convert.ToDecimal(reader["points_possible"]);
+                            
+                            scores.Add(score);
+                        }
+                    }
+                }
+            }
+
+            return scores;
+        }
+        
+        private Calibration BuildCalibration(SqlDataReader reader)
         {
             Calibration calibration = new Calibration();
 
@@ -166,8 +197,6 @@ namespace CalibrationApp.DAO
             calibration.CalibrationDate = Convert.ToDateTime(reader["calibration_date"]);
             calibration.ContactId = Convert.ToString(reader["contact_id"]);
             calibration.IsActive = Convert.ToBoolean(reader["isOpen"]);
-            calibration.IndivPointsEarned = Convert.ToDecimal(reader["points_earned"]);
-            calibration.IndivPointsPossible = Convert.ToDecimal(reader["points_possible"]);
             return calibration;
         }
 
