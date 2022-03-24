@@ -59,7 +59,7 @@ CREATE TABLE Users (
 SET IDENTITY_INSERT Users ON
 INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',3,5);
 SET IDENTITY_INSERT Users OFF
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES ('adouglas','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1);
 INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',2,1);
 GO
 
@@ -132,14 +132,15 @@ CREATE TABLE Calibrations (
 	group_score_earned decimal(5,2) NOT NULL,
 	group_score_possible decimal(5,2) NOT NULL,
 	form_id int NOT NULL,
+	isActive BIT NOT NULL,
 	isOpen BIT NOT NULL,
 	CONSTRAINT PK_Calibrations PRIMARY KEY (calibration_id),
 	CONSTRAINT FK_Calibrations_Forms FOREIGN KEY (form_id) references Forms (form_id),
 	CONSTRAINT FK_Calibrations_Contacts FOREIGN KEY (contact_type) references Contacts (contact_id),
 )
 
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,0);
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/25',3,'Chat 43211','Ender','Wiggin',85.5,100,1,1);
+INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isActive,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,1,0);
+INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isActive,isOpen) VALUES ('2022/01/25',3,'Chat 43211','Ender','Wiggin',85.5,100,1,1,1);
 
 CREATE TABLE Answers (
 	calibration_id int NOT NULL,

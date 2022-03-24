@@ -38,7 +38,7 @@ namespace CalibrationApp.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Leader")]
         public ActionResult<Calibration> CreateCalibration(Calibration calibration)
         {
             try
@@ -109,7 +109,6 @@ namespace CalibrationApp.Controllers
         public ActionResult GetMyScores()
         {
             int userId = GetCurrentUserID();
-            //int userId = 2;
             return Ok(dao.GetMyScores(userId));
         }
     }

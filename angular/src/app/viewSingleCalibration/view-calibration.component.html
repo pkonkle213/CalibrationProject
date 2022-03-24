@@ -4,7 +4,7 @@
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
     <h4>Current status: {{calibration.isActive ? "Open" : "Closed"}}</h4>
-    <h5>Current Score: {{CalculateScore()}}%</h5>
+    <h5>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}})%</h5>
 
     <table>
         <thead>

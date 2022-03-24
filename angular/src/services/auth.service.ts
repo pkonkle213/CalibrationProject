@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http"
-import { IUser } from "src/interfaces/user";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, of, tap } from "rxjs";
 import { IReturn } from "src/interfaces/returnUser";
 
@@ -18,9 +17,9 @@ export class AuthService {
         token: "",
     }
     private url:string = "https://localhost:44329/";
-
+    
     constructor(private http:HttpClient) {
-        
+    
     }
 
     loginUser(userName:string, password:string) {
@@ -33,7 +32,7 @@ export class AuthService {
             }))
             .pipe(catchError(err => {
                 return of(false)
-            }))
+            }));
     }
 
     isAuthenticated() {

@@ -6,14 +6,16 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { appRoutes } from './routes';
+import { AuthService } from 'src/services/auth.service';
 import { CalibrationService } from 'src/services/calibration.service';
+import { CreateCalibration } from './createCalibration/create-calibration.component';
+import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-calibration.component';
+import { LoginComponent } from './login/login.component';
 import { ViewAllCalibrations } from './viewAllCalibrations/view-all-calibrations.component';
 import { ViewSingleCalibrationComponent } from './viewSingleCalibration/view-calibration.component';
-import { appRoutes } from './routes';
-import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-calibration.component';
-import { AuthService } from 'src/services/auth.service';
-import { LoginComponent } from './login/login.component';
-import { CreateCalibration } from './createCalibration/create-calibration.component';
+import { EditUsersComponent } from './editUsers/edit-users.component';
+import { UserService } from 'src/services/user.service';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { CreateCalibration } from './createCalibration/create-calibration.compon
     GroupCalibrationComponent,
     LoginComponent,
     CreateCalibration,
+    EditUsersComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +37,7 @@ import { CreateCalibration } from './createCalibration/create-calibration.compon
   providers: [
     CalibrationService,
     AuthService,
+    UserService,
   ],
   bootstrap: [
     AppComponent,

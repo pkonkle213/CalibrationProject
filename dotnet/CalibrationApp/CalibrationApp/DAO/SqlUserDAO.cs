@@ -48,7 +48,7 @@ namespace CalibrationApp.DAO
             return returnUser;
         }
 
-        private List<Team> GetTeams()
+        public List<Team> GetTeams()
         {
             List<Team> teams = new List<Team>();
             string sql = "SELECT team_id, team_name " +
@@ -76,6 +76,36 @@ namespace CalibrationApp.DAO
             }
 
             return teams;
+        }
+        
+        public List<Role> GetRoles()
+        {
+            List<Role> roles = new List<Role>();
+            string sql = "SELECT role_id, role_name " +
+                         "FROM Roles";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Role role = new Role();
+
+                            role.Id = Convert.ToInt32(reader["role_id"]);
+                            role.Name = Convert.ToString(reader["role_name"]);
+
+                            roles.Add(role);
+                        }
+                    }
+                }
+            }
+
+            return roles;
         }
 
         private int GetRoleId(string roleString)
@@ -106,36 +136,6 @@ namespace CalibrationApp.DAO
             }
 
             return -1;
-        }
-
-        private List<Role> GetRoles()
-        {
-            List<Role> roles = new List<Role>();
-            string sql = "SELECT role_id, role_name " +
-                         "FROM Roles";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Role role = new Role();
-
-                            role.Id = Convert.ToInt32(reader["role_id"]);
-                            role.Name = Convert.ToString(reader["role_name"]);
-
-                            roles.Add(role);
-                        }
-                    }
-                }
-            }
-
-            return roles;
         }
 
         public User AddUser(string username, string password, string role, string team, string firstName, string lastName)

@@ -1,0 +1,33 @@
+<div>
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td><input type="text" [(ngModel)]="newUser.username"></td>
+        </tr>
+        <tr>
+            <td>First Name:</td>
+            <td><input type="text" [(ngModel)]="newUser.first"></td>
+        </tr>
+        <tr>
+            <td>Last Name:</td>
+            <td><input type="text" [(ngModel)]="newUser.last"></td>
+        </tr>
+        <tr>
+            <td>Role:</td>
+            <td>            
+                <select [(ngModel)]="newUser.role">
+                    <option *ngFor="let role of roles" value="{{role.name}}">{{role.name}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Team:</td>
+            <td>            
+                <select [(ngModel)]="newUser.team">
+                    <option *ngFor="let team of teams" value="{{team.name}}">{{team.name}}</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button (click)="CreateNewUser(newUser)">Submit</button>
+</div>

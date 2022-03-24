@@ -8,6 +8,7 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    
     public class LoginController : ControllerBase
     {
         private readonly ITokenGenerator tokenGenerator;
@@ -19,6 +20,18 @@ namespace CalibrationApp.Controllers
             tokenGenerator = _tokenGenerator;
             passwordHasher = _passwordHasher;
             userDAO = _userDAO;
+        }
+
+        [HttpGet("Teams")]
+        public ActionResult<List<Team>> GetAllTeams()
+        {
+            return Ok(userDAO.GetTeams());
+        }
+
+        [HttpGet("Roles")]
+        public ActionResult<List<Role>> GetAllRoles()
+        {
+            return Ok(userDAO.GetRoles());
         }
 
         /// <summary>

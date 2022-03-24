@@ -14,8 +14,7 @@
       <li *ngIf="authService.isAuthenticated()"><a [routerLink]="['/view']">View Calibrations</a></li>
       <li *ngIf="authService.isAuthenticated()">View Your Calibration Stats</li>
       <li *ngIf="leaderCheck()"><a [routerLink]="['/create']">Create a New Calibration</a></li>
-      <li *ngIf="leaderCheck()">Submit a Group Score</li>
-      <li *ngIf="adminCheck()">Edit Users</li>
+      <li *ngIf="adminCheck()"><a [routerLink]="['/edit']">Edit Users</a></li>
       <li *ngIf="adminCheck()">View All Stats</li>
     </ul>
   </nav>
