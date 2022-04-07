@@ -14,8 +14,8 @@ import { GroupCalibrationComponent } from './viewGroupCalibration/view-group-cal
 import { LoginComponent } from './login/login.component';
 import { ViewAllCalibrations } from './viewAllCalibrations/view-all-calibrations.component';
 import { ViewSingleCalibrationComponent } from './viewSingleCalibration/view-calibration.component';
-import { EditUsersComponent } from './editUsers/edit-users.component';
 import { UserService } from 'src/services/user.service';
+import { CreateUserComponent } from './createUser/create-user.component'
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { UserService } from 'src/services/user.service';
     GroupCalibrationComponent,
     LoginComponent,
     CreateCalibration,
-    EditUsersComponent,
+    CreateUserComponent,
   ],
   imports: [
     BrowserModule,

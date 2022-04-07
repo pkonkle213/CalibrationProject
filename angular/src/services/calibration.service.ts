@@ -87,4 +87,9 @@ export class CalibrationService {
         let groupAnswer = this.url + "Answer/Group/" + calibrationId;
         return this.http.get(groupAnswer,this.httpOptions);
     }
+
+    switchIsOpen(calibrationId:number) {
+        let switchOpen = this.url + "Calibration/" + calibrationId;
+        return this.http.put(switchOpen,this.httpOptions);
+    }
 }

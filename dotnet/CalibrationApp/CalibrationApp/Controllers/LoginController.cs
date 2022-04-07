@@ -8,7 +8,6 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    
     public class LoginController : ControllerBase
     {
         private readonly ITokenGenerator tokenGenerator;
@@ -21,7 +20,7 @@ namespace CalibrationApp.Controllers
             passwordHasher = _passwordHasher;
             userDAO = _userDAO;
         }
-
+        
         [HttpGet("Teams")]
         public ActionResult<List<Team>> GetAllTeams()
         {
@@ -38,7 +37,7 @@ namespace CalibrationApp.Controllers
         /// A test endpoint to ensure that the server is running.
         /// </summary>
         [AllowAnonymous]
-        [HttpGet("ready")]
+        [HttpGet("Ready")]
         public string Ready()
         {
             return "Server Ready";
@@ -48,7 +47,7 @@ namespace CalibrationApp.Controllers
         /// A test endpoint requiring authorization to ensure that authorization is working.
         /// </summary>
         [Authorize]
-        [HttpGet("confirm")]
+        [HttpGet("Confirm")]
         public string Confirm()
         {
             return "Token confirmed";
@@ -69,6 +68,7 @@ namespace CalibrationApp.Controllers
         /// </summary>
         /// <param name="userParam">The login request</param>
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Authenticate(LoginUser userParam)
         {
             // Default to bad username/password message

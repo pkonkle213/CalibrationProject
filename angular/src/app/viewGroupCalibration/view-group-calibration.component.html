@@ -3,7 +3,8 @@
     <h3>Channel: {{calibration.contactChannel}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
-    <h5>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}})%</h5>
+    <h4 *ngIf="!!Possible()">Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}})%</h4>
+    <h5>Current Status: {{calibration.isOpen}}</h5>
 
     <table>
         <thead>
@@ -11,9 +12,9 @@
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-                <th>{{SumSame() / (participants.length * questions.length) * 100}}%</th>
-                <th>{{SumDifferent() / (participants.length * questions.length) * 100}}%</th>
-                <th *ngFor="let person of participants">{{Calibrated(person)}}%</th>
+                <th>{{SumSame() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</th>
+                <th>{{SumDifferent() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</th>
+                <th *ngFor="let person of participants">{{Calibrated(person) | number:'1.0-0'}}%</th>
             </tr>
             <tr>
                 <th>Question</th>
@@ -28,7 +29,9 @@
             <tr *ngFor="let question of questions; index as i">
                 <td>{{question.questionText}}</td>
                 <td><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
-                <td>{{answers[i].optionValue}}</td>
+                
+                <td>{{groupSubmit[i].optionValue}}</td>
+
                 <td>{{Same(i)}}</td>
                 <td>{{Different(i)}}</td>
                 <td *ngFor="let person of participants">{{person.answers[i].optionValue}}</td>

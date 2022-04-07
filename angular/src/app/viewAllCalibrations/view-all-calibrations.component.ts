@@ -1,8 +1,7 @@
-import { HttpEventType } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICalibration } from 'src/interfaces/calibration';
-import { IScore } from 'src/interfaces/score';
+import { AuthService } from 'src/services/auth.service';
 import { CalibrationService } from 'src/services/calibration.service';
 
 @Component ({
@@ -15,7 +14,7 @@ export class ViewAllCalibrations {
     calibration:any;
     scores:any;
     
-    constructor(private _calibrationService: CalibrationService, private router:Router){
+    constructor(private _calibrationService: CalibrationService, private router:Router, private auth:AuthService){
     }
     
     ngOnInit() {
@@ -25,6 +24,46 @@ export class ViewAllCalibrations {
         this._calibrationService.getMyScores().subscribe(data => {
             this.scores = data;
         })
+    }
+
+    Wait(calibration:ICalibration) {
+        if (!this.LeaderCheck() && !calibration.groupScorePossible){
+            return true;
+        }
+        
+        return false;
+    }
+
+    Start(calibration:ICalibration) {
+        if (this.LeaderCheck() && !calibration.groupScorePossible) {
+            return true;
+        }
+
+        return false;
+    }
+
+    ViewEdit(calibration:ICalibration) {
+        if(!!calibration.groupScorePossible) {
+            return true;
+        }
+
+        return false;
+    }
+
+    LeaderCheck() {
+        if(this.auth.currentUser.user.role==="Leader" || this.auth.currentUser.user.role==="Admin"){
+            return true;
+        }
+
+        return false;
+    }
+
+    AdminCheck() {
+        if(this.auth.currentUser.user.role==="Admin"){
+            return true;
+        }
+
+        return false;
     }
 
     ConvertToPercent(earned:number, possible: number) {
@@ -59,6 +98,7 @@ export class ViewAllCalibrations {
     }
 
     PushToGroup(id:number) {
+        //this._calibrationService.switchIsOpen(id).subscribe(data => {});
         this.router.navigate(['/group/',id]);
     }
 }

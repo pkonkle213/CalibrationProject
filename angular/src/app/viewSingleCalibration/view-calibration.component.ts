@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from "@angular/router";
 import { CalibrationService } from "src/services/calibration.service";
 import { IAnswer } from "src/interfaces/answer";
-import { retry } from "rxjs";
 import { IScore } from "src/interfaces/score";
 
 @Component ({
@@ -22,7 +21,7 @@ export class ViewSingleCalibrationComponent {
     score:IScore = {
         calibrationId: 0,
         pointsEarned: 0,
-        pointsPossible: 0
+        pointsPossible: 0,
     };
 
     constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router) {
@@ -36,27 +35,27 @@ export class ViewSingleCalibrationComponent {
 
         this._calibrationService.getQuestions(this._route.snapshot.params['id']).subscribe(data => {
             this.questions = data;
-        });
 
-        this._calibrationService.getMyAnswers(this._route.snapshot.params['id']).subscribe(data => {
-            this.answers = data;
-            
-            if (this.answers.length===0) {
-                for(let i=0;i<this.questions.length;i++)
-                {
-                    this.answerSubmit.push({
-                        calibrationId: this._route.snapshot.params['id'],
-                        questionId: this.questions[i].id,
-                        optionValue: this.questions[i].options[0].optionValue,
-                        comment: '',
-                        pointsEarned: this.questions[i].options[0].pointsEarned,
-                    });
+            this._calibrationService.getMyAnswers(this._route.snapshot.params['id']).subscribe(data => {
+                this.answers = data;
+
+                if (this.answers===null || this.answers.length===0) {
+                    for(let i=0;i<this.questions.length;i++)
+                    {
+                        this.answerSubmit.push({
+                            calibrationId: this._route.snapshot.params['id'],
+                            questionId: this.questions[i].id,
+                            optionValue: this.questions[i].options[0].optionValue,
+                            comment: '',
+                            pointsEarned: this.questions[i].options[0].pointsEarned,
+                        });
+                    }
                 }
-            }
-            else {
-                this.answerSubmit=this.answers;
-                this.updating=true;
-            }
+                else {
+                    this.answerSubmit = this.answers;
+                    this.updating=true;
+                }
+            });
         });
     }
 
@@ -91,7 +90,6 @@ export class ViewSingleCalibrationComponent {
         this.score.calibrationId = this._route.snapshot.params['id'];
         this.score.pointsEarned = this.Earned();
         this.score.pointsPossible = this.Possible();
-        console.log(this.score);
         return this.score;
     }
 

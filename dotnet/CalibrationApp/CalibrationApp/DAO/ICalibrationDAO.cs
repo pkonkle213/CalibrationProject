@@ -15,6 +15,8 @@ namespace CalibrationApp.DAO
 
         void SwitchCalibrationIsOpen(int calibrationId);
 
+        void SwitchCalibrationIsActive(int calibrationId);
+
         List<Score> GetMyScores(int userId);
     }
 }

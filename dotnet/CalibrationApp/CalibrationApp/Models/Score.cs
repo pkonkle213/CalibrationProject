@@ -2,8 +2,8 @@
 {
     public class Score
     {
-        public int calibrationId { get; set; }
-        public decimal pointsEarned { get; set; }
-        public decimal pointsPossible { get; set; }
+        public int CalibrationId { get; set; }
+        public decimal PointsEarned { get; set; }
+        public decimal PointsPossible { get; set; }
     }
 }

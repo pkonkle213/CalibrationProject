@@ -132,15 +132,14 @@ CREATE TABLE Calibrations (
 	group_score_earned decimal(5,2) NOT NULL,
 	group_score_possible decimal(5,2) NOT NULL,
 	form_id int NOT NULL,
-	isActive BIT NOT NULL,
 	isOpen BIT NOT NULL,
 	CONSTRAINT PK_Calibrations PRIMARY KEY (calibration_id),
 	CONSTRAINT FK_Calibrations_Forms FOREIGN KEY (form_id) references Forms (form_id),
 	CONSTRAINT FK_Calibrations_Contacts FOREIGN KEY (contact_type) references Contacts (contact_id),
 )
 
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isActive,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,1,0);
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isActive,isOpen) VALUES ('2022/01/25',3,'Chat 43211','Ender','Wiggin',85.5,100,1,1,1);
+INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,0);
+INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/25',3,'Chat 43211','Ender','Wiggin',0,0,1,1);
 
 CREATE TABLE Answers (
 	calibration_id int NOT NULL,
@@ -183,7 +182,7 @@ CREATE TABLE Scores(
 	CONSTRAINT FK_Scores_Calibrations FOREIGN KEY (calibration_id) references Calibrations (calibration_id),
 )
 
-INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,70,85);
+INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,30,50);
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
 
 CREATE TABLE Questions_Options(

@@ -3,12 +3,12 @@ import { ISendUser } from 'src/interfaces/sendUser'
 import { UserService } from 'src/services/user.service';
 
 @Component({
-    selector: 'edit-users',
-    templateUrl: 'edit-users.component.html',
-    styleUrls: ['edit-users.component.css'],
+    selector: 'create-user',
+    templateUrl: 'create-user.component.html',
+    styleUrls: ['create-user.component.css'],
 })
 
-export class EditUsersComponent {
+export class CreateUserComponent {
     newUser:ISendUser = {
         username: "",
         password: "password",
@@ -33,7 +33,6 @@ export class EditUsersComponent {
 
     CreateNewUser(user:ISendUser) {
         this.userService.createUser(user).subscribe(() => {
-            console.log('Created!');
             this.newUser = {
                 username: "",
                 password: "password",

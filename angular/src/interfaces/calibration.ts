@@ -7,5 +7,5 @@ export interface ICalibration {
     contactChannel: string,
     calibrationDate: Date,
     contactId: string,
-    isActive: boolean,
+    isOpen: boolean,
 }

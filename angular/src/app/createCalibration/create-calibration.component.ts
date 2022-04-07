@@ -19,7 +19,7 @@ export class CreateCalibration {
         contactChannel: "",
         calibrationDate: new Date('8/20/1987'),
         contactId: "",
-        isActive: true,
+        isOpen: true,
     }
 
     constructor(private _calibrationService:CalibrationService, private router:Router) {

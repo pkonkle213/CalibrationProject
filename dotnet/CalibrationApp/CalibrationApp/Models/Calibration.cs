@@ -10,7 +10,7 @@
         public string ContactChannel { get; set; }
         public DateTime CalibrationDate { get; set; }
         public string ContactId { get; set; }
-        public Boolean IsActive { get; set; }
+        public Boolean IsOpen { get; set; }
         public decimal IndivPointsEarned { get; set; }
         public decimal IndivPointsPossible { get; set; }
     }

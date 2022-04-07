@@ -39,8 +39,15 @@ namespace CalibrationApp.Controllers
         public ActionResult SubmitAnswers(List<Answer> answers)
         {
             int userId = GetCurrentUserID();
-            dao.SubmitAnswers(answers, userId);
-            return Created("Answers submitted!", answers);
+            int count = dao.SubmitAnswers(answers, userId);
+            if (count==1)
+            {
+                return Created("Answers submitted!", answers);
+            }
+            else
+            {
+                return BadRequest("Something went wrong");
+            }
         }
 
         [HttpPost("Score")]
@@ -60,8 +67,7 @@ namespace CalibrationApp.Controllers
         public ActionResult UpdateAnswers(List<Answer> answers)
         {
             int userId = GetCurrentUserID();
-            dao.DeleteAnswers(answers[0].CalibrationId, userId);
-            dao.SubmitAnswers(answers, userId);
+            dao.UpdateAnswers(answers, userId);
             return Ok();
         }
 
@@ -69,8 +75,7 @@ namespace CalibrationApp.Controllers
         public ActionResult UpdateScore(Score score)
         {
             int userId = GetCurrentUserID();
-            dao.DeleteScore(score, userId);
-            dao.SubmitScore(score, userId);
+            dao.UpdateScore(score, userId);
             return Ok();
         }
 

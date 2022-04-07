@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from "@angular/router";
 import { CalibrationService } from 'src/services/calibration.service';
 import { IAnswer } from 'src/interfaces/answer';
+import { IScore } from 'src/interfaces/score';
+import { AuthService } from 'src/services/auth.service';
 
 @Component({
     selector: 'view-group-calibration',
@@ -16,10 +18,15 @@ export class GroupCalibrationComponent {
     questions:any;
     answers:any;
     groupSubmit:IAnswer[] = [];
-    updatingAnswer:boolean = false;
+    updating:boolean = false;
     participants:any;
+    score:IScore = {
+        calibrationId: 0,
+        pointsEarned: 0,
+        pointsPossible: 0,
+    }
 
-    constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router) {
+    constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router, private auth:AuthService) {
         this.calibrationId=this._route.snapshot.params['id'];
     }
 
@@ -28,23 +35,47 @@ export class GroupCalibrationComponent {
             this.calibration = data;
         });
 
-        this._calibrationService.getQuestions(this.calibrationId).subscribe(data => {
-            this.questions = data;
-        });
-
         this._calibrationService.getParticipants(this.calibrationId).subscribe(data => {
             this.participants = data;
         });
+        
+        this._calibrationService.getQuestions(this.calibrationId).subscribe(data => {
+            this.questions = data;
+            
+            this._calibrationService.getGroupAnswers(this.calibrationId).subscribe(data => {
+                this.answers = data;
 
-        this._calibrationService.getGroupAnswers(this.calibrationId).subscribe(data => {
-            this.answers = data;
-        })
+                if (this.answers===null || this.answers.length===0) {
+                    for(let i=0;i<this.questions.length;i++) {
+                        this.groupSubmit.push({
+                            calibrationId: this._route.snapshot.params['id'],
+                            questionId: this.questions[i].id,
+                            optionValue: this.questions[i].options[0].optionValue,
+                            comment: '',
+                            pointsEarned: this.questions[i].options[0].pointsEarned,
+                        })
+                    }
+                }
+                else {
+                    this.groupSubmit = this.answers;
+                    this.updating = true;
+                }
+            });
+        });
+    }
+
+    AdminCheck() {
+        return this.auth.currentUser.user.role==="Admin";
+    }
+
+    LeaderCheck() {
+        return (this.auth.currentUser.user.role==="Leader" || this.auth.currentUser.user.role==="Admin");
     }
 
     Same(index:number) {
         let count = 0;
         for(let i=0;i<this.participants.length;i++) {
-            if(this.participants[i].answers[index].optionValue===this.answers[index].optionValue) {
+            if(this.participants[i].answers[index].optionValue===this.groupSubmit[index].optionValue) {
                 count++;
             }
         }
@@ -54,7 +85,7 @@ export class GroupCalibrationComponent {
     Different(index:number) {
         let count = 0;
         for(let i=0;i<this.participants.length;i++) {
-            if(this.participants[i].answers[index].optionValue!==this.answers[index].optionValue) {
+            if(this.participants[i].answers[index].optionValue!==this.groupSubmit[index].optionValue) {
                 count++;
             }
         }
@@ -82,7 +113,7 @@ export class GroupCalibrationComponent {
     Calibrated(person:any) {
         let sum = 0;
         for(let i=0;i<this.questions.length;i++) {
-            if(person.answers[i].optionValue===this.answers[i].optionValue) {
+            if(person.answers[i].optionValue===this.groupSubmit[i].optionValue) {
                 sum++;
             }
         }
@@ -104,7 +135,7 @@ export class GroupCalibrationComponent {
     Earned() {
         let earned = 0;
         for(let i=0;i<this.questions.length;i++) {
-            earned += this.answers[i].pointsEarned * this.questions[i].pointsPossible;
+            earned += this.groupSubmit[i].pointsEarned * this.questions[i].pointsPossible;
         }
 
         return earned;
@@ -123,7 +154,32 @@ export class GroupCalibrationComponent {
         return this.Earned() / this.Possible() * 100;
     }
 
+    BuildScore():IScore {
+        this.score.calibrationId = this._route.snapshot.params['id'];
+        this.score.pointsEarned = this.Earned();
+        this.score.pointsPossible = this.Possible();
+        console.log(this.score);
+        return this.score;
+    }
+    
     SubmitGroupAnswer() {
+        console.log(this.BuildScore());
+        if(this.updating) {
+            this._calibrationService.updateMyAnswer(this.groupSubmit).subscribe(() => {});
+            this._calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
+                this._router.navigate(['/view']);
+            });
+        }
+        else {
+            this._calibrationService.submitMyAnswer(this.groupSubmit).subscribe(() => {});
+            this._calibrationService.submitMyScore(this.BuildScore()).subscribe(() => {
+                this._router.navigate(['/view']);
+            });
+        }
+    }
 
+    onChange(event:any,i:number) {
+        let q = this.questions[i].options.find((x: { optionValue: any; }) => x.optionValue===event.target.value)
+        this.groupSubmit[i].pointsEarned = q.pointsEarned;
     }
 }

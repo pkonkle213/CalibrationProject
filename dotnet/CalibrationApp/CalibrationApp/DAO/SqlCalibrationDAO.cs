@@ -171,9 +171,9 @@ namespace CalibrationApp.DAO
                         {
                             Score score = new Score();
 
-                            score.calibrationId = Convert.ToInt32(reader["calibration_id"]);
-                            score.pointsEarned = Convert.ToDecimal(reader["points_earned"]);
-                            score.pointsPossible = Convert.ToDecimal(reader["points_possible"]);
+                            score.CalibrationId = Convert.ToInt32(reader["calibration_id"]);
+                            score.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
+                            score.PointsPossible = Convert.ToDecimal(reader["points_possible"]);
                             
                             scores.Add(score);
                         }
@@ -196,11 +196,29 @@ namespace CalibrationApp.DAO
             calibration.ContactChannel = Convert.ToString(reader["type"]);
             calibration.CalibrationDate = Convert.ToDateTime(reader["calibration_date"]);
             calibration.ContactId = Convert.ToString(reader["contact_id"]);
-            calibration.IsActive = Convert.ToBoolean(reader["isOpen"]);
+            calibration.IsOpen = Convert.ToBoolean(reader["isOpen"]);
             return calibration;
         }
 
         public void SwitchCalibrationIsOpen(int calibrationId)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "UPDATE Calibrations " +
+                    "SET isOpen = 1 - isOpen " +
+                    "WHERE calibration_id = @calibrationId;";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
+                    command.ExecuteScalar();
+                }
+            }
+        }
+
+        public void SwitchCalibrationIsActive(int calibrationId)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {

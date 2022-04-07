@@ -3,8 +3,8 @@
     <h3>Channel: {{calibration.contactChannel}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
-    <h4>Current status: {{calibration.isActive ? "Open" : "Closed"}}</h4>
-    <h5>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}})%</h5>
+    <h4>Current status: {{calibration.isOpen ? "Open" : "Closed"}}</h4>
+    <h5>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}}%)</h5>
 
     <table>
         <thead>
@@ -17,19 +17,19 @@
         <tbody>
             <tr *ngFor="let question of questions; index as i">
                 <td>{{question.questionText}}</td>
-                <td *ngIf="calibration.isActive">
+                <td *ngIf="calibration.isOpen">
                     <select [(ngModel)]="answerSubmit[i].optionValue" (change)="onChange($event,i)">
                         <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
                     </select>
                 </td>
-                <td *ngIf="calibration.isActive">
+                <td *ngIf="calibration.isOpen">
                     <input [(ngModel)]="answerSubmit[i].comment" placeholder="Why this score was entered"/>
                 </td>
-                <td *ngIf="!calibration.isActive">{{answers[i].optionValue}}</td>
-                <td *ngIf="!calibration.isActive">{{answers[i].comment}}</td>
+                <td *ngIf="!calibration.isOpen">{{answerSubmit[i].optionValue}}</td>
+                <td *ngIf="!calibration.isOpen">{{answerSubmit[i].comment}}</td>
             </tr>
         </tbody>
     </table>
     
-    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isActive">Submit Your Answers</button>
+    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isOpen">Submit Your Answers</button>
 </div>
