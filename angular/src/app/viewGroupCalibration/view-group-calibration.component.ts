@@ -64,6 +64,10 @@ export class GroupCalibrationComponent {
         });
     }
 
+    CanSubmitGroupScore() {
+        return (this.auth.currentUser.user.role==="Admin" || (this.auth.currentUser.user.role==="Leader" && !this.updating));
+    }
+
     AdminCheck() {
         return this.auth.currentUser.user.role==="Admin";
     }
@@ -80,6 +84,10 @@ export class GroupCalibrationComponent {
             }
         }
         return count;
+    }
+
+    Cancel() {
+        this._router.navigate(['/view']);
     }
 
     Different(index:number) {
@@ -163,16 +171,15 @@ export class GroupCalibrationComponent {
     }
     
     SubmitGroupAnswer() {
-        console.log(this.BuildScore());
         if(this.updating) {
-            this._calibrationService.updateMyAnswer(this.groupSubmit).subscribe(() => {});
-            this._calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
+            this._calibrationService.updateGroupAnswer(this.groupSubmit).subscribe(() => {});
+            this._calibrationService.updateGroupScore(this.BuildScore()).subscribe(() => {
                 this._router.navigate(['/view']);
             });
         }
         else {
-            this._calibrationService.submitMyAnswer(this.groupSubmit).subscribe(() => {});
-            this._calibrationService.submitMyScore(this.BuildScore()).subscribe(() => {
+            this._calibrationService.submitGroupAnswer(this.groupSubmit).subscribe(() => {});
+            this._calibrationService.updateGroupScore(this.BuildScore()).subscribe(() => {
                 this._router.navigate(['/view']);
             });
         }

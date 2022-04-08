@@ -8,13 +8,13 @@ namespace CalibrationApp.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class AnswerController : ControllerBase
+    public class IndividualController : ControllerBase
     {
-        private readonly IAnswerDAO dao;
+        private readonly IIndividualDAO dao;
 
-        public AnswerController(IAnswerDAO answerDAO)
+        public IndividualController(IIndividualDAO indivDAO)
         {
-            this.dao = answerDAO;
+            this.dao = indivDAO;
         }
 
         private int GetCurrentUserID()
@@ -40,7 +40,7 @@ namespace CalibrationApp.Controllers
         {
             int userId = GetCurrentUserID();
             int count = dao.SubmitAnswers(answers, userId);
-            if (count==1)
+            if (count == 1)
             {
                 return Created("Answers submitted!", answers);
             }
@@ -85,14 +85,6 @@ namespace CalibrationApp.Controllers
         {
             return Ok(dao.GetParticipatingUsers(calibrationId));
         }
-
-        [HttpGet("Group/{calibrationId}")]
-        public ActionResult GetAnswersForCalibration(int calibrationId)
-        {
-            int userId = 0;
-            return Ok(dao.GetMyAnswers(calibrationId, userId));
-        }
-        
 
         /// <summary>
         /// Gets the set of answers for the logged in user

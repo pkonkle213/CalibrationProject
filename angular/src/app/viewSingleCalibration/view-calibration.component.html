@@ -31,5 +31,8 @@
         </tbody>
     </table>
     
-    <button type="submit" (click)="SubmitAnswer()" *ngIf="calibration.isOpen">Submit Your Answers</button>
+    <div *ngIf="calibration.isOpen">
+        <button type="submit" (click)="SubmitAnswer()">Submit Your Answers</button>
+        <button (click)="Cancel()">Cancel</button>
+    </div>
 </div>

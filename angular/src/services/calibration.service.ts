@@ -54,37 +54,52 @@ export class CalibrationService {
     }
 
     getMyAnswers(calibrationId:number) {
-        let answers = this.url + "Answer/" + calibrationId;
+        let answers = this.url + "Individual/" + calibrationId;
         return this.http.get<IAnswer[]>(answers,this.httpOptions);
     }
 
     submitMyAnswer(answers:IAnswer[]) {
-        let submit = this.url + "Answer/Answer";
+        let submit = this.url + "Individual/Answer";
         return this.http.post(submit,answers,this.httpOptions);
     }
 
     submitMyScore(score:IScore) {
-        let submit = this.url + "Answer/Score";
+        let submit = this.url + "Individual/Score";
         return this.http.post(submit,score,this.httpOptions);
     }
 
     updateMyAnswer(answers:IAnswer[]) {
-        let submit = this.url + "Answer/Answer";
+        let submit = this.url + "Individual/Answer";
         return this.http.put(submit,answers,this.httpOptions)
     }
 
     updateMyScore(score:IScore) {
-        let submit = this.url + "Answer/Score";
+        let submit = this.url + "Individual/Score";
+        return this.http.put(submit,score,this.httpOptions);
+    }
+
+    submitGroupAnswer(answers:IAnswer[]) {
+        let submit = this.url + "Group/Answer";
+        return this.http.post(submit,answers,this.httpOptions);
+    }
+
+    updateGroupAnswer(answers:IAnswer[]) {
+        let submit = this.url + "Group/Answer";
+        return this.http.put(submit,answers,this.httpOptions)
+    }
+
+    updateGroupScore(score:IScore) {
+        let submit = this.url + "Group/Score";
         return this.http.put(submit,score,this.httpOptions);
     }
 
     getParticipants(calibrationId:number) {
-        let participants = this.url + "Answer/Participants/" + calibrationId;
+        let participants = this.url + "Individual/Participants/" + calibrationId;
         return this.http.get(participants,this.httpOptions);
     }
 
     getGroupAnswers(calibrationId:number) {
-        let groupAnswer = this.url + "Answer/Group/" + calibrationId;
+        let groupAnswer = this.url + "Group/" + calibrationId;
         return this.http.get(groupAnswer,this.httpOptions);
     }
 

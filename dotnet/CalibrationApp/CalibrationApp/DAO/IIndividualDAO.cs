@@ -2,7 +2,7 @@
 
 namespace CalibrationApp.DAO
 {
-    public interface IAnswerDAO
+    public interface IIndividualDAO
     {
         List<User> GetParticipatingUsers(int calibrationid);
         List<Answer> GetMyAnswers(int calibrationId, int userId);

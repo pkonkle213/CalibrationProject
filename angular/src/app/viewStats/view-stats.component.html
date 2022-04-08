@@ -1,0 +1,16 @@
+<p>Lifetime Calibrated: {{TotalCalibrated()}}%</p>
+
+<table>
+    <thead>
+        <th>Question ID</th>
+        <th>Question / Category</th>
+        <th>Percent Calibrated</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let question of questions">
+            <td>{{question.id}}</td>
+            <td>{{question.questionText}}</td>
+            <td>{{Calibrated(question.id)}}%</td>
+        </tr>
+    </tbody>
+</table>

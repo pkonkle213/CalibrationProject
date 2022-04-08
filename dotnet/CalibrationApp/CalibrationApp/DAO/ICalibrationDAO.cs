@@ -9,13 +9,9 @@ namespace CalibrationApp.DAO
 
         Calibration GetCalibration(int calibrationId, int userId);
 
-        List<Calibration> GetAllCalibrations(int userId); 
-
-        Calibration GetCalibrationResults(int calibrationId);
+        List<Calibration> GetAllCalibrations(int userId);
 
         void SwitchCalibrationIsOpen(int calibrationId);
-
-        void SwitchCalibrationIsActive(int calibrationId);
 
         List<Score> GetMyScores(int userId);
     }

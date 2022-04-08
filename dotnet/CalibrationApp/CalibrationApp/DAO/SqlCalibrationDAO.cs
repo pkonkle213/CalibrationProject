@@ -134,8 +134,6 @@ namespace CalibrationApp.DAO
 
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    command.Parameters.AddWithValue("@userId", userId);
-
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -216,30 +214,6 @@ namespace CalibrationApp.DAO
                     command.ExecuteScalar();
                 }
             }
-        }
-
-        public void SwitchCalibrationIsActive(int calibrationId)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                const string sql = "UPDATE Calibrations " +
-                    "SET isOpen = 1 - isOpen " +
-                    "WHERE calibration_id = @calibrationId;";
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
-                    command.ExecuteScalar();
-                }
-            }
-        }
-
-        public Calibration GetCalibrationResults(int calibrationId)
-        {
-            Calibration calibration = new Calibration();
-            return calibration;
         }
     }
 }

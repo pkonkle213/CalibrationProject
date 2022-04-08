@@ -3,8 +3,7 @@
     <h3>Channel: {{calibration.contactChannel}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
-    <h4 *ngIf="!!Possible()">Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}})%</h4>
-    <h5>Current Status: {{calibration.isOpen}}</h5>
+    <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}}%)</h4>
 
     <table>
         <thead>
@@ -30,12 +29,23 @@
                 <td>{{question.questionText}}</td>
                 <td><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
                 
-                <td>{{groupSubmit[i].optionValue}}</td>
+                <td *ngIf="CanSubmitGroupScore()">
+                    <select [(ngModel)]="groupSubmit[i].optionValue" (change)="onChange($event,i)">
+                        <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
+                    </select>
+                    <input [(ngModel)]="groupSubmit[i].comment" placeholder="Why this score was entered"/>
+                </td>
 
+                <td *ngIf="!CanSubmitGroupScore()">{{groupSubmit[i].optionValue}}</td>
                 <td>{{Same(i)}}</td>
                 <td>{{Different(i)}}</td>
                 <td *ngFor="let person of participants">{{person.answers[i].optionValue}}</td>
             </tr>
         </tbody>
     </table>
+
+    <div *ngIf="CanSubmitGroupScore()">
+        <button type="submit" (click)="SubmitGroupAnswer()">Submit Group Answers</button>
+        <button (click)="Cancel()">Cancel</button>
+    </div>
 </div>

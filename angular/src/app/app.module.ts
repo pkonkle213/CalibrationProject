@@ -16,6 +16,8 @@ import { ViewAllCalibrations } from './viewAllCalibrations/view-all-calibrations
 import { ViewSingleCalibrationComponent } from './viewSingleCalibration/view-calibration.component';
 import { UserService } from 'src/services/user.service';
 import { CreateUserComponent } from './createUser/create-user.component'
+import { ViewStatsComponent } from './viewStats/view-stats.component';
+import { StatsService } from 'src/services/statistics.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { CreateUserComponent } from './createUser/create-user.component'
     LoginComponent,
     CreateCalibration,
     CreateUserComponent,
+    ViewStatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import { CreateUserComponent } from './createUser/create-user.component'
     CalibrationService,
     AuthService,
     UserService,
+    StatsService,
   ],
   bootstrap: [
     AppComponent,

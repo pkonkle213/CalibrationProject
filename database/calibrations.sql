@@ -184,6 +184,8 @@ CREATE TABLE Scores(
 
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,30,50);
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
+INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (1,1,32.5,50);
+GO
 
 CREATE TABLE Questions_Options(
 	question_id int NOT NULL,

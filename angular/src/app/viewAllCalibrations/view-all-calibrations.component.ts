@@ -27,7 +27,7 @@ export class ViewAllCalibrations {
     }
 
     Wait(calibration:ICalibration) {
-        if (!this.LeaderCheck() && !calibration.groupScorePossible){
+        if (!this.LeaderCheck() && calibration.groupScorePossible===0){
             return true;
         }
         
@@ -35,7 +35,7 @@ export class ViewAllCalibrations {
     }
 
     Start(calibration:ICalibration) {
-        if (this.LeaderCheck() && !calibration.groupScorePossible) {
+        if (this.LeaderCheck() && calibration.groupScorePossible===0) {
             return true;
         }
 

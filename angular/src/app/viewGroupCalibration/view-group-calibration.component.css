@@ -8,3 +8,7 @@ td {
 button {
     margin: 15px 5px;
 }
+
+select {
+    width: 100%;
+}

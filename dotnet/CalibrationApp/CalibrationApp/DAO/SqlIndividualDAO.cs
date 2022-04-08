@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 
 namespace CalibrationApp.DAO
 {
-    public class SqlAnswerDAO : IAnswerDAO
+    public class SqlIndividualDAO : IIndividualDAO
     {
         private readonly string connectionString;
 
-        public SqlAnswerDAO(string dbConnectionString)
+        public SqlIndividualDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
@@ -52,21 +52,40 @@ namespace CalibrationApp.DAO
 
         public void SubmitScore(Score score, int userId)
         {
+            int correct = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                const string sql = "INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) " +
-                    "VALUES (@user_id,@calibration_id,@points_earned,@points_possible)";
+                const string check = "SELECT calibration_id " +
+                    "FROM Calibrations " +
+                    "WHERE (isOpen = 1 AND calibration_id = @calibrationId)";
 
-                using (SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(check, conn))
                 {
-                    command.Parameters.AddWithValue("@user_id", userId);
-                    command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
-                    command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
-                    command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
+                    command.Parameters.AddWithValue("@calibrationId", score.CalibrationId);
+                    correct = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
 
-                    command.ExecuteScalar();
+            if (correct == 1)
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    const string sql = "INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) " +
+                        "VALUES (@user_id,@calibration_id,@points_earned,@points_possible)";
+
+                    using (SqlCommand command = new SqlCommand(sql, conn))
+                    {
+                        command.Parameters.AddWithValue("@user_id", userId);
+                        command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
+                        command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
+                        command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
+
+                        command.ExecuteScalar();
+                    }
                 }
             }
         }
@@ -105,8 +124,7 @@ namespace CalibrationApp.DAO
                             command.Parameters.AddWithValue("@calibrationId", answer.CalibrationId);
                             command.Parameters.AddWithValue("@userId", userId);
                             command.Parameters.AddWithValue("@questionId", answer.QuestionId);
-                            int optionId = GetOption(answer.OptionValue);
-                            command.Parameters.AddWithValue("@optionId", optionId);
+                            command.Parameters.AddWithValue("@optionId", GetOption(answer.OptionValue));
                             command.Parameters.AddWithValue("@comment", answer.Comment);
 
                             command.ExecuteScalar();

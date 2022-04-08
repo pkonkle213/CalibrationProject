@@ -4,27 +4,6 @@
         <name>CalibrationApp</name>
     </assembly>
     <members>
-        <member name="M:CalibrationApp.Controllers.AnswerController.SubmitAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
-            <summary>
-            Submit answers for a calibration and a user
-            </summary>
-            <param name="answers">A List of answers</param>
-            <returns></returns>
-        </member>
-        <member name="M:CalibrationApp.Controllers.AnswerController.UpdateAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
-            <summary>
-            Updating a round of answers
-            </summary>
-            <param name="answers">A list of Answers</param>
-            <returns></returns>
-        </member>
-        <member name="M:CalibrationApp.Controllers.AnswerController.GetMyAnswers(System.Int32)">
-            <summary>
-            Gets the set of answers for the logged in user
-            </summary>
-            <param name="calibrationId">Calibration ID</param>
-            <returns>List of Answers</returns>
-        </member>
         <member name="M:CalibrationApp.Controllers.CalibrationController.GetSpecificCalibrations(System.Int32)">
             <summary>
             Gets a specific calibration by its CalibrationID number
@@ -44,6 +23,27 @@
             </summary>
             <param name="calibrationId">The ID associated with the calibration</param>
             <returns>Confirmation that it was successful</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.SubmitAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
+            <summary>
+            Submit answers for a calibration and a user
+            </summary>
+            <param name="answers">A List of answers</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.UpdateAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
+            <summary>
+            Updating a round of answers
+            </summary>
+            <param name="answers">A list of Answers</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.GetMyAnswers(System.Int32)">
+            <summary>
+            Gets the set of answers for the logged in user
+            </summary>
+            <param name="calibrationId">Calibration ID</param>
+            <returns>List of Answers</returns>
         </member>
         <member name="M:CalibrationApp.Controllers.LoginController.Ready">
             <summary>

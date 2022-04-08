@@ -51,8 +51,10 @@ namespace CalibrationApp
 
             string connectionString = Configuration.GetConnectionString("Project");
             services.AddTransient<IUserDAO>(sp => new SqlUserDAO(connectionString));
-            services.AddTransient<IAnswerDAO>(sp => new SqlAnswerDAO(connectionString));
+            services.AddTransient<IIndividualDAO>(sp => new SqlIndividualDAO(connectionString));
+            services.AddTransient<IGroupDAO>(sp => new SqlGroupDAO(connectionString));
             services.AddTransient<IQuestionDAO>(sp => new SqlQuestionDAO(connectionString));
+            services.AddTransient<IStatsDAO>(sp => new SqlStatsDAO(connectionString));
             services.AddTransient<ICalibrationDAO>(sp => new SqlCalibrationDAO(connectionString));
         }
 

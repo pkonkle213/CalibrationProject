@@ -93,8 +93,11 @@ export class ViewSingleCalibrationComponent {
         return this.score;
     }
 
+    Cancel() {
+        this._router.navigate(['/view']);
+    }
+
     SubmitAnswer() {
-        console.log(this.BuildScore());
         if(this.updating) {
             this._calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {});
             this._calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
