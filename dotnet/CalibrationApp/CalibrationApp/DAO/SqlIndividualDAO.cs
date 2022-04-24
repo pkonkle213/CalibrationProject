@@ -229,11 +229,12 @@ namespace CalibrationApp.DAO
         {
             List<User> users = new List<User>();
 
-            const string sql = "SELECT u.user_id,u.first_name,u.last_name,r.role_name,t.team_name " +
+            const string sql = "SELECT u.user_id,u.first_name,u.last_name,r.role_name,t.team_name,s.points_earned,s.points_possible " +
                 "FROM Users u " +
                 "INNER JOIN Roles r ON u.role_id = r.role_id " +
                 "INNER JOIN Teams t ON u.team_id = t.team_id " +
-                "WHERE (u.user_id <> 0 AND u.user_id IN " +
+                "INNER JOIN Scores s on s.user_id = u.user_id " +
+                "WHERE (s.calibration_id = @calibrationId AND u.user_id <> 0 AND u.user_id IN " +
                 "(SELECT user_id " +
                 "FROM Answers " +
                 "WHERE calibration_id = @calibrationId " +
@@ -257,6 +258,8 @@ namespace CalibrationApp.DAO
                             user.LastName = Convert.ToString(reader["last_name"]);
                             user.Role = Convert.ToString(reader["role_name"]);
                             user.Team = Convert.ToString(reader["team_name"]);
+                            user.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
+                            user.PointsPossible = Convert.ToDecimal(reader["points_possible"]);
 
                             users.Add(user);
                         }

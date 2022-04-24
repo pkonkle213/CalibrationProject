@@ -90,6 +90,17 @@ export class GroupCalibrationComponent {
         this._router.navigate(['/view']);
     }
 
+    Complete() {
+        let total = 0;
+        for(let i=0;i<this.questions.length;i++) {
+            if(this.Different(i)===0) {
+                total++;
+            }
+        }
+
+        return total / this.questions.length * 100;
+    }
+
     Different(index:number) {
         let count = 0;
         for(let i=0;i<this.participants.length;i++) {
@@ -158,8 +169,12 @@ export class GroupCalibrationComponent {
         return possible;
     }
 
-    CalculateScore() {
-        return this.Earned() / this.Possible() * 100;
+    DefaultOption(options:any) {
+        
+    }
+
+    CalculateScore(earned:number,possible:number) {
+        return earned / possible * 100;
     }
 
     BuildScore():IScore {

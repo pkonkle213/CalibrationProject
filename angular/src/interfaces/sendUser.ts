@@ -4,6 +4,6 @@ export interface ISendUser {
     confirmPassword?:string,
     role?: string,
     team?: string,
-    first?: string,
-    last?: string
+    firstName?: string,
+    lastName?: string
 }

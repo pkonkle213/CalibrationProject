@@ -8,4 +8,6 @@ export interface IUser {
     firstName: string,
     lastName: string,
     answers?:IAnswer[],
+    pointsEarned?:number,
+    pointsPossible?:number,
 }

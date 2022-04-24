@@ -52,7 +52,8 @@ namespace CalibrationApp.DAO
         {
             List<Team> teams = new List<Team>();
             string sql = "SELECT team_id, team_name " +
-                         "FROM Teams";
+                         "FROM Teams " +
+                         "WHERE team_id <> 5";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -136,6 +137,42 @@ namespace CalibrationApp.DAO
             }
 
             return -1;
+        }
+
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
+            string sql = "SELECT u.user_id,u.username,r.role_name,t.team_name,u.first_name,u.last_name " +
+                "FROM Users u " +
+                "INNER JOIN Roles r ON r.role_id = u.role_id " +
+                "INNER JOIN Teams t ON t.team_id = u.team_id " +
+                "WHERE u.user_id <> 0";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            users.Add(new User()
+                            {
+                                UserId = Convert.ToInt32(reader["user_id"]),
+                                Username = Convert.ToString(reader["username"]),
+                                Role = Convert.ToString(reader["role_name"]),
+                                Team = Convert.ToString(reader["team_name"]),
+                                FirstName = Convert.ToString(reader["first_name"]),
+                                LastName = Convert.ToString(reader["last_name"]),
+                            });
+                        }
+                    }
+                }
+            }
+
+            return users;
         }
 
         public User AddUser(string username, string password, string role, string team, string firstName, string lastName)

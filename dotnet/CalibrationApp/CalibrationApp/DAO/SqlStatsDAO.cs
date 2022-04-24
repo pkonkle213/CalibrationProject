@@ -33,7 +33,7 @@ namespace CalibrationApp.DAO
 
                             question.Id = Convert.ToInt32(reader["question_id"]);
                             question.QuestionText = Convert.ToString(reader["question"]);
-                            
+
                             questions.Add(question);
                         }
                     }
@@ -43,51 +43,54 @@ namespace CalibrationApp.DAO
             return questions;
         }
 
-        public List<Answer> GetMyAnswers(int userId)
+        public Calibrated GetCalibrated(int userId,int questionId)
         {
-            return GetAnswers(userId);
-        }
+            Calibrated calibrated = new Calibrated();
 
-        public List<Answer> GetGroupAnswers()
-        {
-            return GetAnswers(0);
-        }
+            string sqlPossible = "SELECT Count(*) " +
+                "FROM Answers a, Answers b " +
+                "WHERE (a.user_id=0 AND b.user_id=@user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
 
-        private List<Answer> GetAnswers(int userId)
-        {
-            List<Answer> answers = new List<Answer>();
-
-            const string sql = "SELECT a.calibration_id,a.user_id,a.question_id,o.option_value,a.comment,o.points_earned " +
-                "FROM Answers a " +
-                "INNER JOIN Options o ON o.option_id = a.option_id " +
-                "WHERE a.user_id = @userId";
+            if (questionId!=0)
+            {
+                sqlPossible += " AND (a.question_id = @question_id)";
+            }
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using (SqlCommand command = new SqlCommand(sql, conn))
+
+                using (SqlCommand command = new SqlCommand (sqlPossible, conn))
                 {
-                    command.Parameters.AddWithValue("@userId", userId);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    if (questionId != 0)
                     {
-                        while (reader.Read())
-                        {
-                            Answer answer = new Answer();
-
-                            answer.CalibrationId = Convert.ToInt32(reader["calibration_id"]);
-                            answer.OptionValue = Convert.ToString(reader["option_value"]);
-                            answer.QuestionId = Convert.ToInt32(reader["question_id"]);
-                            answer.Comment = Convert.ToString(reader["comment"]);
-                            answer.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
-
-                            answers.Add(answer);
-                        }
+                        command.Parameters.AddWithValue("@question_id", questionId);
                     }
+                    
+                    calibrated.Possible = Convert.ToInt32(command.ExecuteScalar());
                 }
             }
 
-            return answers;
+            sqlPossible += " AND (a.option_id = b.option_id)";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlPossible, conn))
+                {
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    if (questionId != 0)
+                    {
+                        command.Parameters.AddWithValue("@question_id", questionId);
+                    }
+
+                    calibrated.Correct = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+
+            return calibrated;
         }
     }
 }

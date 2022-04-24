@@ -3,7 +3,8 @@
     <h3>Channel: {{calibration.contactChannel}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
-    <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore()}}%)</h4>
+    <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore(Earned(),Possible()) | number:'1.0-0'}}%)</h4>
+    <h5>Percent completely calibrated: {{Complete() | number:'1.0-0'}}%</h5>
 
     <table>
         <thead>
@@ -11,31 +12,38 @@
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-                <th>{{SumSame() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</th>
-                <th>{{SumDifferent() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
                 <th *ngFor="let person of participants">{{Calibrated(person) | number:'1.0-0'}}%</th>
             </tr>
             <tr>
                 <th>Question</th>
                 <th>Options</th>
-                <th>Group Score</th>
+                <th>Group Selection</th>
                 <th>Same As Group</th>
                 <th>Different Than Group</th>
                 <th *ngFor="let person of participants">{{person.firstName}}</th>
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>{{SumSame() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</td>
+                <td>{{SumDifferent() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</td>
+                <td *ngFor="let person of participants">{{person.pointsEarned}} / {{person.pointsPossible}} ({{CalculateScore(person.pointsEarned,person.pointsPossible)}}%)</td>
+            </tr>
+
             <tr *ngFor="let question of questions; index as i">
                 <td>{{question.questionText}}</td>
                 <td><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
-                
                 <td *ngIf="CanSubmitGroupScore()">
                     <select [(ngModel)]="groupSubmit[i].optionValue" (change)="onChange($event,i)">
                         <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
                     </select>
                     <input [(ngModel)]="groupSubmit[i].comment" placeholder="Why this score was entered"/>
                 </td>
-
                 <td *ngIf="!CanSubmitGroupScore()">{{groupSubmit[i].optionValue}}</td>
                 <td>{{Same(i)}}</td>
                 <td>{{Different(i)}}</td>

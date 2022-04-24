@@ -34,6 +34,12 @@ namespace CalibrationApp.Controllers
             return Ok(userDAO.GetRoles());
         }
 
+        [HttpGet("Users")]
+        public ActionResult<List<User>> GetAllUsers()
+        {
+            return Ok(userDAO.GetAllUsers());
+        }
+
         /// <summary>
         /// A test endpoint to ensure that the server is running.
         /// </summary>

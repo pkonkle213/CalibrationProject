@@ -30,23 +30,24 @@ namespace CalibrationApp.Controllers
             return id;
         }
 
-        [HttpGet("Individual")]
-        public ActionResult<List<Answer>> GetMyAnswers()
-        {
-            int userId = GetCurrentUserID();
-            return Ok(dao.GetMyAnswers(userId));
-        }
-
         [HttpGet("Question")]
         public ActionResult<List<Question>> GetQuestions()
         {
             return Ok(dao.GetAllQuestions());
         }
 
-        [HttpGet("Group")]
-        public ActionResult<List<Answer>> GetGroupAnswers()
+        [HttpGet("Individual")]
+        public ActionResult<Calibrated> GetOverallCalibrated()
         {
-            return Ok(dao.GetGroupAnswers());
+            int userId = GetCurrentUserID();
+            return Ok(dao.GetCalibrated(userId,0));
+        }
+
+        [HttpGet("Individual/{calibrationId}")]
+        public ActionResult<Calibrated> GetSpecificCalibrated(int calibrationId)
+        {
+            int userId = GetCurrentUserID();
+            return Ok(dao.GetCalibrated(userId,calibrationId));
         }
     }
 }
