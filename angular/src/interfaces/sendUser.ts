@@ -5,5 +5,6 @@ export interface ISendUser {
     role?: string,
     team?: string,
     firstName?: string,
-    lastName?: string
+    lastName?: string,
+    isActive: boolean,
 }

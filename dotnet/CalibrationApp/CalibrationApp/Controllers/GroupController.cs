@@ -14,7 +14,7 @@ namespace CalibrationApp.Controllers
 
         public GroupController(IGroupDAO groupDAO)
         {
-            this.dao = groupDAO;
+            this.dao = groupDAO;        
         }
 
         [HttpPost("Answer")]

@@ -5,7 +5,7 @@ import { ICalibration } from '../interfaces/calibration';
 import { IAnswer } from "src/interfaces/answer";
 import { IScore } from "src/interfaces/score";
 import { AuthService } from 'src/services/auth.service';
-import { IContactOption } from "src/interfaces/contactOption";
+import { IContactType } from "src/interfaces/contactType";
 
 @Injectable()
 export class CalibrationService {
@@ -15,17 +15,10 @@ export class CalibrationService {
     constructor(private http:HttpClient,private _authService:AuthService){
         this.httpOptions = { headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this._authService.currentUser.token})};
     }
-    
-    // private handleError<T> (operation = 'operation', result?: T){
-    //     return (error: any): Observable<T> => {
-    //         console.error(error);
-    //         return of (result as T);
-    //     }
-    // }
 
     getAllContactTypes() {
         let options = this.url + "Calibration/Types";
-        return this.http.get<IContactOption>(options,this.httpOptions);
+        return this.http.get<IContactType>(options,this.httpOptions);
     }
 
     createCalibration(calibration:ICalibration) {

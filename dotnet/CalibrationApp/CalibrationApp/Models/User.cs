@@ -10,6 +10,7 @@
         public string Team { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool IsActive { get; set; }
         public List<Answer> Answers { get; set; }
         public decimal PointsEarned { get; set; }
         public decimal PointsPossible { get; set; }

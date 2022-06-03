@@ -166,6 +166,7 @@ namespace CalibrationApp.DAO
                                 Team = Convert.ToString(reader["team_name"]),
                                 FirstName = Convert.ToString(reader["first_name"]),
                                 LastName = Convert.ToString(reader["last_name"]),
+                                IsActive = Convert.ToBoolean(reader["isActive"]),
                             });
                         }
                     }
@@ -175,7 +176,7 @@ namespace CalibrationApp.DAO
             return users;
         }
 
-        public User AddUser(string username, string password, string role, string team, string firstName, string lastName)
+        public User AddUser(string username, string password, string role, bool isActive, string team, string firstName, string lastName)
         {
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(password);
@@ -190,6 +191,7 @@ namespace CalibrationApp.DAO
                 cmd.Parameters.AddWithValue("@salt", hash.Salt);
                 cmd.Parameters.AddWithValue("@first_name", firstName);
                 cmd.Parameters.AddWithValue("@last_name", lastName);
+                cmd.Parameters.AddWithValue("@isActive", isActive);
                 cmd.Parameters.AddWithValue("@role_id", GetRoleId(role));
                 cmd.Parameters.AddWithValue("@team_id", GetTeamId(team));
                 cmd.ExecuteNonQuery();
@@ -210,6 +212,7 @@ namespace CalibrationApp.DAO
                 Team = Convert.ToString(reader["team_name"]),
                 FirstName = Convert.ToString(reader["first_name"]),
                 LastName = Convert.ToString(reader["last_name"]),
+                IsActive = Convert.ToBoolean(reader["isActive"]),
             };
 
             return u;

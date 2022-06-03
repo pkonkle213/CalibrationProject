@@ -1,4 +1,13 @@
 td {
     border: 1px solid black;
     text-align: center;
+    padding: 5px;
+}
+
+button {
+    width: 100%;
+}
+
+.child {
+    width: 100%;
 }

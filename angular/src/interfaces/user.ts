@@ -7,6 +7,7 @@ export interface IUser {
     username: string,
     firstName: string,
     lastName: string,
+    isActive: boolean,
     answers?:IAnswer[],
     pointsEarned?:number,
     pointsPossible?:number,

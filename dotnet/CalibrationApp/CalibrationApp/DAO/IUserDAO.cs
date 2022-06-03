@@ -8,7 +8,7 @@ namespace CalibrationApp.DAO
         List<Team> GetTeams();
         List<Role> GetRoles();
         User GetUser(string username);
-        User AddUser(string username, string password, string role, string team, string firstName, string lastName);
+        User AddUser(string username, string password, string role, bool isActive, string team, string firstName, string lastName);
         List<User> GetAllUsers();
     }
 }

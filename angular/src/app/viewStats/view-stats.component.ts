@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { StatsService } from "src/services/statistics.service";
+import { CalibrationService } from "src/services/calibration.service";
 
 @Component({
     selector: 'view-stats',
@@ -8,56 +9,73 @@ import { StatsService } from "src/services/statistics.service";
 })
 
 export class ViewStatsComponent {
-    totalSuccess:number = 0;
-    totalPossible:number = 0;
+    overallCalibrated:any;
     questions:any;
-    myAnswers:any;
-    groupAnswers:any;
+    questionCalibrated:any[] = [];
+    calibrations:any;
+    calibrationCalibrated:any[] = [];
+    types:any;
+    typeCalibrated:any[] = [];
+    questionVisible:boolean = false;
+    calibrationVisible:boolean = false;
+    typeVisible:boolean = false;
 
-    constructor(private _statsService:StatsService){
+    constructor(private _statsService:StatsService, private _calibrationService:CalibrationService){
         
     }
 
-    TotalCalibrated(){
-        return this.totalSuccess / this.totalPossible * 100;
-    }
-
     ngOnInit() {
+        this._statsService.getOverallCalibrated().subscribe(data => {
+            this.overallCalibrated = data;
+        });
+
         this._statsService.getAllQuestions().subscribe(data => {
             this.questions = data;
-            console.log(this.questions);
+
+            for(let i = 0; i < this.questions.length; i++) {
+                this._statsService.getQuestionCalibrated(this.questions[i].id).subscribe(data => {
+                    this.questionCalibrated.push(data);
+                });
+            }
         });
 
-        this._statsService.getGroupAnswers().subscribe(data => {
-            this.groupAnswers = data;
-            console.log(this.groupAnswers);
+        this._calibrationService.getAllCalibrations().subscribe(data => {
+            this.calibrations = data;
+
+            for(let i = 0; i < this.calibrations.length; i++) {
+                this._statsService.getCalibrationCalibrated(this.calibrations[i].id).subscribe(data => {
+                    this.calibrationCalibrated.push(data);
+                });
+            }
         });
 
-        this._statsService.getMyAnswers().subscribe(data => {
-            this.myAnswers = data;
-            console.log(this.myAnswers);
+        this._calibrationService.getAllContactTypes().subscribe(data => {
+            this.types = data;
+
+            for(let i = 0; i < this.types.length; i++) {
+                this._statsService.getTypeCalibrated(this.types[i].id).subscribe(data => {
+                    this.typeCalibrated.push(data);
+                });
+            }
         });
     }
 
-    Calibrated(id:number) {
-        let success=0;
-        let possible=0;
+    ChangeQuestionVisible() {
+        this.questionVisible = !this.questionVisible;
+    }
 
-        for(let me=0;me<this.myAnswers.length;me++) {
-            if (this.myAnswers[me].questionId===id) {
-                for(let group=0;group<this.groupAnswers.length;group++) {
-                    if(this.groupAnswers[group].calibrationId===this.myAnswers[me].calibrationId && this.groupAnswers[group].questionId===this.myAnswers[me].questionId) {
-                        this.totalPossible++;
-                        possible++;
-                        if(this.groupAnswers[group].optionValue===this.myAnswers[me].optionValue) {
-                            this.totalSuccess++;
-                            success++;
-                        }
-                    }
-                }
-            }
+    ChangeCalibrationVisible() {
+        this.calibrationVisible = !this.calibrationVisible;
+    }
+
+    ChangeTypeVisible() {
+        this.typeVisible = !this.typeVisible;
+    }
+
+    TotalCalibrated(correct:number,possible:number) {
+        if(possible===null || possible===0){
+            return "None attempted";
         }
-
-        return success / possible * 100;
+        return correct / possible * 100 + "%";
     }
 }

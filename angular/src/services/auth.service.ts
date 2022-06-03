@@ -12,7 +12,8 @@ export class AuthService {
             team: "",
             username: "",
             firstName: "",
-            lastName: ""
+            lastName: "",
+            isActive: false,
         },
         token: "",
     }
@@ -49,6 +50,7 @@ export class AuthService {
                 firstName: "",
                 lastName: "",
                 answers: [],
+                isActive: true,
             },
             token: "",
         }; 

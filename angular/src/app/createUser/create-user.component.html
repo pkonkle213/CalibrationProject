@@ -8,6 +8,7 @@
                 <th>Last Name</th>
                 <th>Team</th>
                 <th>Role</th>
+                <th>Active</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -18,7 +19,8 @@
                 <td>{{user.lastName}}</td>
                 <td>{{user.team}}</td>
                 <td>{{user.role}}</td>
-                <td><button>Edit User</button><button>Disable User</button></td>
+                <td>{{user.isActive}}</td>
+                <td><button (click)="EditUser(user.id)">Edit User</button><button (click)="DisableUser(user.id)">Disable User</button></td>
             </tr>
             <tr *ngIf="addUser">
                 <td><input type="text" [(ngModel)]="createUser.username"></td>

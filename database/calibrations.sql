@@ -46,6 +46,7 @@ CREATE TABLE Users (
 	salt varchar(200) NOT NULL,
 	first_name varchar(50) NOT NULL,
 	last_name varchar(50) NOT NULL,
+	isActive BIT NOT NULL,
 	role_id int NOT NULL,
 	team_id int NOT NULL,
 	CONSTRAINT PK_Users PRIMARY KEY (user_id),
@@ -57,10 +58,10 @@ CREATE TABLE Users (
 -- These values should not be kept when going to Production
 
 SET IDENTITY_INSERT Users ON
-INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',3,5);
+INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,3,5);
 SET IDENTITY_INSERT Users OFF
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1);
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id,team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',2,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,2,1);
 GO
 
 
@@ -125,6 +126,7 @@ GO
 CREATE TABLE Calibrations (
 	calibration_id int IDENTITY,
 	calibration_date dateTime NOT NULL,
+	leader_user_id int NOT NULL,
 	contact_type int NOT NULL,
 	contact_id varchar(100) NOT NULL,
 	tm_first_name varchar(100) NOT NULL,
@@ -136,6 +138,7 @@ CREATE TABLE Calibrations (
 	CONSTRAINT PK_Calibrations PRIMARY KEY (calibration_id),
 	CONSTRAINT FK_Calibrations_Forms FOREIGN KEY (form_id) references Forms (form_id),
 	CONSTRAINT FK_Calibrations_Contacts FOREIGN KEY (contact_type) references Contacts (contact_id),
+	CONSTRAINT FK_Calibrations_Users FOREIGN KEY (leader_user_id) references Users (user_id),
 )
 
 INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,0);

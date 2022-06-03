@@ -7,6 +7,20 @@ namespace CalibrationApp.DAO
     {
         private readonly string connectionString;
 
+        private string sql = "SELECT Count(*) " +
+            "FROM Answers a " +
+            "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+            "INNER JOIN Calibrations c ON c.calibration_id = a.calibration_id " +
+            "WHERE (a.user_id = 0 AND b.user_id = @user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
+
+        private string perQuestion = " AND (a.question_id = @question_id)";
+
+        private string perCalibration = " AND (a.calibration_id = @calibration_id)";
+
+        private string perCalibrationType = " AND (c.contact_type = @contact_type)";
+
+        private string modifier;
+
         public SqlStatsDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
@@ -16,7 +30,7 @@ namespace CalibrationApp.DAO
         {
             List<Question> questions = new List<Question>();
 
-            const string sql = "SELECT question_id,question " +
+            const string sql = "SELECT question_id, question " +
                 "FROM Questions";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -43,47 +57,61 @@ namespace CalibrationApp.DAO
             return questions;
         }
 
-        public Calibrated GetCalibrated(int userId,int questionId)
+        public Calibrated GetCalibrated(int userId, string reason, int elementId)
         {
             Calibrated calibrated = new Calibrated();
 
-            string sqlPossible = "SELECT Count(*) " +
-                "FROM Answers a, Answers b " +
-                "WHERE (a.user_id=0 AND b.user_id=@user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
-
-            if (questionId!=0)
+            switch (reason)
             {
-                sqlPossible += " AND (a.question_id = @question_id)";
+                case "Question":
+                    sql += perQuestion;
+                    modifier = "@question_id";
+                    break;
+
+                case "Calibration":
+                    sql += perCalibration;
+                    modifier = "@calibration_id";
+                    break;
+
+                case "Type":
+                    sql += perCalibrationType;
+                    modifier = "@contact_type";
+                    break;
+
+                default:
+                    break;
             }
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand (sqlPossible, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@user_id", userId);
-                    if (questionId != 0)
-                    {
-                        command.Parameters.AddWithValue("@question_id", questionId);
-                    }
                     
+                    if (elementId != 0)
+                    {
+                        command.Parameters.AddWithValue(modifier, elementId);
+                    }
+
                     calibrated.Possible = Convert.ToInt32(command.ExecuteScalar());
                 }
             }
 
-            sqlPossible += " AND (a.option_id = b.option_id)";
+            string sqlCorrect = sql + " AND (a.option_id = b.option_id)";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand(sqlPossible, conn))
+                using (SqlCommand command = new SqlCommand(sqlCorrect, conn))
                 {
                     command.Parameters.AddWithValue("@user_id", userId);
-                    if (questionId != 0)
+
+                    if (elementId != 0)
                     {
-                        command.Parameters.AddWithValue("@question_id", questionId);
+                        command.Parameters.AddWithValue(modifier, elementId);
                     }
 
                     calibrated.Correct = Convert.ToInt32(command.ExecuteScalar());

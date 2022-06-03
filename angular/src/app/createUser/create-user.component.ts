@@ -16,12 +16,14 @@ export class CreateUserComponent {
         role: "",
         team: "",
         firstName: "",
-        lastName: ""
+        lastName: "",
+        isActive: true,
     }
     roles:any;
     teams:any;
     users:any;
     addUser:boolean = false;
+    editId:number = 0;
 
     constructor(private userService:UserService) {
         this.userService.getTeams().subscribe(data => {
@@ -35,6 +37,10 @@ export class CreateUserComponent {
         this.userService.getAllUsers().subscribe(data => {
             this.users = data;
         })
+    }
+    
+    EditCheck(userId:number) {
+        return (userId===this.editId);
     }
 
     AddNewUser() {
@@ -51,11 +57,20 @@ export class CreateUserComponent {
                 role: "",
                 team: "",
                 firstName: "",
-                lastName: ""
+                lastName: "",
+                isActive: true,
             }
         });
 
         this.addUser=false;
+    }
+
+    DisableUser(userId:number) {
+
+    }
+
+    EditUser(userId:number) {
+
     }
 
     Cancel() {
@@ -67,7 +82,8 @@ export class CreateUserComponent {
             role: "",
             team: "",
             firstName: "",
-            lastName: ""
+            lastName: "",
+            isActive: true,
         }
     }
 }

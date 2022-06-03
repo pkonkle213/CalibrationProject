@@ -6,6 +6,6 @@ namespace CalibrationApp.DAO
     {
         public List<Question> GetAllQuestions();
 
-        public Calibrated GetCalibrated(int userId, int questionId);
+        public Calibrated GetCalibrated(int userId, string reason, int elementId);
     }
 }
