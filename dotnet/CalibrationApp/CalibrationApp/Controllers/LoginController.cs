@@ -127,7 +127,7 @@ namespace CalibrationApp.Controllers
                 return Conflict(new { message = "Username already taken. Please choose a different username." });
             }
 
-            User user = userDAO.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.Team, userParam.First, userParam.Last);
+            User user = userDAO.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.isActive, userParam.Team, userParam.First, userParam.Last);
             if (user != null)
             {
                 result = Created(user.Username, null); //values aren't read on client
@@ -138,6 +138,13 @@ namespace CalibrationApp.Controllers
             }
 
             return result;
+        }
+
+        [HttpPut]
+        public IActionResult ChangeActive(int userId)
+        {
+            userDAO.SwitchActive(userId);
+            return Ok("Switched!");
         }
     }
 }

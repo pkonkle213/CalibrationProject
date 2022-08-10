@@ -9,14 +9,14 @@ namespace CalibrationApp.DAO
     public class SqlUserDAO : IUserDAO
     {
 
-        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, t.team_name, u.first_name, u.last_name " +
+        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, u.isActive, t.team_name, u.first_name, u.last_name " +
             "FROM Users u " +
             "INNER JOIN Roles r ON r.role_id=u.role_id " +
             "INNER JOIN Teams t ON t.team_id=u.team_id " +
             "WHERE u.username = @username";
 
-        private string sqlAddUser = "INSERT INTO Users (username, password_hash, salt, first_name, last_name, role_id, team_id) VALUES " +
-            "(@username, @password_hash, @salt, @first_name, @last_name, @role_id, @team_id)";
+        private string sqlAddUser = "INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES " +
+            "(@username, @password_hash, @salt, @first_name, @last_name, @isActive, @role_id, @team_id)";
 
         private readonly string connectionString;
         public SqlUserDAO(string dbConnectionString)
@@ -142,7 +142,7 @@ namespace CalibrationApp.DAO
         public List<User> GetAllUsers()
         {
             List<User> users = new List<User>();
-            string sql = "SELECT u.user_id,u.username,r.role_name,t.team_name,u.first_name,u.last_name " +
+            string sql = "SELECT u.user_id,u.username,r.role_name,u.isActive,t.team_name,u.first_name,u.last_name " +
                 "FROM Users u " +
                 "INNER JOIN Roles r ON r.role_id = u.role_id " +
                 "INNER JOIN Teams t ON t.team_id = u.team_id " +
@@ -198,6 +198,24 @@ namespace CalibrationApp.DAO
             }
 
             return GetUser(username);
+        }
+
+        public void SwitchActive(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "UPDATE Users " +
+                    "SET isActive = 1 - isActive " +
+                    "WHERE user_id = @user_id";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    command.ExecuteScalar();
+                }
+            }
         }
 
         private User GetUserFromReader(SqlDataReader reader)

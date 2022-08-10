@@ -141,8 +141,8 @@ CREATE TABLE Calibrations (
 	CONSTRAINT FK_Calibrations_Users FOREIGN KEY (leader_user_id) references Users (user_id),
 )
 
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/15',4,'Email 12345','Jane','Doe',60,85,1,0);
-INSERT INTO Calibrations (calibration_date,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/25',3,'Chat 43211','Ender','Wiggin',0,0,1,1);
+INSERT INTO Calibrations (calibration_date,leader_user_id,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/15',1,4,'Email 12345','Jane','Doe',60,85,1,0);
+INSERT INTO Calibrations (calibration_date,leader_user_id,contact_type,contact_id,tm_first_name,tm_last_name,group_score_earned,group_score_possible,form_id,isOpen) VALUES ('2022/01/25',1,3,'Chat 43211','Ender','Wiggin',0,0,1,1);
 
 CREATE TABLE Answers (
 	calibration_id int NOT NULL,
