@@ -1,0 +1,38 @@
+img {
+    width: 20px;
+    margin: 5px;
+}
+
+table, td, tr, th {
+    border: solid black 1px;
+}
+
+.save {
+    text-align: right;
+}
+
+.first {
+    width: 70%;
+}
+
+input {
+    width: 80%;
+}
+
+.second {
+    text-align: center;
+    width: 10%;
+}
+
+.third {
+    width: 20%;
+    text-align: center;
+}
+
+table {
+  width: 100%;  
+}
+
+th {
+    text-align: center;
+}

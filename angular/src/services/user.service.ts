@@ -14,22 +14,21 @@ export class UserService {
 
     getTeams() {
         let path = this.url + "Login/Teams";
-        return this.http.get(path,this.httpOptions);
+        return this.http.get(path, this.httpOptions);
     }
 
     getRoles() {
         let path = this.url + "Login/Roles";
-        return this.http.get(path,this.httpOptions);
+        return this.http.get(path, this.httpOptions);
     }
 
     getAllUsers() {
         let path = this.url + "Login/Users";
-        return this.http.get(path,this.httpOptions);
+        return this.http.get(path, this.httpOptions);
     }
 
-        
     createUser(user:ISendUser) {
-        let create = this.url + "Login/register";
-        return this.http.post(create,user,this.httpOptions);
+        let path = this.url + "Login/register";
+        return this.http.post(path, user, this.httpOptions);
     }
 }

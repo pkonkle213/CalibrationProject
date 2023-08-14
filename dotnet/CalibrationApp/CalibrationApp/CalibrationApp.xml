@@ -4,7 +4,7 @@
         <name>CalibrationApp</name>
     </assembly>
     <members>
-        <member name="M:CalibrationApp.Controllers.CalibrationController.GetSpecificCalibrations(System.Int32)">
+        <member name="M:CalibrationApp.Controllers.CalibrationController.GetSingleCalibration(System.Int32)">
             <summary>
             Gets a specific calibration by its CalibrationID number
             </summary>
@@ -72,12 +72,19 @@
             </summary>
             <param name="userParam">The new user to create</param>
         </member>
-        <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestions(System.Int32)">
+        <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByCalibrationId(System.Int32)">
             <summary>
             Gets all questions linked to the calibration
             </summary>
             <param name="calibrationId">Calibration ID</param>
             <returns>A list of Questions</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByFormId(System.Int32)">
+            <summary>
+            Gets all questions based on the form
+            </summary>
+            <param name="formId"></param>
+            <returns></returns>
         </member>
         <member name="T:CalibrationApp.Models.LoginResponse">
             <summary>

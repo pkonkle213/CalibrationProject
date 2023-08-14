@@ -7,33 +7,21 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class StatsController : ControllerBase
     {
         private readonly IStatsDAO dao;
+        private Common commonFunctions = new Common();
 
         public StatsController(IStatsDAO statsDAO)
         {
             this.dao = statsDAO;
         }
 
-        private int GetCurrentUserID()
-        {
-            var user = this.User;
-            int id = 0;
-            if (user.Identity.Name != null)
-            {
-                var idClaim = user.FindFirst("sub");
-                string idString = idClaim.Value;
-                id = int.Parse(idString);
-            }
-            return id;
-        }
-
         [HttpGet("Overall")]
         public ActionResult<Calibrated> GetOverallCalibrated()
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "General";
             return Ok(dao.GetCalibrated(userId, reason, 0));
         }
@@ -47,7 +35,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("Question/{questionId}")]
         public ActionResult<Calibrated> GetSpecificQuestionCalibrated(int questionId)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Question";
             return Ok(dao.GetCalibrated(userId, reason, questionId));
         }
@@ -55,7 +43,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("Calibration/{calibrationId}")]
         public ActionResult<Calibrated> GetSpecificCalibrationCalibrated(int calibrationId)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Calibration";
             return Ok(dao.GetCalibrated(userId, reason, calibrationId));
         }
@@ -63,7 +51,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("Type/{typeId}")]
         public ActionResult<Calibrated> GetSpecificTypeCalibrated(int typeId)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Type";
             return Ok(dao.GetCalibrated(userId, reason, typeId));
         }

@@ -1,11 +1,13 @@
-﻿using CalibrationApp.Models;
+﻿
+using CalibrationApp.Models;
 
 namespace CalibrationApp.DAO
 {
     public interface IQuestionDAO
     {
-        List<Question> GetQuestions(int calibrationId);
-
-        List<Option> GetOptions(int questionId, bool isCategory);
+        List<Question> GetQuestionsByCalibrationId(int calibrationId);
+        List<Question> GetQuestionsByFormId(int formId);
+        Question NewQuestion(Question question);
+        int UpdateQuestion(Question question);
     }
 }

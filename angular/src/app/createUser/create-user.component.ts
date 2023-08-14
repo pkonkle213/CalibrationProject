@@ -19,9 +19,11 @@ export class CreateUserComponent {
         lastName: "",
         isActive: true,
     }
+    
     roles:any;
     teams:any;
     users:any;
+    userIssue:boolean = false;
     addUser:boolean = false;
     editId:number = 0;
 
@@ -40,29 +42,35 @@ export class CreateUserComponent {
     }
     
     EditCheck(userId:number) {
-        return (userId===this.editId);
+        return (userId === this.editId);
     }
 
     AddNewUser() {
-        this.addUser=true;
+        this.addUser = true;
     }
 
     CreateNewUser(user:ISendUser) {
-        this.users.push(user);
-        this.userService.createUser(user).subscribe(() => {
-            this.createUser = {
-                username: "",
-                password: "password",
-                confirmPassword: "password",
-                role: "",
-                team: "",
-                firstName: "",
-                lastName: "",
-                isActive: true,
+        this.userService.createUser(user).subscribe(data => {
+            if (!data) {
+                this.userIssue = true;
+            }
+            else {
+                console.log(data);
+                this.users.push(data);
+                this.createUser = {
+                    username: "",
+                    password: "password",
+                    confirmPassword: "password",
+                    role: "",
+                    team: "",
+                    firstName: "",
+                    lastName: "",
+                    isActive: true,
+                };
+
+                this.addUser = false;
             }
         });
-
-        this.addUser=false;
     }
 
     DisableUser(userId:number) {
@@ -74,7 +82,7 @@ export class CreateUserComponent {
     }
 
     Cancel() {
-        this.addUser=false;
+        this.addUser = false;
         this.createUser = {
             username: "",
             password: "password",

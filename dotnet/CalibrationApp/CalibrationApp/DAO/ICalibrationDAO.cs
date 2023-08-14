@@ -7,7 +7,7 @@ namespace CalibrationApp.DAO
         List<ContactType> GetContactTypes();
         Calibration CreateCalibration(Calibration calibration);
 
-        Calibration GetCalibration(int calibrationId, int userId);
+        Calibration GetCalibration(int calibrationId);
 
         List<Calibration> GetAllCalibrations(int userId);
 

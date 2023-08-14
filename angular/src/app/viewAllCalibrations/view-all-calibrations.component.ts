@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICalibration } from 'src/interfaces/calibration';
+import { IContactType } from 'src/interfaces/contactType';
 import { AuthService } from 'src/services/auth.service';
 import { CalibrationService } from 'src/services/calibration.service';
 
@@ -13,6 +14,7 @@ export class ViewAllCalibrations {
     calibrations:any;
     calibration:any;
     scores:any;
+    types:any;
     
     constructor(private _calibrationService: CalibrationService, private router:Router, private auth:AuthService){
     }
@@ -40,6 +42,14 @@ export class ViewAllCalibrations {
         }
 
         return false;
+    }
+
+    GetContactChannelName(channelId:number) {
+        this._calibrationService.getAllContactTypes().subscribe((data) => {
+            this.types = data;
+        });
+
+        return this.types.find((x:IContactType) => x.id === channelId).name;
     }
 
     ViewEdit(calibration:ICalibration) {

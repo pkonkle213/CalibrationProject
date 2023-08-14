@@ -117,6 +117,7 @@ namespace CalibrationApp.Controllers
         /// </summary>
         /// <param name="userParam">The new user to create</param>
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(RegisterUser userParam)
         {
             IActionResult result;
@@ -127,10 +128,10 @@ namespace CalibrationApp.Controllers
                 return Conflict(new { message = "Username already taken. Please choose a different username." });
             }
 
-            User user = userDAO.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.isActive, userParam.Team, userParam.First, userParam.Last);
+            User user = userDAO.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.isActive, userParam.Team, userParam.FirstName, userParam.LastName);
             if (user != null)
             {
-                result = Created(user.Username, null); //values aren't read on client
+                result = Created(user.Username, null);
             }
             else
             {

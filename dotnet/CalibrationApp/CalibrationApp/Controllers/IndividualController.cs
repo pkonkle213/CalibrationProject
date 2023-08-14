@@ -7,27 +7,15 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class IndividualController : ControllerBase
     {
         private readonly IIndividualDAO dao;
+        private Common commonFunctions = new Common();
 
         public IndividualController(IIndividualDAO indivDAO)
         {
             this.dao = indivDAO;
-        }
-
-        private int GetCurrentUserID()
-        {
-            var user = this.User;
-            int id = 0;
-            if (user.Identity.Name != null)
-            {
-                var idClaim = user.FindFirst("sub");
-                string idString = idClaim.Value;
-                id = int.Parse(idString);
-            }
-            return id;
         }
 
         /// <summary>
@@ -38,7 +26,7 @@ namespace CalibrationApp.Controllers
         [HttpPost("Answer")]
         public ActionResult SubmitAnswers(List<Answer> answers)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             int count = dao.SubmitAnswers(answers, userId);
             if (count == 1)
             {
@@ -53,7 +41,7 @@ namespace CalibrationApp.Controllers
         [HttpPost("Score")]
         public ActionResult SubmitScore(Score score)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             dao.SubmitScore(score, userId);
             return Ok();
         }
@@ -66,7 +54,7 @@ namespace CalibrationApp.Controllers
         [HttpPut("Answer")]
         public ActionResult UpdateAnswers(List<Answer> answers)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             dao.UpdateAnswers(answers, userId);
             return Ok();
         }
@@ -74,7 +62,7 @@ namespace CalibrationApp.Controllers
         [HttpPut("Score")]
         public ActionResult UpdateScore(Score score)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             dao.UpdateScore(score, userId);
             return Ok();
         }
@@ -94,7 +82,7 @@ namespace CalibrationApp.Controllers
         [HttpGet("{calibrationId}")]
         public ActionResult GetMyAnswers(int calibrationId)
         {
-            int userId = GetCurrentUserID();
+            int userId = commonFunctions.GetCurrentUserID(User);
             return Ok(dao.GetMyAnswers(calibrationId, userId));
         }
     }

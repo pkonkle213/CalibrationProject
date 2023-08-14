@@ -56,6 +56,7 @@ namespace CalibrationApp
             services.AddTransient<IQuestionDAO>(sp => new SqlQuestionDAO(connectionString));
             services.AddTransient<IStatsDAO>(sp => new SqlStatsDAO(connectionString));
             services.AddTransient<ICalibrationDAO>(sp => new SqlCalibrationDAO(connectionString));
+            services.AddTransient<IFormDAO>(sp => new SqlFormDAO(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

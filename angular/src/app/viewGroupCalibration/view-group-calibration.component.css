@@ -12,3 +12,11 @@ button {
 select {
     width: 100%;
 }
+
+th {
+    text-align: center;
+}
+
+td.option {
+    text-wrap: nowrap;
+}

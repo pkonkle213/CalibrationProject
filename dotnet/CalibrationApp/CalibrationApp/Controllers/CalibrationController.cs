@@ -2,42 +2,38 @@
 using CalibrationApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CalibrationController : ControllerBase
     {
         private readonly ICalibrationDAO dao;
+        private Common commonFunctions = new Common();
 
         public CalibrationController(ICalibrationDAO calibrationDAO)
         {
-            this.dao = calibrationDAO;
+            dao = calibrationDAO;
         }
 
         [HttpGet("Types")]
         public ActionResult<List<ContactType>> GetContactTypes()
         {
-            return Ok(dao.GetContactTypes());
-        }
-
-        private int GetCurrentUserID()
-        {
-            var user = this.User;
-            int id = 0;
-            if (user.Identity.Name != null)
+            try
             {
-                var idClaim = user.FindFirst("sub");
-                string idString = idClaim.Value;
-                id = int.Parse(idString);
+                return Ok(dao.GetContactTypes());
             }
-            return id;
+            catch (Exception ex)
+            {
+                return BadRequest("Don't look at me! " + ex);
+            }
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Leader")]
+        //[Authorize(Roles = "Admin,Leader")]
         public ActionResult<Calibration> CreateCalibration(Calibration calibration)
         {
             try
@@ -49,7 +45,7 @@ namespace CalibrationApp.Controllers
                 return BadRequest("Could not create calibration: " + ex.Message);
             }
         }
-        
+
 
         /// <summary>
         /// Gets a specific calibration by its CalibrationID number
@@ -58,17 +54,23 @@ namespace CalibrationApp.Controllers
         /// <returns>A single calibration</returns>
         [HttpGet]
         [Route("{calibrationId}")]
-        public ActionResult<Calibration> GetSpecificCalibrations(int calibrationId)
+        public ActionResult<Calibration> GetSingleCalibration(int calibrationId)
         {
-            int userId = GetCurrentUserID();
-            Calibration calibration = dao.GetCalibration(calibrationId, userId);
-            if (calibration == null)
+            try
             {
-                return BadRequest("No calibration found");
+                Calibration calibration = dao.GetCalibration(calibrationId);
+                if (calibration == null)
+                {
+                    return BadRequest("No calibration found");
+                }
+                else
+                {
+                    return Ok(calibration);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(calibration);
+                return BadRequest("I have no idea. " + ex.Message);
             }
         }
 
@@ -80,15 +82,22 @@ namespace CalibrationApp.Controllers
         [Route("All")]
         public ActionResult<List<Calibration>> GetAllCalibrations()
         {
-            int userId = GetCurrentUserID();
-            List<Calibration> calibrations = dao.GetAllCalibrations(userId);
-            if (calibrations == null || calibrations.Count == 0)
+            try
             {
-                return BadRequest("No calibrations found");
+                int userId = commonFunctions.GetCurrentUserID(User);
+                List<Calibration> calibrations = dao.GetAllCalibrations(userId);
+                if (calibrations == null || calibrations.Count == 0)
+                {
+                    return BadRequest("No calibrations found");
+                }
+                else
+                {
+                    return Ok(calibrations);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(calibrations);
+                return BadRequest("Something went wrong, obviously. " + ex.Message);
             }
         }
 
@@ -100,15 +109,29 @@ namespace CalibrationApp.Controllers
         [HttpPut("{calibrationId}")]
         public ActionResult SwitchCalibrationIsOpen(int calibrationId)
         {
-            dao.SwitchCalibrationIsOpen(calibrationId);
-            return Ok("Switched!");
+            try
+            {
+                dao.SwitchCalibrationIsOpen(calibrationId);
+                return Ok("Switched!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Bad news, Jim. " + ex.Message);
+            }
         }
 
         [HttpGet("Scores")]
         public ActionResult GetMyScores()
         {
-            int userId = GetCurrentUserID();
-            return Ok(dao.GetMyScores(userId));
+            try
+            {
+                int userId = commonFunctions.GetCurrentUserID(User);
+                return Ok(dao.GetMyScores(userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("This ain't it. " + ex.Message);
+            }
         }
     }
 }

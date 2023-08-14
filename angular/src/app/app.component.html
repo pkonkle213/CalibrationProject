@@ -10,13 +10,13 @@
     </nav>
   </header>
   <nav id="left-nav">
-    <ul>
-      <li *ngIf="authService.isAuthenticated()"><a [routerLink]="['/view']">View Calibrations</a></li>
-      <li *ngIf="authService.isAuthenticated()"><a [routerLink]="['/stats']">View Your Calibration Stats</a></li>
-      <li *ngIf="leaderCheck()"><a [routerLink]="['/create']">Create a New Calibration</a></li>
-      <li *ngIf="adminCheck()"><a [routerLink]="['/edit']">Edit Users</a></li>
-      <li *ngIf="adminCheck()">View All Stats</li>
-    </ul>
+    <table>
+      <tr *ngIf="authService.isAuthenticated()"><td><a [routerLink]="['/view']">View Calibrations</a></td></tr>
+      <tr *ngIf="authService.isAuthenticated()"><td><a [routerLink]="['/stats']">View Your Calibration Stats</a></td></tr>
+      <tr *ngIf="leaderCheck()"><td><a [routerLink]="['/createCalibration']">Create a New Calibration</a></td></tr>
+      <tr *ngIf="adminCheck()"><td><a [routerLink]="['/form']">Create and Edit Forms</a></td></tr>
+      <tr *ngIf="adminCheck()"><td><a [routerLink]="['/editUsers']">Edit Users</a></td></tr>
+    </table>
   </nav>
   <main>
     <router-outlet></router-outlet>

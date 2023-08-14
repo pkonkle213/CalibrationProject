@@ -1,10 +1,10 @@
 <div>
     <h2>Calibration for: {{calibration.repFirstName}} {{calibration.repLastName}}</h2>
-    <h3>Channel: {{calibration.contactChannel}}</h3>
+    <h3>Channel: {{contactType}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
-    <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore(Earned(),Possible()) | number:'1.0-0'}}%)</h4>
-    <h5>Percent completely calibrated: {{Complete() | number:'1.0-0'}}%</h5>
+    <!-- <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore(Earned(),Possible()) | number:'1.0-0'}}%)</h4>
+    <h5>Percent completely calibrated: {{Complete() | number:'1.0-0'}}%</h5> -->
 
     <table>
         <thead>
@@ -37,7 +37,7 @@
 
             <tr *ngFor="let question of questions; index as i">
                 <td>{{question.questionText}}</td>
-                <td><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
+                <td class="option"><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
                 <td *ngIf="CanSubmitGroupScore()">
                     <select [(ngModel)]="groupSubmit[i].optionValue" (change)="onChange($event,i)">
                         <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>

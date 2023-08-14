@@ -67,21 +67,22 @@ GO
 
 CREATE TABLE Options (
 	option_id int IDENTITY,
+	isCategory bit NOT NULL,
 	option_value varchar(20) NOT NULL,
 	points_earned decimal(3,2) NOT NULL,
 	CONSTRAINT PK_Options PRIMARY KEY (option_id),
 )
 
-INSERT INTO Options (option_value,points_earned) VALUES ('Meets',0);
-INSERT INTO Options (option_value,points_earned) VALUES ('Does Not Meet',0);
-INSERT INTO Options (option_value,points_earned) VALUES ('Critical',0);
-INSERT INTO Options (option_value,points_earned) VALUES ('100%',1);
-INSERT INTO Options (option_value,points_earned) VALUES ('75%',.75);
-INSERT INTO Options (option_value,points_earned) VALUES ('50%',.5);
-INSERT INTO Options (option_value,points_earned) VALUES ('0%',0);
-INSERT INTO Options (option_value,points_earned) VALUES ('N/A',0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Meets',0,0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Does Not Meet',0,0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Critical',0,0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('100%',1,1);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('75%',1,.75);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('50%',1,.5);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('0%',1,0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('N/A',1,0);
+INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('N/A',0,0);
 GO
-
 
 CREATE TABLE Contacts (
 	contact_id int IDENTITY,
@@ -110,17 +111,18 @@ GO
 CREATE TABLE Questions (
 	question_id int IDENTITY,
 	form_id int NOT NULL,
+	form_position int NOT NULL,
 	question varchar(200) NOT NULL,
 	isCategory bit NOT NULL,
-	points_possible int,
+	points_possible int NOT NULL,
 	CONSTRAINT PK_Questions PRIMARY KEY (question_id),
 	CONSTRAINT FK_Questions_Forms FOREIGN KEY (form_id) references Forms (form_id),
 )
 
-INSERT INTO Questions (form_id,question,isCategory,points_possible) VALUES (1,'Category1',1,30);
-INSERT INTO Questions (form_id,question,isCategory,points_possible) VALUES (1,'Question1',0,NULL);
-INSERT INTO Questions (form_id,question,isCategory,points_possible) VALUES (1,'Category2',1,20);
-INSERT INTO Questions (form_id,question,isCategory,points_possible) VALUES (1,'Question2',0,NULL);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,2,'Category1',1,30);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,4,'Question1',0,0);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,1,'Category2',1,20);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,3,'Question2',0,0);
 GO
 
 CREATE TABLE Calibrations (
@@ -188,30 +190,4 @@ CREATE TABLE Scores(
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,1,30,50);
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (1,1,32.5,50);
-GO
-
-CREATE TABLE Questions_Options(
-	question_id int NOT NULL,
-	option_id int NOT NULL,
-	CONSTRAINT PK_Questions_Options PRIMARY KEY (question_id,option_id),
-	CONSTRAINT FK_Questions_Options_Questions FOREIGN KEY (question_id) references Questions (question_id),
-	CONSTRAINT FK_Questions_Options_Options FOREIGN KEY (option_id) references Options (option_id),
-)
-
-INSERT INTO Questions_Options (question_id,option_id) VALUES (1,4);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (1,5);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (1,6);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (1,7);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (2,1);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (2,2);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (2,3);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (2,8);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (3,4);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (3,5);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (3,6);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (3,7);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (4,1);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (4,2);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (4,3);
-INSERT INTO Questions_Options (question_id,option_id) VALUES (4,8);
 GO

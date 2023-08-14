@@ -1,8 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ICalibrated } from "src/interfaces/calibrated";
-import { ICalibration } from "src/interfaces/calibration";
-import { IContactType } from "src/interfaces/contactType";
 import { IQuestion } from "src/interfaces/question";
 import { AuthService } from 'src/services/auth.service';
 
@@ -11,7 +9,7 @@ export class StatsService {
     private url:string = "https://localhost:44329/";
     private httpOptions:any;
     
-    constructor(private http:HttpClient,private _authService:AuthService){
+    constructor(private http:HttpClient, private _authService:AuthService){
         this.httpOptions = { headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this._authService.currentUser.token})};
     }
     

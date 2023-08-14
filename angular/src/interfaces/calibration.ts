@@ -2,10 +2,12 @@ export interface ICalibration {
     id: number,
     repFirstName: string,
     repLastName: string,
+    leaderUserId: number,
     groupScoreEarned: number,
     groupScorePossible: number,
-    contactChannel: string,
+    contactChannelId: number,
     calibrationDate: Date,
     contactId: string,
     isOpen: boolean,
+    formId:number,
 }

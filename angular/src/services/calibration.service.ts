@@ -35,9 +35,9 @@ export class CalibrationService {
         let calibration = this.url + "Calibration/" + calibrationId;
         return this.http.get<ICalibration>(calibration,this.httpOptions);
     }
-
+  
     getQuestions(calibrationId:number) {
-        let questions = this.url + "Question/" + calibrationId;
+        let questions = this.url + "Question/Calibration/" + calibrationId;
         return this.http.get<IQuestion>(questions,this.httpOptions);
     }
 

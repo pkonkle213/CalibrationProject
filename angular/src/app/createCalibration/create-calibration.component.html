@@ -10,10 +10,18 @@
             <td><input [(ngModel)]="calibration.repLastName" type="text" id="repLastName"></td>
         </tr>
         <tr>
+            <td>Form</td>
+            <td>
+                <select [(ngModel)]="calibration.formId">
+                    <option *ngFor="let form of forms" value="{{form.formId}}">{{form.formName}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td>Channel</td>
             <td>
-                <select [(ngModel)]="calibration.contactChannel">
-                    <option *ngFor="let option of options" value="{{option.name}}">{{option.name}}</option>
+                <select [(ngModel)]="calibration.contactChannelId">
+                    <option *ngFor="let option of options" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </td>
         </tr>

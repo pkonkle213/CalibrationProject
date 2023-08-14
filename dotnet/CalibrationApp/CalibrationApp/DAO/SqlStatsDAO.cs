@@ -8,10 +8,10 @@ namespace CalibrationApp.DAO
         private readonly string connectionString;
 
         private string sql = "SELECT Count(*) " +
-            "FROM Answers a " +
-            "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
-            "INNER JOIN Calibrations c ON c.calibration_id = a.calibration_id " +
-            "WHERE (a.user_id = 0 AND b.user_id = @user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
+                             "FROM Answers a " +
+                             "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                             "INNER JOIN Calibrations c ON c.calibration_id = a.calibration_id " +
+                             "WHERE (a.user_id = 0 AND b.user_id = @user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
 
         private string perQuestion = " AND (a.question_id = @question_id)";
 

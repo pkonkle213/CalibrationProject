@@ -14,7 +14,7 @@
             <td>{{calibration.id}}</td>
             <td>{{calibration.calibrationDate | date}}</td>
             <td>{{calibration.repFirstName}} {{calibration.repLastName}}</td>
-            <td>{{calibration.contactChannel}}</td>
+            <td>{{GetContactChannelName(calibration.contactChannelId)}}</td>
 
             <td *ngIf="Wait(calibration)" colspan="2">Awaiting Group Results</td>
             <td *ngIf="Start(calibration)" colspan="2"><button (click)="PushToGroup(calibration.id)">Click to start calibration</button></td>

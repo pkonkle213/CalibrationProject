@@ -18,6 +18,9 @@ import { UserService } from 'src/services/user.service';
 import { CreateUserComponent } from './createUser/create-user.component'
 import { ViewStatsComponent } from './viewStats/view-stats.component';
 import { StatsService } from 'src/services/statistics.service';
+import { FormService } from 'src/services/form.service';
+import { QuestionService } from 'src/services/question.service';
+import { CreateFormComponent } from './createFormQuestion/create-form-question.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,7 @@ import { StatsService } from 'src/services/statistics.service';
     CreateCalibration,
     CreateUserComponent,
     ViewStatsComponent,
+    CreateFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +46,8 @@ import { StatsService } from 'src/services/statistics.service';
     AuthService,
     UserService,
     StatsService,
+    FormService,
+    QuestionService,
   ],
   bootstrap: [
     AppComponent,

@@ -7,7 +7,7 @@ namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class GroupController : ControllerBase
     {
         private readonly IGroupDAO dao;

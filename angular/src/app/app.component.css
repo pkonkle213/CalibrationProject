@@ -7,11 +7,9 @@
     column-gap: 2px;
     row-gap: 2px;
     
-
     grid-template-areas:
         "navBar navBar"
         "menu main";
-
 
     grid-template-columns:
         1fr 5fr;
@@ -31,8 +29,18 @@ h1 {
 }
 
 nav#left-nav {
+    display: flex;
     grid-area: menu;
     border: solid black 1px;
+}
+
+table {
+    align-self: flex-start;
+}
+
+td {
+    text-align: center;
+    padding: 5px 10px;
 }
 
 main {
@@ -51,10 +59,6 @@ nav#top-nav li {
     list-style: none;
     padding-left: 10px;
     padding-right: 10px;
-}
-
-nav#left-nav li {
-    padding-top: 10px;;
 }
 
 main {
