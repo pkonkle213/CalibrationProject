@@ -4,6 +4,7 @@ namespace CalibrationApp.DAO
 {
     public interface IStatsDAO
     {
-        public Calibrated GetCalibrated(int userId, string reason);
+        public Statistic GetGeneralCalibrated(int userId);
+        public List<Statistic> GetCalibrated(int userId, string reason);
     }
 }

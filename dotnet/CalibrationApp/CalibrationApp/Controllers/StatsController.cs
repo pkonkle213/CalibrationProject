@@ -21,8 +21,7 @@ namespace CalibrationApp.Controllers
         public IActionResult GetOverallCalibrated()
         {
             int userId = commonFunctions.GetCurrentUserID(User);
-            string reason = "General";
-            return Ok(dao.GetCalibrated(userId, reason, 0));
+            return Ok(dao.GetGeneralCalibrated(userId));
         }
 
         [HttpGet("Questions")]
@@ -30,7 +29,7 @@ namespace CalibrationApp.Controllers
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Question";
-            return Ok(dao.GetCalibrated(userId, reason, questionId));
+            return Ok(dao.GetCalibrated(userId, reason));
         }
 
         [HttpGet("Calibrations")]
@@ -38,7 +37,7 @@ namespace CalibrationApp.Controllers
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Calibration";
-            return Ok(dao.GetCalibrated(userId, reason, calibrationId));
+            return Ok(dao.GetCalibrated(userId, reason));
         }
 
         [HttpGet("Types")]
@@ -46,7 +45,7 @@ namespace CalibrationApp.Controllers
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             string reason = "Type";
-            return Ok(dao.GetCalibrated(userId, reason, typeId));
+            return Ok(dao.GetCalibrated(userId, reason));
         }
     }
 }

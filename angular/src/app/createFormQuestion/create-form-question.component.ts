@@ -45,6 +45,10 @@ export class CreateFormComponent {
         });
     }
 
+    TotalPoints() {
+
+    }
+
     minPosition(question:IQuestion) {
         var minPosition = Math.min(...this.questions.map((x:IQuestion) => x.formPosition));
         return (question.formPosition == minPosition);
@@ -183,6 +187,7 @@ export class CreateFormComponent {
         var currentForm = this.forms.find((form:IForm) => form.formId == this.form.formId);
         if (currentForm != null) {
             this.form.formName = currentForm.formName;
+            this.form.isArchived = currentForm.isArchived;
         }
         else {
             this.form.formName = "New Form Name";

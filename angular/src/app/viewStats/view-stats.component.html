@@ -13,10 +13,10 @@
                     <th>Question / Category</th>
                     <th>Percent Calibrated</th>
             </tr>
-            <tr *ngFor="let question of questions; index as i">
-                    <td>{{question.id}}</td>
-                    <td>{{question.questionText}}</td>
-                    <td>{{TotalCalibrated(questionCalibrated[i].correct,questionCalibrated[i].possible)}}</td>
+            <tr *ngFor="let question of questionCalibrated">
+                    <td>{{question.elementId}}</td>
+                    <td>{{question.description}}</td>
+                    <td>{{TotalCalibrated(question.correct, question.possible)}}</td>
             </tr>
             </table>
         </td>
@@ -33,10 +33,10 @@
                         <th>Calibration Date</th>
                         <th>Percent Calibrated</th>
                 </tr>
-                <tr *ngFor="let calibration of calibrations; index as i">
-                        <td>{{calibration.id}}</td>
-                        <td>{{calibration.calibrationDate | date}}</td>
-                        <td>{{TotalCalibrated(calibrationCalibrated[i].correct,calibrationCalibrated[i].possible)}}</td>
+                <tr *ngFor="let calibration of calibrationCalibrated">
+                        <td>{{calibration.elementId}}</td>
+                        <td>{{calibration.description | date}}</td>
+                        <td>{{TotalCalibrated(calibration.correct, calibration.possible)}}</td>
                 </tr>
             </table>
         </td>
@@ -49,12 +49,14 @@
         <td colspan="2">
             <table class="child">
                 <tr>
-                        <th>Contact Type</th>
-                        <th>Percent Calibrated</th>
+                    <th>Contact Type Id</th>
+                    <th>Contact Type</th>
+                    <th>Percent Calibrated</th>
                 </tr>
-                <tr *ngFor="let type of types; index as i">
-                        <td>{{type.name}}</td>
-                        <td>{{TotalCalibrated(typeCalibrated[i].correct,typeCalibrated[i].possible)}}</td>
+                <tr *ngFor="let type of typeCalibrated">
+                    <td>{{type.elementId}}</td>
+                    <td>{{type.description}}</td>
+                    <td>{{TotalCalibrated(type.correct,type.possible)}}</td>
                 </tr>
             </table>
         </td>

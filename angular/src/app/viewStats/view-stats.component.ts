@@ -10,17 +10,14 @@ import { CalibrationService } from "src/services/calibration.service";
 
 export class ViewStatsComponent {
     overallCalibrated:any;
-    questions:any;
-    questionCalibrated:any[] = [];
-    calibrations:any;
-    calibrationCalibrated:any[] = [];
-    types:any;
-    typeCalibrated:any[] = [];
+    questionCalibrated:any;
+    calibrationCalibrated:any;
+    typeCalibrated:any;
     questionVisible:boolean = false;
     calibrationVisible:boolean = false;
     typeVisible:boolean = false;
 
-    constructor(private _statsService:StatsService, private _calibrationService:CalibrationService){
+    constructor(private _statsService:StatsService){
         
     }
 
@@ -29,34 +26,16 @@ export class ViewStatsComponent {
             this.overallCalibrated = data;
         });
 
-        this._statsService.getAllQuestions().subscribe(data => {
-            this.questions = data;
-
-            for(let i = 0; i < this.questions.length; i++) {
-                this._statsService.getQuestionCalibrated(this.questions[i].id).subscribe(data => {
-                    this.questionCalibrated.push(data);
-                });
-            }
+        this._statsService.getQuestionCalibrated().subscribe(data => {
+            this.questionCalibrated = data;
         });
 
-        this._calibrationService.getAllCalibrations().subscribe(data => {
-            this.calibrations = data;
-
-            for(let i = 0; i < this.calibrations.length; i++) {
-                this._statsService.getCalibrationCalibrated(this.calibrations[i].id).subscribe(data => {
-                    this.calibrationCalibrated.push(data);
-                });
-            }
+        this._statsService.getCalibrationCalibrated().subscribe(data => {
+            this.calibrationCalibrated = data;
         });
 
-        this._calibrationService.getAllContactTypes().subscribe(data => {
-            this.types = data;
-
-            for(let i = 0; i < this.types.length; i++) {
-                this._statsService.getTypeCalibrated(this.types[i].id).subscribe(data => {
-                    this.typeCalibrated.push(data);
-                });
-            }
+        this._statsService.getTypeCalibrated().subscribe(data => {
+            this.typeCalibrated = data;
         });
     }
 
@@ -72,10 +51,11 @@ export class ViewStatsComponent {
         this.typeVisible = !this.typeVisible;
     }
 
-    TotalCalibrated(correct:number,possible:number) {
-        if(possible===null || possible===0){
+    TotalCalibrated(correct:number, possible:number) {
+        if(possible === null || possible === 0){
             return "None attempted";
         }
+
         return correct / possible * 100 + "%";
     }
 }

@@ -15,7 +15,7 @@ export class ViewAllCalibrations {
     calibration:any;
     scores:any;
     types:any;
-    isOpen:boolean = false;
+    isOpen:boolean = true;
     
     constructor(private _calibrationService: CalibrationService, private router:Router, private auth:AuthService){
     }
@@ -41,6 +41,7 @@ export class ViewAllCalibrations {
     FilterCalibrations() {
         if (this.isOpen)
             return this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen === true);
+        
         return this.allCalibrations;
     }
 

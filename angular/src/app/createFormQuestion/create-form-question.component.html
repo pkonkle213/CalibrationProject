@@ -7,7 +7,7 @@
     </p>
     <p>
         <button (click)="NewFormInput()">Create New Form</button>
-        <button *ngIf="ActiveForm()" (click)="SwitchIsArchived()">{{this.form.isArchived ? "En" : "Dis"}}able This Form</button>
+        <button *ngIf="ActiveForm()" (click)="SwitchIsArchived()">{{form.isArchived ? "En" : "Dis"}}able This Form</button>
     </p>
 
     <table *ngIf="ShowQuestionsTable()">
@@ -23,7 +23,7 @@
             <td><img src="../../assets/arrowblank.png"></td>
             <td class="first">Question</td>
             <td class="second">Maximum Points</td>
-            <td class="third">&nbsp;</td>
+            <td class="third">Total Points: {{TotalPoints()}}</td>
         </tr>
         <tr *ngFor="let question of questions">
             <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>

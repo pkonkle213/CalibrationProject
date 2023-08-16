@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { ICalibrated } from "src/interfaces/calibrated";
-import { IQuestion } from "src/interfaces/question";
+import { IStatistic } from "src/interfaces/stat";
 import { AuthService } from 'src/services/auth.service';
 
 @Injectable()
@@ -15,26 +14,21 @@ export class StatsService {
     
     getOverallCalibrated() {
         let overall = this.url + "Stats/Overall";
-        return this.http.get<ICalibrated>(overall,this.httpOptions);
+        return this.http.get<IStatistic>(overall, this.httpOptions);
     }
 
-    getAllQuestions() {
-        let questions = this.url + "Stats/Question";
-        return this.http.get<IQuestion>(questions,this.httpOptions);
+    getQuestionCalibrated() {
+        let specific = this.url + "Stats/Questions/";
+        return this.http.get<IStatistic>(specific, this.httpOptions);
     }
 
-    getQuestionCalibrated(questionId:number) {
-        let specific = this.url + "Stats/Question/" + questionId;
-        return this.http.get<ICalibrated>(specific,this.httpOptions);
+    getCalibrationCalibrated() {
+        let specific = this.url + "Stats/Calibrations/";
+        return this.http.get<IStatistic>(specific, this.httpOptions);
     }
 
-    getCalibrationCalibrated(questionId:number) {
-        let specific = this.url + "Stats/Calibration/" + questionId;
-        return this.http.get<ICalibrated>(specific,this.httpOptions);
-    }
-
-    getTypeCalibrated(questionId:number) {
-        let specific = this.url + "Stats/Type/" + questionId;
-        return this.http.get<ICalibrated>(specific,this.httpOptions);
+    getTypeCalibrated() {
+        let specific = this.url + "Stats/Types/";
+        return this.http.get<IStatistic>(specific, this.httpOptions);
     }
 }
