@@ -7,95 +7,121 @@ namespace CalibrationApp.DAO
     {
         private readonly string connectionString;
 
-        private string sql = "SELECT Count(*) " +
-                             "FROM Answers a " +
-                             "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
-                             "INNER JOIN Calibrations c ON c.calibration_id = a.calibration_id " +
-                             "WHERE (a.user_id = 0 AND b.user_id = @user_id) AND (a.calibration_id = b.calibration_id) AND (a.question_id = b.question_id)";
-
-        private string perQuestion = " AND (a.question_id = @question_id)";
-
-        private string perCalibration = " AND (a.calibration_id = @calibration_id)";
-
-        private string perCalibrationType = " AND (c.contact_type = @contact_type)";
-
-        private string modifier;
+        private string _correct;
+        private string _possible;
 
         public SqlStatsDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
 
-        public List<Question> GetAllQuestions()
-        {
-            List<Question> questions = new List<Question>();
-
-            const string sql = "SELECT question_id, question " +
-                "FROM Questions";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Question question = new Question();
-
-                            question.Id = Convert.ToInt32(reader["question_id"]);
-                            question.QuestionText = Convert.ToString(reader["question"]);
-
-                            questions.Add(question);
-                        }
-                    }
-                }
-            }
-
-            return questions;
-        }
-
-        public Calibrated GetCalibrated(int userId, string reason, int elementId)
+        public Statistic GetCalibrated(int userId, string reason)
         {
             Calibrated calibrated = new Calibrated();
 
             switch (reason)
             {
-                case "Question":
-                    sql += perQuestion;
-                    modifier = "@question_id";
+                case "General":
+                    _correct = "SELECT COUNT(*) AS Correct " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = @userId) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "AND (a.option_id = b.option_id)";
+
+                    _possible = "SELECT COUNT(*) AS Possible " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id)";
                     break;
 
                 case "Calibration":
-                    sql += perCalibration;
-                    modifier = "@calibration_id";
+                    _correct = "SELECT a.calibration_id, c.calibration_date, COUNT(*) AS Correct " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = @userId) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "AND (a.option_id = b.option_id) " +
+                                "GROUP BY a.calibration_id, c.calibration_date";
+
+                    _possible = "SELECT a.calibration_id, c.calibration_date, COUNT(*) AS Possible " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "GROUP BY a.calibration_id, c.calibration_date";
+                    break;
+
+                case "Question":
+                    _correct = "SELECT a.question_id, q.question, COUNT(*) AS Correct " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Questions q ON a.question_id = q.question_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "AND (a.option_id = b.option_id) " +
+                                "GROUP BY a.question_id, q.question";
+
+                    _possible = "SELECT a.question_id, q.question, COUNT(*) AS Possible " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Questions q ON a.question_id = q.question_id " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "GROUP BY a.question_id, q.question";
                     break;
 
                 case "Type":
-                    sql += perCalibrationType;
-                    modifier = "@contact_type";
+                    _correct = "SELECT c.contact_type, cs.type, COUNT(*) AS Correct " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
+                                "INNER JOIN Contacts cs ON cs.contact_id = c.contact_type " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "AND (a.option_id = b.option_id) " +
+                                "GROUP BY c.contact_type, cs.type";
+
+                    _possible = "SELECT c.contact_type, cs.type, COUNT(*) AS Possible " +
+                                "FROM Answers a " +
+                                "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
+                                "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
+                                "INNER JOIN Contacts cs ON cs.contact_id = c.contact_type " +
+                                "WHERE (a.user_id = 0 AND b.user_id = 1) " +
+                                "AND (a.question_id = b.question_id) " +
+                                "GROUP BY c.contact_type, cs.type";
                     break;
 
                 default:
                     break;
             }
 
+            List<Statistic> statistics = new List<Statistic>();
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(_possible, conn))
                 {
                     command.Parameters.AddWithValue("@user_id", userId);
-                    
-                    if (elementId != 0)
-                    {
-                        command.Parameters.AddWithValue(modifier, elementId);
-                    }
 
-                    calibrated.Possible = Convert.ToInt32(command.ExecuteScalar());
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Statistic stat = new Statistic();
+
+                            stat.ElementId = Convert.ToInt32(reader["Id"]);
+                            stat.Description = Convert.ToString(reader["Description"]);
+                            stat.Possible = Convert.ToInt32(reader["Possible"]);
+
+                            statistics.Add(stat);
+                        }
+                    }
                 }
             }
 

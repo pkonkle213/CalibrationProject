@@ -9,7 +9,7 @@ namespace CalibrationApp.DAO
 
         Calibration GetCalibration(int calibrationId);
 
-        List<Calibration> GetAllCalibrations(int userId);
+        List<Calibration> GetAllCalibrations();
 
         void SwitchCalibrationIsOpen(int calibrationId);
 

@@ -1,7 +1,11 @@
 <div>
-    <h2>All Calibrations</h2>
+    <h2>All {{isOpen ? "Open" : ""}} Calibrations</h2>
+    <button (click)="SwitchOpen()">Switch to {{isOpen ? "All" : "Open"}}</button>
     <table>
-        <tr>
+        <tr *ngIf="!allCalibrations">
+            <th>No Calibrations To Show</th>
+        </tr>
+        <tr *ngIf="!!allCalibrations">
             <th>Calibration Id</th>
             <th>Calibration Date</th>
             <th>Team Member Name</th>
@@ -10,7 +14,7 @@
             <th>Your Score</th>
             <th>Your Submission</th>
         </tr>
-        <tr *ngFor="let calibration of calibrations">
+        <tr *ngFor="let calibration of FilterCalibrations()">
             <td>{{calibration.id}}</td>
             <td>{{calibration.calibrationDate | date}}</td>
             <td>{{calibration.repFirstName}} {{calibration.repLastName}}</td>

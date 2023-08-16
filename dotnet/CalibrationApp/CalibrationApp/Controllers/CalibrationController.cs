@@ -1,8 +1,6 @@
 ﻿using CalibrationApp.DAO;
 using CalibrationApp.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace CalibrationApp.Controllers
 {
@@ -84,8 +82,7 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                int userId = commonFunctions.GetCurrentUserID(User);
-                List<Calibration> calibrations = dao.GetAllCalibrations(userId);
+                List<Calibration> calibrations = dao.GetAllCalibrations();
                 if (calibrations == null || calibrations.Count == 0)
                 {
                     return BadRequest("No calibrations found");

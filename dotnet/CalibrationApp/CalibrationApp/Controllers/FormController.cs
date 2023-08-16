@@ -1,6 +1,5 @@
 ﻿using CalibrationApp.DAO;
 using CalibrationApp.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalibrationApp.Controllers

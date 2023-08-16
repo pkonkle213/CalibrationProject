@@ -102,7 +102,7 @@ namespace CalibrationApp.DAO
 
         }
 
-        public List<Calibration> GetAllCalibrations(int userId)
+        public List<Calibration> GetAllCalibrations()
         {
             List<Calibration> calibrations = new List<Calibration>();
 

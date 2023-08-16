@@ -3,12 +3,12 @@ using CalibrationApp.DAO;
 using CalibrationApp.Models;
 using CalibrationApp.Security;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace CalibrationApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    //[Authorize]
     public class LoginController : ControllerBase
     {
         private readonly ITokenGenerator tokenGenerator;
