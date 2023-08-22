@@ -8,6 +8,6 @@
         public int PointsPossible { get; set; }
         public bool IsCategory => PointsPossible > 0;
         public int FormPosition { get; set; }
-        public List<Option> Options { get; set; }
+        //public List<Option> Options { get; set; }
     }
 }

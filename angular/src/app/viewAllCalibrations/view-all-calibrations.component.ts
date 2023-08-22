@@ -40,53 +40,25 @@ export class ViewAllCalibrations {
 
     FilterCalibrations() {
         if (this.isOpen)
-            return this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen === true);
+            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen === true));
         
-        return this.allCalibrations;
+        return (this.allCalibrations);
     }
 
     Wait(calibration:ICalibration) {
-        if (!this.LeaderCheck() && calibration.groupScorePossible===0){
-            return true;
-        }
-        
-        return false;
+        return (!this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 
     Start(calibration:ICalibration) {
-        if (this.LeaderCheck() && calibration.groupScorePossible===0) {
-            return true;
-        }
-
-        return false;
+        return (this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 
     GetContactChannelName(channelId:number) {
-        return this.types.find((x:IContactType) => x.id === channelId).name;
+        return (this.types.find((x:IContactType) => x.id === channelId).name);
     }
 
     ViewEdit(calibration:ICalibration) {
-        if(!!calibration.groupScorePossible) {
-            return true;
-        }
-
-        return false;
-    }
-
-    LeaderCheck() {
-        if(this.auth.currentUser.user.role==="Leader" || this.auth.currentUser.user.role==="Admin"){
-            return true;
-        }
-
-        return false;
-    }
-
-    AdminCheck() {
-        if(this.auth.currentUser.user.role==="Admin"){
-            return true;
-        }
-
-        return false;
+        return (!!calibration.groupScorePossible);
     }
 
     ConvertToPercent(earned:number, possible: number) {

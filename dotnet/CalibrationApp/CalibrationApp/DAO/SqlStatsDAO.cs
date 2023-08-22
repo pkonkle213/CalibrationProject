@@ -59,8 +59,6 @@ namespace CalibrationApp.DAO
 
         public List<Statistic> GetCalibrated(int userId, string reason)
         {
-            Calibrated calibrated = new Calibrated();
-
             switch (reason)
             {
                 case "Calibration":

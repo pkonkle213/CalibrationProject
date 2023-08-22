@@ -52,6 +52,7 @@ CREATE TABLE Users (
 	CONSTRAINT PK_Users PRIMARY KEY (user_id),
 	CONSTRAINT FK_Users_Roles FOREIGN KEY (role_id) references Roles (role_id),
 	CONSTRAINT FK_Users_Teams FOREIGN KEY (team_id) references Teams (team_id),
+	CONSTRAINT UC_Users_user_id UNIQUE (user_id),
 )
 
 -- Populate default data for testing: user and admin with password of 'password'
@@ -61,7 +62,7 @@ SET IDENTITY_INSERT Users ON
 INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,3,5);
 SET IDENTITY_INSERT Users OFF
 INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1,1);
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,2,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,3,1);
 GO
 
 
@@ -105,7 +106,7 @@ CREATE TABLE Forms (
 	CONSTRAINT PK_Forms PRIMARY KEY (form_id),
 )
 
-INSERT INTO Forms (form_name,isArchived) VALUES ('Zulily form',0);
+INSERT INTO Forms (form_name,isArchived) VALUES ('Phil''s Phake Phorm',0);
 GO
 
 CREATE TABLE Questions (

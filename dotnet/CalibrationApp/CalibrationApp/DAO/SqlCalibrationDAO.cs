@@ -76,7 +76,7 @@ namespace CalibrationApp.DAO
         {
             Calibration calibration = new Calibration();
 
-            const string sql = "SELECT calibration_id, tm_first_name, tm_last_name, group_score_earned, group_score_possible, contact_type, calibration_date, contact_id, form_id, isOpen " +
+            const string sql = "SELECT calibration_id, leader_user_id, tm_first_name, tm_last_name, group_score_earned, group_score_possible, contact_type, calibration_date, contact_id, form_id, isOpen " +
                                "FROM Calibrations  " +
                                "WHERE calibration_id = @calibrationId";
 
@@ -106,7 +106,7 @@ namespace CalibrationApp.DAO
         {
             List<Calibration> calibrations = new List<Calibration>();
 
-            const string sql = "SELECT calibration_id, tm_first_name, tm_last_name, group_score_earned, group_score_possible, contact_type, calibration_date, contact_id, form_id, isOpen " +
+            const string sql = "SELECT calibration_id, leader_user_id, tm_first_name, tm_last_name, group_score_earned, group_score_possible, contact_type, calibration_date, contact_id, form_id, isOpen " +
                                "FROM Calibrations " +
                                "ORDER BY calibration_date DESC";
 
@@ -169,6 +169,7 @@ namespace CalibrationApp.DAO
             Calibration calibration = new Calibration();
 
             calibration.Id = Convert.ToInt32(reader["calibration_id"]);
+            calibration.LeaderUserId = Convert.ToInt32(reader["leader_user_id"]);
             calibration.RepFirstName = Convert.ToString(reader["tm_first_name"]);
             calibration.RepLastName = Convert.ToString(reader["tm_last_name"]);
             calibration.GroupScoreEarned = Convert.ToDecimal(reader["group_score_earned"]);

@@ -20,6 +20,7 @@ export class CreateFormComponent {
     updateMessage:string = "";
     updateSuccess:boolean = false;
     editFormName:boolean = false;
+    editQuestion:number = 0;
 
     form:IForm = {
         formId: 0,
@@ -45,8 +46,43 @@ export class CreateFormComponent {
         });
     }
 
-    TotalPoints() {
+    EditQuestion(question:IQuestion) {
+        return (question.id === this.editQuestion);
+    }
 
+    SaveQuestion(question:ISendQuestion) {
+        for(let i = 0; i < this.questions.length; i++) {
+            if (this.questions[i].id === question.id)
+                this.questions[i] = question;
+        }
+
+        this.CancelEditQuestion();
+    }
+
+    CancelEditQuestion() {
+        this.createQuestion = {
+            id: 0,
+            formId: this.form.formId,
+            questionText: "",
+            pointsPossible: 0,
+            formPosition: 0,
+        }
+        
+        this.editQuestion = 0;
+    }
+
+    SetEditQuestion(question:IQuestion) {
+        this.editQuestion = question.id;
+        this.createQuestion = question;
+    }
+
+    TotalPoints() {
+        let sum:number = 0;
+        for(let i = 0; i < this.questions.length; i++){
+            sum += this.questions[i].pointsPossible;
+        }
+
+        return sum;
     }
 
     minPosition(question:IQuestion) {
@@ -201,7 +237,7 @@ export class CreateFormComponent {
     SaveAndUpdateQuestions() {
         this.questionService.updateQuestions(this.questions).subscribe((data) => {
             if (!data) {
-            this.updateMessage = "Something went wrong.";
+                this.updateMessage = "Something went wrong.";
             }
             else {
                 this.updateMessage = "Successfully saved!";

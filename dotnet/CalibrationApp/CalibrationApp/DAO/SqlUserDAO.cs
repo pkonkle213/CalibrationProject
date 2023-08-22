@@ -8,14 +8,13 @@ namespace CalibrationApp.DAO
 {
     public class SqlUserDAO : IUserDAO
     {
-        private string sqlGetUser = "SELECT u.user_id, u.username, u.password_hash, u.salt, r.role_name, u.isActive, t.team_name, u.first_name, u.last_name " +
-            "FROM Users u " +
-            "INNER JOIN Roles r ON r.role_id=u.role_id " +
-            "INNER JOIN Teams t ON t.team_id=u.team_id " +
-            "WHERE u.username = @username";
+        private string sqlGetUser = "SELECT user_id, username, password_hash, salt, role, isActive, team_id, first_name, last_name " +
+                                    "FROM Users " +
+                                    "WHERE username = @username";
 
-        private string sqlAddUser = "INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES " +
-            "(@username, @password_hash, @salt, @first_name, @last_name, @isActive, @role_id, @team_id)";
+        private string sqlAddUser = "INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role, team_id) VALUES " +
+                                    "(@username, @password_hash, @salt, @first_name, @last_name, @isActive, @role, @team_id); " +
+                                    "SELECT @@IDENTITY";
 
         private readonly string connectionString;
         public SqlUserDAO(string dbConnectionString)
@@ -23,9 +22,9 @@ namespace CalibrationApp.DAO
             connectionString = dbConnectionString;
         }
 
-        public User GetUser(string username)
+        public SaltedUser GetUser(string username)
         {
-            User returnUser = null;
+            SaltedUser returnUser = null;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -77,51 +76,6 @@ namespace CalibrationApp.DAO
 
             return teams;
         }
-        
-        public List<Role> GetRoles()
-        {
-            List<Role> roles = new List<Role>();
-            string sql = "SELECT role_id, role_name " +
-                         "FROM Roles";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Role role = new Role();
-
-                            role.Id = Convert.ToInt32(reader["role_id"]);
-                            role.Name = Convert.ToString(reader["role_name"]);
-
-                            roles.Add(role);
-                        }
-                    }
-                }
-            }
-
-            return roles;
-        }
-
-        private int GetRoleId(string roleString)
-        {
-            List<Role> roles = GetRoles();
-
-            foreach (Role role in roles)
-            {
-                if (role.Name == roleString)
-                {
-                    return role.Id;
-                }
-            }
-
-            return -1;
-        }
 
         private int GetTeamId(string teamString)
         {
@@ -138,14 +92,13 @@ namespace CalibrationApp.DAO
             return -1;
         }
 
-        public List<User> GetAllUsers()
+        public List<StandardUser> GetAllUsers()
         {
-            List<User> users = new List<User>();
-            string sql = "SELECT u.user_id,u.username,r.role_name,u.isActive,t.team_name,u.first_name,u.last_name " +
-                "FROM Users u " +
-                "INNER JOIN Roles r ON r.role_id = u.role_id " +
-                "INNER JOIN Teams t ON t.team_id = u.team_id " +
-                "WHERE u.user_id <> 0";
+            List<StandardUser> users = new List<StandardUser>();
+            string sql = "SELECT user_id, username, role, isActive, team_id, first_name, last_name " +
+                "FROM Users " +
+                "WHERE user_id <> 0 " +
+                "ORDER BY isActive DESC, team_id, last_name";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -157,12 +110,12 @@ namespace CalibrationApp.DAO
                     {
                         while (reader.Read())
                         {
-                            users.Add(new User()
+                            users.Add(new StandardUser()
                             {
                                 UserId = Convert.ToInt32(reader["user_id"]),
                                 Username = Convert.ToString(reader["username"]),
-                                Role = Convert.ToString(reader["role_name"]),
-                                Team = Convert.ToString(reader["team_name"]),
+                                Role = Convert.ToString(reader["role"]),
+                                TeamId = Convert.ToInt32(reader["team_id"]),
                                 FirstName = Convert.ToString(reader["first_name"]),
                                 LastName = Convert.ToString(reader["last_name"]),
                                 IsActive = Convert.ToBoolean(reader["isActive"]),
@@ -175,32 +128,70 @@ namespace CalibrationApp.DAO
             return users;
         }
 
-        public User AddUser(string username, string password, string role, bool isActive, string team, string firstName, string lastName)
+        public StandardUser AddUser(RegisterUser regUser)
         {
             IPasswordHasher passwordHasher = new PasswordHasher();
-            PasswordHash hash = passwordHasher.ComputeHash(password);
+            PasswordHash hash = passwordHasher.ComputeHash(regUser.Password);
+            int newUserId;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
                 SqlCommand cmd = new SqlCommand(sqlAddUser, conn);
-                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@username", regUser.Username);
                 cmd.Parameters.AddWithValue("@password_hash", hash.Password);
                 cmd.Parameters.AddWithValue("@salt", hash.Salt);
-                cmd.Parameters.AddWithValue("@first_name", firstName);
-                cmd.Parameters.AddWithValue("@last_name", lastName);
-                cmd.Parameters.AddWithValue("@isActive", isActive);
-                cmd.Parameters.AddWithValue("@role_id", GetRoleId(role));
-                cmd.Parameters.AddWithValue("@team_id", GetTeamId(team));
-                cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@first_name", regUser.FirstName);
+                cmd.Parameters.AddWithValue("@last_name", regUser.LastName);
+                cmd.Parameters.AddWithValue("@isActive", true);
+                cmd.Parameters.AddWithValue("@role", regUser.Role);
+                cmd.Parameters.AddWithValue("@team_id", regUser.TeamId);
+                newUserId = Convert.ToInt32(cmd.ExecuteScalar());
             }
 
-            return GetUser(username);
+            StandardUser newUser = new StandardUser()
+            {
+                UserId = newUserId,
+                Username = regUser.Username,
+                FirstName = regUser.FirstName,
+                LastName = regUser.LastName,
+                Role = regUser.Role,
+                TeamId = regUser.TeamId,
+                IsActive = true,
+            };
+
+            return newUser;
         }
 
-        public void SwitchActive(int userId)
+        public int UpdateUser(StandardUser user)
         {
+            int rowsAffected; using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "UPDATE Users " +
+                    "SET username = @username, first_name = @firstName, last_name = @lastName, role = @role, team_id = @teamId " +
+                    "WHERE user_id = @user_id";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@user_id", user.UserId);
+                    command.Parameters.AddWithValue("@username", user.Username);
+                    command.Parameters.AddWithValue("@firstName", user.FirstName);
+                    command.Parameters.AddWithValue("@lastName", user.LastName);
+                    command.Parameters.AddWithValue("@role", user.Role);
+                    command.Parameters.AddWithValue("@teamId", user.TeamId);
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+            }
+
+            return rowsAffected;
+        }
+
+        public int SwitchActive(int userId)
+        {
+            int rowsAffected;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -212,21 +203,23 @@ namespace CalibrationApp.DAO
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@user_id", userId);
-                    command.ExecuteScalar();
+                    rowsAffected = command.ExecuteNonQuery();
                 }
             }
+
+            return rowsAffected;
         }
 
-        private User GetUserFromReader(SqlDataReader reader)
+        private SaltedUser GetUserFromReader(SqlDataReader reader)
         {
-            User u = new User()
+            SaltedUser u = new SaltedUser()
             {
                 UserId = Convert.ToInt32(reader["user_id"]),
                 Username = Convert.ToString(reader["username"]),
                 PasswordHash = Convert.ToString(reader["password_hash"]),
                 Salt = Convert.ToString(reader["salt"]),
-                Role = Convert.ToString(reader["role_name"]),
-                Team = Convert.ToString(reader["team_name"]),
+                Role = Convert.ToString(reader["role"]),
+                TeamId = Convert.ToInt32(reader["team_id"]),
                 FirstName = Convert.ToString(reader["first_name"]),
                 LastName = Convert.ToString(reader["last_name"]),
                 IsActive = Convert.ToBoolean(reader["isActive"]),

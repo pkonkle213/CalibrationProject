@@ -6,10 +6,10 @@ namespace CalibrationApp.DAO
     public interface IUserDAO
     {
         List<Team> GetTeams();
-        List<Role> GetRoles();
-        User GetUser(string username);
-        User AddUser(string username, string password, string role, bool isActive, string team, string firstName, string lastName);
-        List<User> GetAllUsers();
-        public void SwitchActive(int userId);
+        SaltedUser GetUser(string username);
+        StandardUser AddUser(RegisterUser user);
+        List<StandardUser> GetAllUsers();
+        int UpdateUser(StandardUser user);
+        int SwitchActive(int userId);
     }
 }

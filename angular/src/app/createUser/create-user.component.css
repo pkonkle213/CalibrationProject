@@ -2,3 +2,7 @@ td {
     border: solid 1px black;
     width: 5%;
 }
+
+input {
+    width: 100%;
+}

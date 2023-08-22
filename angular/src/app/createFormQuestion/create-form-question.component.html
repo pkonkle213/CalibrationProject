@@ -26,10 +26,18 @@
             <td class="third">Total Points: {{TotalPoints()}}</td>
         </tr>
         <tr *ngFor="let question of questions">
-            <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>
-            <td>{{question.questionText}}</td>
-            <td class="second">{{question.isCategory ? question.pointsPossible : "--"}}</td>
-            <td class="third"><button>Edit</button><button>Delete</button></td>
+            <ng-container *ngIf="EditQuestion(question)">
+                <td>&nbsp;</td>
+                <td><input type="text" [(ngModel)]="createQuestion.questionText"></td>
+                <td><input type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
+                <td><button (click)="SaveQuestion(createQuestion)">Save</button><button>Cancel</button></td>
+            </ng-container>
+            <ng-container *ngIf="!EditQuestion(question)">
+                <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>
+                <td>{{question.questionText}}</td>
+                <td class="second">{{question.isCategory ? question.pointsPossible : "--"}}</td>
+                <td class="third"><button (click)="SetEditQuestion(question)">Edit</button><button (click)="Cancel()">Delete</button></td>
+            </ng-container>
         </tr>
         <tr *ngIf="newQuestion">
             <td>&nbsp;</td>

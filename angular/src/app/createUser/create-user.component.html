@@ -13,21 +13,40 @@
         </thead>
         <tbody>
             <tr *ngFor="let user of users">
-                <td>{{user.username}}</td>
-                <td>{{user.firstName}}</td>
-                <td>{{user.lastName}}</td>
-                <td>{{user.team}}</td>
-                <td>{{user.role}}</td>
-                <td>{{user.isActive}}</td>
-                <td><button (click)="EditUser(user.id)">Edit User</button><button (click)="DisableUser(user.id)">Disable User</button></td>
+                <ng-container *ngIf="!EditCheck(user)">
+                    <td>{{user.username}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{FindTeam(user)}}</td>
+                    <td>{{user.role}}</td>
+                    <td>{{user.isActive}}</td>
+                    <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">Disable</button></td>
+                </ng-container>
+                <ng-container *ngIf="EditCheck(user)">
+                    <td><input type="text" [(ngModel)]="editUser.username"></td>
+                    <td><input type="text" [(ngModel)]="editUser.firstName"></td>
+                    <td><input type="text" [(ngModel)]="editUser.lastName"></td>
+                    <td>
+                        <select [(ngModel)]="editUser.teamId">
+                            <option *ngFor="let team of teams" value="{{team.id}}">{{team.name}}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select [(ngModel)]="editUser.role">
+                            <option *ngFor="let role of roles" value="{{role.name}}">{{role.name}}</option>
+                        </select>
+                    </td>
+                    <td>{{editUser.isActive}}</td>
+                    <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">Disable</button></td>
+                </ng-container>
             </tr>
             <tr *ngIf="addUser">
                 <td><input type="text" [(ngModel)]="createUser.username"></td>
                 <td><input type="text" [(ngModel)]="createUser.firstName"></td>
                 <td><input type="text" [(ngModel)]="createUser.lastName"></td>
                 <td>          
-                    <select [(ngModel)]="createUser.team">
-                        <option *ngFor="let team of teams" value="{{team.name}}">{{team.name}}</option>
+                    <select [(ngModel)]="createUser.teamId">
+                        <option *ngFor="let team of teams" value="{{team.id}}">{{team.name}}</option>
                     </select>
                 </td>
                 <td>

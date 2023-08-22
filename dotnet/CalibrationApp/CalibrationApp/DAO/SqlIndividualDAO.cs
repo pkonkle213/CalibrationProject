@@ -225,14 +225,12 @@ namespace CalibrationApp.DAO
             return correct;
         }
 
-        public List<User> GetParticipatingUsers(int calibrationId)
+        public List<StandardUser> GetParticipatingUsers(int calibrationId)
         {
-            List<User> users = new List<User>();
+            List<StandardUser> users = new List<StandardUser>();
 
-            const string sql = "SELECT u.user_id,u.first_name,u.last_name,r.role_name,t.team_name,s.points_earned,s.points_possible " +
+            const string sql = "SELECT u.user_id, u.first_name, u.last_name, u.role, u.team_id, s.points_earned, s.points_possible " +
                 "FROM Users u " +
-                "INNER JOIN Roles r ON u.role_id = r.role_id " +
-                "INNER JOIN Teams t ON u.team_id = t.team_id " +
                 "INNER JOIN Scores s on s.user_id = u.user_id " +
                 "WHERE (s.calibration_id = @calibrationId AND u.user_id <> 0 AND u.user_id IN " +
                 "(SELECT user_id " +
@@ -251,13 +249,13 @@ namespace CalibrationApp.DAO
                     {
                         while (reader.Read())
                         {
-                            User user = new User();
+                            StandardUser user = new StandardUser();
 
                             user.UserId = Convert.ToInt32(reader["user_id"]);
                             user.FirstName = Convert.ToString(reader["first_name"]);
                             user.LastName = Convert.ToString(reader["last_name"]);
-                            user.Role = Convert.ToString(reader["role_name"]);
-                            user.Team = Convert.ToString(reader["team_name"]);
+                            user.Role = Convert.ToString(reader["role"]);
+                            user.TeamId = Convert.ToInt32(reader["team_id"]);
                             user.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
                             user.PointsPossible = Convert.ToDecimal(reader["points_possible"]);
 
@@ -267,7 +265,7 @@ namespace CalibrationApp.DAO
                 }
             }
 
-            foreach(User user in users)
+            foreach(StandardUser user in users)
             {
                 user.Answers = GetMyAnswers(calibrationId, user.UserId);
             }

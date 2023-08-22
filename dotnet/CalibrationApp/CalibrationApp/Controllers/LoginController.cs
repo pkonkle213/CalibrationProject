@@ -21,21 +21,15 @@ namespace CalibrationApp.Controllers
             passwordHasher = _passwordHasher;
             userDAO = _userDAO;
         }
-        
+
         [HttpGet("Teams")]
         public ActionResult<List<Team>> GetAllTeams()
         {
             return Ok(userDAO.GetTeams());
         }
 
-        [HttpGet("Roles")]
-        public ActionResult<List<Role>> GetAllRoles()
-        {
-            return Ok(userDAO.GetRoles());
-        }
-
         [HttpGet("Users")]
-        public ActionResult<List<User>> GetAllUsers()
+        public ActionResult<List<SaltedUser>> GetAllUsers()
         {
             return Ok(userDAO.GetAllUsers());
         }
@@ -82,7 +76,7 @@ namespace CalibrationApp.Controllers
             IActionResult result = Unauthorized(new { message = "Username or password is incorrect" });
 
             // Get the user by username
-            User user = userDAO.GetUser(userParam.Username);
+            SaltedUser user = userDAO.GetUser(userParam.Username);
 
             // If we found a user and the password hash matches
             if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt))
@@ -93,12 +87,12 @@ namespace CalibrationApp.Controllers
                 // Create a ReturnUser object to return to the client
                 LoginResponse retUser = new LoginResponse()
                 {
-                    User = new ReturnUser()
+                    User = new StandardUser()
                     {
                         UserId = user.UserId,
                         Username = user.Username,
                         Role = user.Role,
-                        Team = user.Team,
+                        TeamId = user.TeamId,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                     },
@@ -120,32 +114,63 @@ namespace CalibrationApp.Controllers
         [AllowAnonymous]
         public IActionResult Register(RegisterUser userParam)
         {
-            IActionResult result;
-
-            User existingUser = userDAO.GetUser(userParam.Username);
-            if (existingUser != null)
+            try
             {
-                return Conflict(new { message = "Username already taken. Please choose a different username." });
-            }
+                IActionResult result;
 
-            User user = userDAO.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.isActive, userParam.Team, userParam.FirstName, userParam.LastName);
-            if (user != null)
-            {
-                result = Created(user.Username, null);
-            }
-            else
-            {
-                result = BadRequest(new { message = "An error occurred and user was not created." });
-            }
+                StandardUser user = userDAO.AddUser(userParam);
 
-            return result;
+                if (user != null)
+                {
+                    result = Created(user.Username, user);
+                }
+                else
+                {
+                    result = BadRequest(new { message = "An error occurred and user was not created." });
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something wrong with the sql. " + ex.Message);
+            }
         }
 
         [HttpPut]
+        public IActionResult UpdateUser(StandardUser user)
+        {
+            try
+            {
+                int rowsAffected = userDAO.UpdateUser(user);
+
+                if (rowsAffected != 1)
+                    return BadRequest($"Seems that {rowsAffected} rows were changed...");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Wasn't able to update the user");
+            }
+        }
+
+        [HttpPut("{userId}")]
         public IActionResult ChangeActive(int userId)
         {
-            userDAO.SwitchActive(userId);
-            return Ok("Switched!");
+            try
+            {
+                int rowsAffected = userDAO.SwitchActive(userId);
+
+                if (rowsAffected == 1)
+                    return Ok(rowsAffected);
+
+                return BadRequest($"Seems that {rowsAffected} rows were changed...");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something errored: " + ex.Message);
+            }
         }
     }
 }

@@ -1,15 +1,15 @@
 ﻿namespace CalibrationApp.Models
 {
-    /// <summary>
-    /// Model of user data to return upon successful login
-    /// </summary>
-    public class ReturnUser
+    public class SaltedUser
     {
         public int UserId { get; set; }
         public string Username { get; set; }
+        public string PasswordHash { get; set; }
+        public string Salt { get; set; }
         public string Role { get; set; }
-        public string Team { get; set; }
+        public int TeamId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -9,7 +9,7 @@ export class AuthService {
         user: {
             userId: 0,
             role: "",
-            team: "",
+            teamId: 0,
             username: "",
             firstName: "",
             lastName: "",
@@ -40,16 +40,23 @@ export class AuthService {
         return this.currentUser.user.userId>0;
     }
 
+    LeaderCheck(leaderId:number) {
+        return (leaderId === this.currentUser.user.userId);
+    }
+
+    AdminCheck() {
+        return (this.currentUser.user.role === "Admin");
+    }
+
     logOutUser() {
         this.currentUser={
             user: {
                 userId: 0,
                 role: "",
-                team: "",
+                teamId: 0,
                 username: "",
                 firstName: "",
                 lastName: "",
-                answers: [],
                 isActive: true,
             },
             token: "",
