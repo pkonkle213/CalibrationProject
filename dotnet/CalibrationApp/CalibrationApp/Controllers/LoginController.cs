@@ -147,11 +147,11 @@ namespace CalibrationApp.Controllers
                 if (rowsAffected != 1)
                     return BadRequest($"Seems that {rowsAffected} rows were changed...");
 
-                return Ok();
+                return Ok(user);
             }
             catch (Exception ex)
             {
-                return BadRequest("Wasn't able to update the user");
+                return BadRequest("Wasn't able to update the user" + ex.Message);
             }
         }
 

@@ -18,6 +18,7 @@ export class ViewAllCalibrations {
     isOpen:boolean = true;
     
     constructor(private _calibrationService: CalibrationService, private router:Router, private auth:AuthService){
+
     }
     
     ngOnInit() {
@@ -93,7 +94,6 @@ export class ViewAllCalibrations {
     }
 
     PushToGroup(id:number) {
-        //this._calibrationService.switchIsOpen(id).subscribe(data => {});
         this.router.navigate(['/group/',id]);
     }
 }

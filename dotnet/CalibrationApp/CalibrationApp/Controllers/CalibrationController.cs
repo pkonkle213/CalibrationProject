@@ -108,8 +108,12 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                dao.SwitchCalibrationIsOpen(calibrationId);
-                return Ok("Switched!");
+                var rowsAffected = dao.SwitchCalibrationIsOpen(calibrationId);
+
+                if (rowsAffected != 1)
+                    return BadRequest($"Unfortunately, {rowsAffected} rows were affected.");
+
+                return Ok(rowsAffected);
             }
             catch (Exception ex)
             {

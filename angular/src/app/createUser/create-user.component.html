@@ -20,7 +20,7 @@
                     <td>{{FindTeam(user)}}</td>
                     <td>{{user.role}}</td>
                     <td>{{user.isActive}}</td>
-                    <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">Disable</button></td>
+                    <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">{{user.isActive ? "Dis" : "En"}}able</button></td>
                 </ng-container>
                 <ng-container *ngIf="EditCheck(user)">
                     <td><input type="text" [(ngModel)]="editUser.username"></td>
@@ -37,7 +37,7 @@
                         </select>
                     </td>
                     <td>{{editUser.isActive}}</td>
-                    <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">Disable</button></td>
+                    <td><button (click)="SaveUserEdit(editUser)">Save</button><button (click)="CancelEdit()">Cancel</button></td>
                 </ng-container>
             </tr>
             <tr *ngIf="addUser">

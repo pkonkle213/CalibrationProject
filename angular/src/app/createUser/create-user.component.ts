@@ -71,7 +71,6 @@ export class CreateUserComponent {
     }
 
     CreateNewUser(user:IRegisterUser) {
-        console.log(user);
         this.userService.createUser(user).subscribe(data => {
             this.users.push(data);
             this.ResetCreateUser();
@@ -94,7 +93,7 @@ export class CreateUserComponent {
 
     SwitchUserIsActive(user:IUser) {
         this.userService.switchActive(user.userId).subscribe((data) => {
-            if(!data){
+            if(!data) {
                 console.log("Didn't switch");
             }
             else {
@@ -113,7 +112,16 @@ export class CreateUserComponent {
     }
 
     SaveUserEdit(user:IUser) {
-
+        this.userService.updateUser(user).subscribe((data) => {
+            if (!data) {
+                console.log("Unable to update");
+            }
+            else {
+                let i = this.users.findIndex((x:any) => x.userId === user.userId);
+                this.users[i] = user;
+                this.CancelEdit();
+            }
+        });
     }
 
     CancelEdit() {

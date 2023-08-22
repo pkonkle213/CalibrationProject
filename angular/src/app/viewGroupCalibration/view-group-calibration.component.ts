@@ -38,26 +38,28 @@ export class GroupCalibrationComponent {
     ngOnInit() {
         this._calibrationService.getCalibration(this.calibrationId).subscribe(data => {
             this.calibration = data;
+        });
        
         this._calibrationService.getAllContactTypes().subscribe((data) => {
             this.contactTypes = data;
-        
-         
-            var thing = this.contactTypes.find((type:any) => type.id == this.calibration.contactChannelId);
-            this.contactType = thing.name;
-            });
         });
 
         this._calibrationService.getParticipants(this.calibrationId).subscribe(data => {
             this.participants = data;
+            console.log("Participants:");
+            console.log(this.participants);
         });
         
         this._calibrationService.getQuestions(this.calibrationId).subscribe(data => {
             this.questions = data;
+            console.log("Questions:");
+            console.log(this.questions);
         });
 
         this._calibrationService.getGroupAnswers(this.calibrationId).subscribe(data => {
             this.answers = data;
+            console.log("Answers:");
+            console.log(this.answers);
 
             if (this.answers===null || this.answers.length===0) {
                 for(let i = 0; i < this.questions.length; i++) {
@@ -143,6 +145,11 @@ export class GroupCalibrationComponent {
         return sum;
     }
 
+    GetContactType() {
+        var contact = this.contactTypes.find((type:any) => type.id === this.calibration.contactChannelId);
+        return contact.name;
+    }
+
     Calibrated(person:any) {
         let sum = 0;
         for(let i=0;i<this.questions.length;i++) {
@@ -152,6 +159,17 @@ export class GroupCalibrationComponent {
         }
 
         return sum / this.questions.length * 100;
+    }
+
+    SwitchIsOpen() {
+        this._calibrationService.switchIsOpen(this.calibrationId).subscribe((data) => {
+            if(!data) {
+                console.log("Could not switch");
+            }
+            else {
+                this.calibration.isOpen = !this.calibration.isOpen;
+            }
+        });
     }
 
     Matching(questionId:any,answerValue:string) {
@@ -180,15 +198,11 @@ export class GroupCalibrationComponent {
 
         this.questions.map((e:IQuestion) => possible += e.pointsPossible);
 
-        // for(let i=0;i<this.qu estions.length;i++) {
+        // for(let i=0;i<this.questions.length;i++) {
         //     possible += this.questions[i].pointsPossible
         // }
 
         return possible;
-    }
-
-    DefaultOption(options:any) {
-        
     }
 
     CalculateScore(earned:number,possible:number) {

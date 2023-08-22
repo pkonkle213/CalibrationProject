@@ -52,7 +52,7 @@ namespace CalibrationApp.DAO
             question.FormPosition = Convert.ToInt32(reader["form_position"]);
             question.QuestionText = Convert.ToString(reader["question"]);
             question.PointsPossible = Convert.ToInt32(reader["points_possible"]);
-            //question.Options = GetOptions(question.IsCategory);
+            question.Options = GetOptions(question.IsCategory);
 
             return question;
         }

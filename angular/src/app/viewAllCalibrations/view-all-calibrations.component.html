@@ -2,10 +2,10 @@
     <h2>All {{isOpen ? "Open" : ""}} Calibrations</h2>
     <button (click)="SwitchOpen()">Switch to {{isOpen ? "All" : "Open"}}</button>
     <table>
-        <tr *ngIf="!allCalibrations">
+        <tr *ngIf="FilterCalibrations().length == 0">
             <th>No Calibrations To Show</th>
         </tr>
-        <tr *ngIf="!!allCalibrations">
+        <tr *ngIf="FilterCalibrations().length > 0">
             <th>Calibration Id</th>
             <th>Calibration Date</th>
             <th>Team Member Name</th>

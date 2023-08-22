@@ -15,17 +15,6 @@ USE calibration_database
 GO
 
 -- Create Tables
-CREATE TABLE Roles (
-	role_id int IDENTITY,
-	role_name VARCHAR(50) NOT NULL,
-	CONSTRAINT PK_Roles PRIMARY KEY (role_id),
-)
-
-INSERT INTO Roles (role_name) VALUES ('Admin');
-INSERT INTO Roles (role_name) VALUES ('Leader');
-INSERT INTO Roles (role_name) VALUES ('Participant');
-GO
-
 CREATE TABLE Teams (
 	team_id int IDENTITY,
 	team_name VARCHAR(50) NOT NULL,
@@ -47,10 +36,9 @@ CREATE TABLE Users (
 	first_name varchar(50) NOT NULL,
 	last_name varchar(50) NOT NULL,
 	isActive BIT NOT NULL,
-	role_id int NOT NULL,
+	role varchar(15) NOT NULL,
 	team_id int NOT NULL,
 	CONSTRAINT PK_Users PRIMARY KEY (user_id),
-	CONSTRAINT FK_Users_Roles FOREIGN KEY (role_id) references Roles (role_id),
 	CONSTRAINT FK_Users_Teams FOREIGN KEY (team_id) references Teams (team_id),
 	CONSTRAINT UC_Users_user_id UNIQUE (user_id),
 )
@@ -59,10 +47,10 @@ CREATE TABLE Users (
 -- These values should not be kept when going to Production
 
 SET IDENTITY_INSERT Users ON
-INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,3,5);
+INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, role,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,'Admin',5);
 SET IDENTITY_INSERT Users OFF
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1,1);
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,3,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role, team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,'Admin',1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,'Participant',1);
 GO
 
 

@@ -35,6 +35,6 @@ export class UserService {
 
     updateUser(user:IUser) {
         let path = this.url + "Login";
-        return this.http.post(path, user, this.httpOptions);
+        return this.http.put(path, user, this.httpOptions);
     }
 }

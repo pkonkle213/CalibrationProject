@@ -7,9 +7,16 @@ namespace CalibrationApp.Controllers
     {
         internal int GetCurrentUserID(ClaimsPrincipal user)
         {
+            try
+            {
                 var idClaim = user.FindFirst("sub");
                 string idString = idClaim.Value;
                 return int.Parse(idString);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
         }
     }
 }

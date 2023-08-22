@@ -183,8 +183,10 @@ namespace CalibrationApp.DAO
             return calibration;
         }
 
-        public void SwitchCalibrationIsOpen(int calibrationId)
+        public int SwitchCalibrationIsOpen(int calibrationId)
         {
+            int rowsAffected;
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -196,9 +198,11 @@ namespace CalibrationApp.DAO
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@calibrationId", calibrationId);
-                    command.ExecuteScalar();
+                    rowsAffected = command.ExecuteNonQuery();
                 }
             }
+
+            return rowsAffected;
         }
     }
 }

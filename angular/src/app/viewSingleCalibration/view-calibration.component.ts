@@ -12,9 +12,11 @@ import { IScore } from "src/interfaces/score";
 })
 
 export class ViewSingleCalibrationComponent {
-    userId:number = 2;
+    // userId:number = 0;
+    calibrationId:number = 0;
     calibration:any;
     questions:any;
+    types:any;
     answers:any;
     answerSubmit:IAnswer[] = [];
     updating:boolean = false;
@@ -24,26 +26,30 @@ export class ViewSingleCalibrationComponent {
         pointsPossible: 0,
     };
 
-    constructor(private _calibrationService:CalibrationService, private _route:ActivatedRoute,private _router:Router) {
-
+    constructor(private calibrationService:CalibrationService, private route:ActivatedRoute, private router:Router) {
+        this.calibrationId = this.route.snapshot.params['id'];
     }
 
     ngOnInit() {
-        this._calibrationService.getCalibration(this._route.snapshot.params['id']).subscribe(data => {
+        this.calibrationService.getCalibration(this.calibrationId).subscribe(data => {
             this.calibration = data;
         });
 
-        this._calibrationService.getQuestions(this._route.snapshot.params['id']).subscribe(data => {
+        this.calibrationService.getAllContactTypes().subscribe((data) => {
+            this.types = data;
+        });
+
+        this.calibrationService.getQuestions(this.calibrationId).subscribe(data => {
             this.questions = data;
 
-            this._calibrationService.getMyAnswers(this._route.snapshot.params['id']).subscribe(data => {
+            this.calibrationService.getMyAnswers(this.calibrationId).subscribe(data => {
                 this.answers = data;
 
-                if (this.answers===null || this.answers.length===0) {
-                    for(let i=0;i<this.questions.length;i++)
+                if (this.answers === null || this.answers.length === 0) {
+                    for(let i = 0; i < this.questions.length; i++)
                     {
                         this.answerSubmit.push({
-                            calibrationId: this._route.snapshot.params['id'],
+                            calibrationId: this.calibrationId,
                             questionId: this.questions[i].id,
                             optionValue: this.questions[i].options[0].optionValue,
                             comment: '',
@@ -57,6 +63,10 @@ export class ViewSingleCalibrationComponent {
                 }
             });
         });
+    }
+
+    GetContactChannel() {
+        return (this.types.find((x:any) => x.id === this.calibration.contactChannelId).name);
     }
 
     onChange(event:any,i:number) {
@@ -87,27 +97,27 @@ export class ViewSingleCalibrationComponent {
     }
 
     BuildScore():IScore {
-        this.score.calibrationId = this._route.snapshot.params['id'];
+        this.score.calibrationId = this.calibrationId;
         this.score.pointsEarned = this.Earned();
         this.score.pointsPossible = this.Possible();
         return this.score;
     }
 
     Cancel() {
-        this._router.navigate(['/view']);
+        this.router.navigate(['/view']);
     }
 
     SubmitAnswer() {
         if(this.updating) {
-            this._calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {});
-            this._calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
-                this._router.navigate(['/view']);
+            this.calibrationService.updateMyAnswer(this.answerSubmit).subscribe(() => {});
+            this.calibrationService.updateMyScore(this.BuildScore()).subscribe(() => {
+                this.router.navigate(['/view']);
             });
         }
         else {
-            this._calibrationService.submitMyAnswer(this.answerSubmit).subscribe(() => {});
-            this._calibrationService.submitMyScore(this.BuildScore()).subscribe(() => {
-                this._router.navigate(['/view']);
+            this.calibrationService.submitMyAnswer(this.answerSubmit).subscribe(() => {});
+            this.calibrationService.submitMyScore(this.BuildScore()).subscribe(() => {
+                this.router.navigate(['/view']);
             });
         }
     }
