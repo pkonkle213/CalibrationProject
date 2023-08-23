@@ -13,6 +13,10 @@ namespace CalibrationApp.Controllers
                 string idString = idClaim.Value;
                 return int.Parse(idString);
             }
+            catch (NullReferenceException ex)
+            {
+                return -1;
+            }
             catch (Exception ex)
             {
                 return -1;

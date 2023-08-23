@@ -31,7 +31,7 @@ namespace CalibrationApp.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin,Leader")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult<Calibration> CreateCalibration(Calibration calibration)
         {
             try

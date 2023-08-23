@@ -41,7 +41,7 @@ export class ViewAllCalibrations {
 
     FilterCalibrations() {
         if (this.isOpen)
-            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen === true));
+            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen));
         
         return (this.allCalibrations);
     }
@@ -50,7 +50,18 @@ export class ViewAllCalibrations {
         return (!this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 
-    Start(calibration:ICalibration) {
+    Ready(calibration:ICalibration) {
+       this._calibrationService.switchIsOpen(calibration.id).subscribe((data) => {
+        if(!data) {
+            console.log("Didn't switch");
+        }
+        else {
+            calibration.isOpen = !calibration.isOpen;
+        }
+       });
+    }
+
+    CanStart(calibration:ICalibration) {
         return (this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 

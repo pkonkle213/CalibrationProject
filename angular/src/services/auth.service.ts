@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     LeaderCheck(leaderId:number) {
-        return (leaderId === this.currentUser.user.userId);
+        return (this.currentUser.user.role === "Admin" || leaderId === this.currentUser.user.userId);
     }
 
     AdminCheck() {

@@ -50,7 +50,7 @@ namespace CalibrationApp.DAO
             return -1;
         }
 
-        public void SubmitScore(Score score, int userId)
+        private bool CalibrationIsClosed(int calibrationId)
         {
             int correct = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -63,166 +63,123 @@ namespace CalibrationApp.DAO
 
                 using (SqlCommand command = new SqlCommand(check, conn))
                 {
-                    command.Parameters.AddWithValue("@calibrationId", score.CalibrationId);
+                    command.Parameters.AddWithValue("@calibrationId", calibrationId);
                     correct = Convert.ToInt32(command.ExecuteScalar());
                 }
             }
 
-            if (correct == 1)
+            return (correct == null || correct != calibrationId);
+        }
+       
+        public void SubmitScore(Score score, int userId)
+        {
+            if (CalibrationIsClosed(score.CalibrationId))
+                throw new Exception("No calibration found");
+            
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                conn.Open();
+
+                const string sql = "INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) " +
+                    "VALUES (@user_id,@calibration_id,@points_earned,@points_possible)";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    conn.Open();
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
+                    command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
+                    command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
 
-                    const string sql = "INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) " +
-                        "VALUES (@user_id,@calibration_id,@points_earned,@points_possible)";
-
-                    using (SqlCommand command = new SqlCommand(sql, conn))
-                    {
-                        command.Parameters.AddWithValue("@user_id", userId);
-                        command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
-                        command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
-                        command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
-
-                        command.ExecuteScalar();
-                    }
+                    command.ExecuteScalar();
                 }
             }
+            
         }
 
         public int SubmitAnswers(List<Answer> answers, int userId)
         {
-            int correct = 0;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            if (CalibrationIsClosed(answers[0].CalibrationId))
+                throw new Exception("Calibration closed");
+            
+            foreach (Answer answer in answers)
             {
-                conn.Open();
-
-                const string check = "SELECT calibration_id " +
-                    "FROM Calibrations " +
-                    "WHERE (isOpen = 1 AND calibration_id = @calibrationId)";
-
-                using (SqlCommand command = new SqlCommand(check, conn))
-                {
-                    command.Parameters.AddWithValue("@calibrationId", answers[0].CalibrationId);
-                    correct = Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-
-            if (correct > 0)
-            {
-                foreach (Answer answer in answers)
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-
-                        const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
-                            "VALUES(@calibrationId, @userId, @questionId, @optionId, @comment)";
-
-                        using (SqlCommand command = new SqlCommand(sql, conn))
-                        {
-                            command.Parameters.AddWithValue("@calibrationId", answer.CalibrationId);
-                            command.Parameters.AddWithValue("@userId", userId);
-                            command.Parameters.AddWithValue("@questionId", answer.QuestionId);
-                            command.Parameters.AddWithValue("@optionId", GetOption(answer.OptionValue));
-                            command.Parameters.AddWithValue("@comment", answer.Comment);
-
-                            command.ExecuteScalar();
-                        }
-                    }
-                }
-            }
-
-            return correct;
-        }
-
-        public void UpdateScore(Score score, int userId)
-        {
-            int correct = 0;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                const string check = "SELECT COUNT(calibration_id) " +
-                    "FROM Calibrations " +
-                    "WHERE (isOpen = 1 AND calibration_id = @calibrationId)";
-
-                using (SqlCommand command = new SqlCommand(check, conn))
-                {
-                    command.Parameters.AddWithValue("@calibrationId", score.CalibrationId);
-                    correct = Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-
-            if (correct == 1)
-            {
-
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    const string sql = "Update Scores " +
-                        "SET points_possible = @points_possible, points_earned = @points_earned " +
-                        "WHERE (user_id=@user_id AND calibration_id=@calibration_id)";
+                    const string sql = "INSERT INTO Answers (calibration_id,user_id,question_id,option_id,comment) " +
+                        "VALUES(@calibrationId, @userId, @questionId, @optionId, @comment)";
 
                     using (SqlCommand command = new SqlCommand(sql, conn))
                     {
-                        command.Parameters.AddWithValue("@user_id", userId);
-                        command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
-                        command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
-                        command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
+                        command.Parameters.AddWithValue("@calibrationId", answer.CalibrationId);
+                        command.Parameters.AddWithValue("@userId", userId);
+                        command.Parameters.AddWithValue("@questionId", answer.QuestionId);
+                        command.Parameters.AddWithValue("@optionId", GetOption(answer.OptionValue));
+                        command.Parameters.AddWithValue("@comment", answer.Comment);
 
                         command.ExecuteScalar();
                     }
+                }
+            }
+            
+            return 1;
+        }
+
+        public void UpdateScore(Score score, int userId)
+        {
+            if (CalibrationIsClosed(score.CalibrationId))
+                throw new Exception("Calibration is closed");
+            
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                const string sql = "Update Scores " +
+                    "SET points_possible = @points_possible, points_earned = @points_earned " +
+                    "WHERE (user_id=@user_id AND calibration_id=@calibration_id)";
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@user_id", userId);
+                    command.Parameters.AddWithValue("@calibration_id", score.CalibrationId);
+                    command.Parameters.AddWithValue("@points_earned", score.PointsEarned);
+                    command.Parameters.AddWithValue("@points_possible", score.PointsPossible);
+
+                    command.ExecuteScalar();
                 }
             }
         }
 
         public int UpdateAnswers(List<Answer> answers, int userId)
         {
-            int correct = 0;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            if (CalibrationIsClosed(answers[0].CalibrationId))
+                throw new Exception("Calibration is closed");
+
+            foreach (Answer answer in answers)
             {
-                conn.Open();
-
-                const string check = "SELECT COUNT(calibration_id) " +
-                    "FROM Calibrations " +
-                    "WHERE (isOpen = 1 AND calibration_id = @calibrationId)";
-
-                using (SqlCommand command = new SqlCommand(check, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@calibrationId", answers[0].CalibrationId);
-                    correct = Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
+                    conn.Open();
 
-            if (correct == 1)
-            {
-                foreach (Answer answer in answers)
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    const string sql = "UPDATE Answers " +
+                        "SET option_id = @option_id, comment = @comment " +
+                        "WHERE (calibration_id = @calibration_id AND user_id = @user_id AND question_id = @question_id)";
+
+                    using (SqlCommand command = new SqlCommand(sql, conn))
                     {
-                        conn.Open();
+                        command.Parameters.AddWithValue("@calibration_id", answer.CalibrationId);
+                        command.Parameters.AddWithValue("@user_id", userId);
+                        command.Parameters.AddWithValue("@question_id", answer.QuestionId);
+                        command.Parameters.AddWithValue("@option_id", GetOption(answer.OptionValue));
+                        command.Parameters.AddWithValue("@comment", answer.Comment);
 
-                        const string sql = "UPDATE Answers " +
-                            "SET option_id = @option_id, comment = @comment " +
-                            "WHERE (calibration_id = @calibration_id AND user_id = @user_id AND question_id = @question_id)";
-
-                        using (SqlCommand command = new SqlCommand(sql, conn))
-                        {
-                            command.Parameters.AddWithValue("@calibration_id", answer.CalibrationId);
-                            command.Parameters.AddWithValue("@user_id", userId);
-                            command.Parameters.AddWithValue("@question_id", answer.QuestionId);
-                            command.Parameters.AddWithValue("@option_id", GetOption(answer.OptionValue));
-                            command.Parameters.AddWithValue("@comment", answer.Comment);
-
-                            command.ExecuteScalar();
-                        }
+                        command.ExecuteScalar();
                     }
                 }
             }
-
-            return correct;
+            
+            return 1;
         }
 
         public List<StandardUser> GetParticipatingUsers(int calibrationId)
