@@ -1,65 +1,65 @@
-<p>Lifetime Calibrated: {{TotalCalibrated(overallCalibrated.correct, overallCalibrated.possible)}}</p>
-
-<table>
-    <tr>
-        <td>Calibrated % by Question</td>
-        <td><button (click)="ChangeQuestionVisible()">{{ questionVisible ? "Hide" : "See"}} Questions</button></td>
-    </tr>
-    <tr *ngIf="questionVisible">
-        <td colspan="2">
-            <table class="child">
-            <tr>
-                    <th>Question ID</th>
-                    <th>Question / Category</th>
-                    <th>Percent Calibrated</th>
-            </tr>
-            <tr *ngFor="let question of questionCalibrated">
-                    <td>{{question.elementId}}</td>
-                    <td>{{question.description}}</td>
-                    <td>{{TotalCalibrated(question.correct, question.possible)}}</td>
-            </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>Calibrated % by Calibration</td>
-        <td><button (click)="ChangeCalibrationVisible()">{{ calibrationVisible ? "Hide" : "See"}} Calibrations</button></td>
-    </tr>
-    <tr *ngIf="calibrationVisible">
-        <td colspan="2">
-            <table class="child">
+<div>
+    <p>Lifetime Calibrated: {{TotalCalibrated(overallCalibrated.correct, overallCalibrated.possible)}}</p>
+    <table>
+        <tr>
+            <td>Calibrated % by Question</td>
+            <td><button (click)="ChangeQuestionVisible()">{{ questionVisible ? "Hide" : "See"}} Questions</button></td>
+        </tr>
+        <tr *ngIf="questionVisible">
+            <td colspan="2">
+                <table class="child">
                 <tr>
-                        <th>Calibration ID</th>
-                        <th>Calibration Date</th>
+                        <th>Question ID</th>
+                        <th>Question / Category</th>
                         <th>Percent Calibrated</th>
                 </tr>
-                <tr *ngFor="let calibration of calibrationCalibrated">
-                        <td>{{calibration.elementId}}</td>
-                        <td>{{calibration.description | date}}</td>
-                        <td>{{TotalCalibrated(calibration.correct, calibration.possible)}}</td>
+                <tr *ngFor="let question of questionCalibrated">
+                        <td>{{question.elementId}}</td>
+                        <td>{{question.description}}</td>
+                        <td>{{TotalCalibrated(question.correct, question.possible)}}</td>
                 </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>Calibration % by Contact Type</td>
-        <td><button (click)="ChangeTypeVisible()">{{ typeVisible ? "Hide" : "See"}} Contact Types</button></td>
-    </tr>
-    <tr *ngIf="typeVisible">
-        <td colspan="2">
-            <table class="child">
-                <tr>
-                    <th>Contact Type Id</th>
-                    <th>Contact Type</th>
-                    <th>Percent Calibrated</th>
-                </tr>
-                <tr *ngFor="let type of typeCalibrated">
-                    <td>{{type.elementId}}</td>
-                    <td>{{type.description}}</td>
-                    <td>{{TotalCalibrated(type.correct,type.possible)}}</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>Calibrated % by Calibration</td>
+            <td><button (click)="ChangeCalibrationVisible()">{{ calibrationVisible ? "Hide" : "See"}} Calibrations</button></td>
+        </tr>
+        <tr *ngIf="calibrationVisible">
+            <td colspan="2">
+                <table class="child">
+                    <tr>
+                            <th>Calibration ID</th>
+                            <th>Calibration Date</th>
+                            <th>Percent Calibrated</th>
+                    </tr>
+                    <tr *ngFor="let calibration of calibrationCalibrated">
+                            <td>{{calibration.elementId}}</td>
+                            <td>{{calibration.description | date}}</td>
+                            <td>{{TotalCalibrated(calibration.correct, calibration.possible)}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>Calibration % by Contact Type</td>
+            <td><button (click)="ChangeTypeVisible()">{{ typeVisible ? "Hide" : "See"}} Contact Types</button></td>
+        </tr>
+        <tr *ngIf="typeVisible">
+            <td colspan="2">
+                <table class="child">
+                    <tr>
+                        <th>Contact Type Id</th>
+                        <th>Contact Type</th>
+                        <th>Percent Calibrated</th>
+                    </tr>
+                    <tr *ngFor="let type of typeCalibrated">
+                        <td>{{type.elementId}}</td>
+                        <td>{{type.description}}</td>
+                        <td>{{TotalCalibrated(type.correct,type.possible)}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

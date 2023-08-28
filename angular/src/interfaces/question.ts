@@ -1,3 +1,5 @@
+import { IOption } from "./calibrationOption";
+
 export interface IQuestion {
     id: number,
     formId: number,
@@ -5,4 +7,5 @@ export interface IQuestion {
     isCategory: boolean,
     pointsPossible: number,
     formPosition:number,
+    options: IOption[],
 }

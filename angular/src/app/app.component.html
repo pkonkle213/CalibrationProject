@@ -15,7 +15,7 @@
       <tr *ngIf="authService.isAuthenticated()"><td><a [routerLink]="['/stats']">View Your Calibration Stats</a></td></tr>
       <tr *ngIf="authService.AdminCheck()"><td><a [routerLink]="['/createCalibration']">Create a New Calibration</a></td></tr>
       <tr *ngIf="authService.AdminCheck()"><td><a [routerLink]="['/form']">Create and Edit Forms</a></td></tr>
-      <tr *ngIf="authService.AdminCheck()"><td><a [routerLink]="['/editUsers']">Edit Users</a></td></tr>
+      <tr *ngIf="authService.AdminCheck()"><td><a [routerLink]="['/editUsers']">View / Edit Users</a></td></tr>
     </table>
   </nav>
   <main>

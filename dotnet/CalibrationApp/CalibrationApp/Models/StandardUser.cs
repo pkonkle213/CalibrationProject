@@ -12,6 +12,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsActive { get; set; }
+        public int? CalibrationPosition { get; set; }
         public decimal? PointsEarned { get; set; }
         public decimal? PointsPossible { get; set; }
         public List<Answer>? Answers { get; set; }

@@ -41,7 +41,7 @@ export class ViewAllCalibrations {
 
     FilterCalibrations() {
         if (this.isOpen)
-            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen));
+            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.groupScorePossible === 0));
         
         return (this.allCalibrations);
     }
@@ -62,6 +62,9 @@ export class ViewAllCalibrations {
     }
 
     CanStart(calibration:ICalibration) {
+        console.log("Leader id " + calibration.leaderUserId);
+        console.log("Current id " + this.auth.currentUser.user.userId);
+        console.log(this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
         return (this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 

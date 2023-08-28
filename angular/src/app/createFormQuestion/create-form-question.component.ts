@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { IForm } from 'src/interfaces/form';
 import { IQuestion } from 'src/interfaces/question';
 import { ISendQuestion } from 'src/interfaces/questionSend';
+import { IOption } from "src/interfaces/calibrationOption";
 import { FormService } from 'src/services/form.service';
 import { QuestionService } from 'src/services/question.service';
 
@@ -34,6 +35,7 @@ export class CreateFormComponent {
         questionText: "",
         pointsPossible: 0,
         formPosition: 0,
+        options: []
     }
 
     constructor(private formService:FormService, private questionService:QuestionService) {
@@ -56,7 +58,20 @@ export class CreateFormComponent {
                 this.questions[i] = question;
         }
 
-        this.CancelEditQuestion();
+        let myQuestion =
+        [
+            question,
+        ]
+
+        this.questionService.updateQuestions(myQuestion).subscribe((data) => {
+            if(!data) {
+                console.log("Didn't update question");
+            }
+            else {
+                this.questions = this.questions;
+                this.CancelEditQuestion();
+            }
+        });
     }
 
     CancelEditQuestion() {
@@ -66,9 +81,16 @@ export class CreateFormComponent {
             questionText: "",
             pointsPossible: 0,
             formPosition: 0,
+            options: [],
         }
         
         this.editQuestion = 0;
+    }
+
+    Disable(question:IQuestion) {
+        console.log("Disabling question - " + question.id);
+        console.log(question);
+        // Eventually this will disable the question
     }
 
     SetEditQuestion(question:IQuestion) {
@@ -149,6 +171,7 @@ export class CreateFormComponent {
                     questionText: "",
                     pointsPossible: 0,
                     formPosition: 0,
+                    options: [],
                 }
 
                 this.questionIssue = false;
@@ -209,6 +232,7 @@ export class CreateFormComponent {
             questionText: "",
             pointsPossible: 0,
             formPosition: 0,
+            options: [],
         }
         
         this.newQuestion = false;

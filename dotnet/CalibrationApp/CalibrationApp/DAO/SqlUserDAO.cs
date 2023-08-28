@@ -77,28 +77,13 @@ namespace CalibrationApp.DAO
             return teams;
         }
 
-        private int GetTeamId(string teamString)
-        {
-            List<Team> teams = GetTeams();
-
-            foreach (Team team in teams)
-            {
-                if (team.Name == teamString)
-                {
-                    return team.Id;
-                }
-            }
-
-            return -1;
-        }
-
         public List<StandardUser> GetAllUsers()
         {
             List<StandardUser> users = new List<StandardUser>();
-            string sql = "SELECT user_id, username, role, isActive, team_id, first_name, last_name " +
+            string sql = "SELECT user_id, username, role, isActive, team_id, calibrationPosition, first_name, last_name " +
                 "FROM Users " +
                 "WHERE user_id <> 0 " +
-                "ORDER BY isActive DESC, team_id, last_name";
+                "ORDER BY isActive DESC, calibrationPosition";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -116,6 +101,7 @@ namespace CalibrationApp.DAO
                                 Username = Convert.ToString(reader["username"]),
                                 Role = Convert.ToString(reader["role"]),
                                 TeamId = Convert.ToInt32(reader["team_id"]),
+                                CalibrationPosition = Convert.ToInt32(reader["calibrationPosition"]),
                                 FirstName = Convert.ToString(reader["first_name"]),
                                 LastName = Convert.ToString(reader["last_name"]),
                                 IsActive = Convert.ToBoolean(reader["isActive"]),

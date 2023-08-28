@@ -23,7 +23,7 @@ export class QuestionService {
         return this.http.post(path, question, this.httpOptions);
     }
 
-    updateQuestions(questions:IQuestion[]) {
+    updateQuestions(questions:ISendQuestion[]) {
         let path = this.url + "Question";
         return this.http.put(path, questions, this.httpOptions);
     }

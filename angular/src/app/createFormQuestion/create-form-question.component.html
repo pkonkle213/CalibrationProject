@@ -30,13 +30,14 @@
                 <td>&nbsp;</td>
                 <td><input type="text" [(ngModel)]="createQuestion.questionText"></td>
                 <td><input type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
-                <td><button (click)="SaveQuestion(createQuestion)">Save</button><button>Cancel</button></td>
+                <td><button (click)="SaveQuestion(createQuestion)">Save</button><button (click)="CancelEditQuestion()">Cancel</button></td>
             </ng-container>
             <ng-container *ngIf="!EditQuestion(question)">
                 <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>
-                <td>{{question.questionText}}</td>
+                <td *ngIf="question.isCategory" class="isCategory">{{question.questionText}}</td>
+                <td *ngIf="!question.isCategory">{{question.questionText}}</td>
                 <td class="second">{{question.isCategory ? question.pointsPossible : "--"}}</td>
-                <td class="third"><button (click)="SetEditQuestion(question)">Edit</button><button (click)="Cancel()">Delete</button></td>
+                <td class="third"><button (click)="SetEditQuestion(question)">Edit</button><button (click)="Disable(question)">Delete</button></td>
             </ng-container>
         </tr>
         <tr *ngIf="newQuestion">
