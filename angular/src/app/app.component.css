@@ -36,6 +36,7 @@ nav#left-nav {
 
 table {
     align-self: flex-start;
+    border: solid black 1px;
 }
 
 td {

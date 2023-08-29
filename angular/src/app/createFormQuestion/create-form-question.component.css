@@ -3,6 +3,10 @@ img {
     margin: 5px;
 }
 
+.bottom {
+    border: none;
+}
+
 table, td, tr, th {
     border: solid black 1px;
 }
@@ -15,7 +19,11 @@ table, td, tr, th {
     width: 70%;
 }
 
-input {
+.isCategory {
+    font-weight: bold;
+}
+
+#text {
     width: 80%;
 }
 
@@ -27,6 +35,14 @@ input {
 .third {
     width: 20%;
     text-align: center;
+}
+
+.second > button {
+    width: 100%;
+}
+
+.third > button {
+    width: 100%;
 }
 
 table {

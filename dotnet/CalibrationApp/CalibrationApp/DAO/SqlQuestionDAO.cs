@@ -52,7 +52,7 @@ namespace CalibrationApp.DAO
             question.FormPosition = Convert.ToInt32(reader["form_position"]);
             question.QuestionText = Convert.ToString(reader["question"]);
             question.PointsPossible = Convert.ToInt32(reader["points_possible"]);
-            question.Options = GetOptions(question.IsCategory);
+            question.Options = GetOptionsForQuestion(question.Id);
 
             return question;
         }
@@ -138,47 +138,13 @@ namespace CalibrationApp.DAO
             return questions;
         }
 
-        //public List<Option> GetAllOptions()
-        //{
-        //    List<Option> options = new List<Option>();
-
-        //    const string sql = "SELECT option_id, isCategory, option_value, points_earned " +
-        //                       "FROM Options";
-
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-
-        //        using (SqlCommand command = new SqlCommand(sql, conn))
-        //        {
-        //            using (SqlDataReader reader = command.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    Option option = new Option();
-
-        //                    option.Id = Convert.ToInt32(reader["option_id"]);
-        //                    option.isCategory = Convert.ToBoolean(reader["isCategory"]);
-        //                    option.OptionValue = Convert.ToString(reader["option_value"]);
-        //                    option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
-
-        //                    options.Add(option);
-        //                }
-        //            }
-
-        //        }
-        //    }
-
-        //    return options;
-        //}
-
-        public List<Option> GetOptions(bool isCategory)
+        public List<Option> GetAllOptions()
         {
             List<Option> options = new List<Option>();
 
-            const string sql = "SELECT option_id, isCategory, option_value, points_earned " +
+            const string sql = "SELECT option_id, order_position, isCategory, option_value, points_earned " +
                                "FROM Options " +
-                               "WHERE isCategory = @isCategory";
+                               "ORDER BY isCategory, order_position";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -186,7 +152,44 @@ namespace CalibrationApp.DAO
 
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    command.Parameters.AddWithValue("@isCategory", isCategory);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Option option = new Option();
+
+                            option.Id = Convert.ToInt32(reader["option_id"]);
+                            option.OrderPosition = Convert.ToInt32(reader["order_position"]);
+                            option.OptionValue = Convert.ToString(reader["option_value"]);
+                            option.IsCategory = Convert.ToBoolean(reader["isCategory"]);
+                            option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
+
+                            options.Add(option);
+                        }
+                    }
+
+                }
+            }
+
+            return options;
+        }
+
+        private List<Option> GetOptionsForQuestion(int questionId)
+        {
+            List<Option> options = new List<Option>();
+
+            const string sql = "SELECT o.option_id, o.order_position, o.option_value, o.points_earned, o.isCategory " +
+                               "FROM Questions_Options qo " +
+                               "INNER JOIN Options o ON o.option_id = qo.option_id " +
+                               "WHERE qo.question_id = @questionId";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@questionId", questionId);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -195,8 +198,10 @@ namespace CalibrationApp.DAO
                             Option option = new Option();
 
                             option.Id = Convert.ToInt32(reader["option_id"]);
+                            option.OrderPosition = Convert.ToInt32(reader["order_position"]);
                             option.OptionValue = Convert.ToString(reader["option_value"]);
                             option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
+                            option.IsCategory = Convert.ToBoolean(reader["isCategory"]);
 
                             options.Add(option);
                         }

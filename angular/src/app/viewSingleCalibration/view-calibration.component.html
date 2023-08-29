@@ -1,6 +1,6 @@
 <div>
     <h2>Calibration for: {{calibration.repFirstName}} {{calibration.repLastName}}</h2>
-    <h3>Channel: {{calibration.contactChannel}}</h3>
+    <h3>Channel: {{GetContactChannel()}}</h3>
     <h3>Date: {{calibration.calibrationDate | date}}</h3>
     <h3>Contact Id: {{calibration.contactId}}</h3>
     <h4>Current status: {{calibration.isOpen ? "Open" : "Closed"}}</h4>

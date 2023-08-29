@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { IForm } from 'src/interfaces/form';
+import { IOption } from 'src/interfaces/option';
 import { IQuestion } from 'src/interfaces/question';
-import { ISendQuestion } from 'src/interfaces/questionSend';
 import { FormService } from 'src/services/form.service';
 import { QuestionService } from 'src/services/question.service';
 
@@ -20,6 +20,9 @@ export class CreateFormComponent {
     updateMessage:string = "";
     updateSuccess:boolean = false;
     editFormName:boolean = false;
+    editQuestion:number = 0;
+    allOptions:any;
+    selectedOptions:any;
 
     form:IForm = {
         formId: 0,
@@ -27,12 +30,16 @@ export class CreateFormComponent {
         isArchived: false,
     }
 
-    createQuestion:ISendQuestion = {
+    editOptionsForQuestion:IOption[] = [];
+
+    createQuestion:IQuestion = {
         id: 0,
         formId: this.form.formId,
         questionText: "",
         pointsPossible: 0,
         formPosition: 0,
+        options: [],
+        isCategory: false,
     }
 
     constructor(private formService:FormService, private questionService:QuestionService) {
@@ -43,10 +50,78 @@ export class CreateFormComponent {
         this.formService.getAllForms().subscribe((data) => {
             this.forms = data;
         });
+
+        this.questionService.getAllOptions().subscribe((data) => {
+            this.allOptions = data;
+        });
+    }
+
+    FindAvailableOptions(question:IQuestion) {
+       
+    }
+
+    SetOptions(question:IQuestion) {
+        this.OptionsForQuestion(question).array.forEach((option:IOption) => {
+            
+        });
+    }
+
+    OptionsForQuestion(question:IQuestion) {
+        let availableOptions = this.allOptions.filter((option:IOption) => option.isCategory === question.isCategory);
+        return availableOptions;
+    }
+
+    EditQuestion(question:IQuestion) {
+        return (question.id === this.editQuestion);
+    }
+
+    SaveQuestion(question:IQuestion) {
+        if (question.pointsPossible > 0) {
+            question.isCategory = true;
+        }
+        else {
+            question.isCategory = false;
+        }
+
+        for(let i = 0; i < this.questions.length; i++) {
+            if (this.questions[i].id === question.id)
+                this.questions[i] = question;
+        }
+
+        let myQuestion =
+        [
+            question,
+        ]
+
+        this.questionService.updateQuestions(myQuestion).subscribe((data) => {
+            if(!data) {
+                console.log("Didn't update question");
+            }
+            else {
+                this.questions = this.questions;
+                this.Cancel();
+            }
+        });
+    }
+
+    Disable(question:IQuestion) {
+        console.log("Disabling question - " + question.id);
+        console.log(question);
+        // Eventually this will disable the question
+    }
+
+    SetEditQuestion(question:IQuestion) {
+        this.editQuestion = question.id;
+        this.createQuestion = question;
     }
 
     TotalPoints() {
+        let sum:number = 0;
+        for(let i = 0; i < this.questions.length; i++){
+            sum += this.questions[i].pointsPossible;
+        }
 
+        return sum;
     }
 
     minPosition(question:IQuestion) {
@@ -113,6 +188,8 @@ export class CreateFormComponent {
                     questionText: "",
                     pointsPossible: 0,
                     formPosition: 0,
+                    options: [],
+                    isCategory: false,
                 }
 
                 this.questionIssue = false;
@@ -173,8 +250,11 @@ export class CreateFormComponent {
             questionText: "",
             pointsPossible: 0,
             formPosition: 0,
+            options: [],
+            isCategory: false,
         }
         
+        this.editQuestion = 0;
         this.newQuestion = false;
     }
 
@@ -201,7 +281,7 @@ export class CreateFormComponent {
     SaveAndUpdateQuestions() {
         this.questionService.updateQuestions(this.questions).subscribe((data) => {
             if (!data) {
-            this.updateMessage = "Something went wrong.";
+                this.updateMessage = "Something went wrong.";
             }
             else {
                 this.updateMessage = "Successfully saved!";

@@ -2,3 +2,25 @@ td {
     border: solid 1px black;
     width: 5%;
 }
+
+th {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+}
+
+img {
+    width: 20px;
+    margin: 5px;
+}
+
+div {
+    width: 100%;
+    text-align: center;
+}
+
+table > tbody > tr > td > button {
+    width: 100%;
+}

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   constructor(public authService:AuthService,  private router:Router) {
 
@@ -15,13 +16,5 @@ export class AppComponent {
   logout() {
     this.authService.logOutUser();
     this.router.navigate(['']);
-  }
-
-  leaderCheck() {
-    return (this.authService.currentUser.user.role==="Leader" || this.authService.currentUser.user.role==="Admin")
-  }
-
-  adminCheck() {
-    return (this.authService.currentUser.user.role==="Admin")
   }
 }

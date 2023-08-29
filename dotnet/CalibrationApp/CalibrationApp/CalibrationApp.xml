@@ -101,7 +101,7 @@
             Model to accept registration parameters
             </summary>
         </member>
-        <member name="T:CalibrationApp.Models.ReturnUser">
+        <member name="T:CalibrationApp.Models.StandardUser">
             <summary>
             Model of user data to return upon successful login
             </summary>

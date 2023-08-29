@@ -15,17 +15,6 @@ USE calibration_database
 GO
 
 -- Create Tables
-CREATE TABLE Roles (
-	role_id int IDENTITY,
-	role_name VARCHAR(50) NOT NULL,
-	CONSTRAINT PK_Roles PRIMARY KEY (role_id),
-)
-
-INSERT INTO Roles (role_name) VALUES ('Admin');
-INSERT INTO Roles (role_name) VALUES ('Leader');
-INSERT INTO Roles (role_name) VALUES ('Participant');
-GO
-
 CREATE TABLE Teams (
 	team_id int IDENTITY,
 	team_name VARCHAR(50) NOT NULL,
@@ -47,41 +36,44 @@ CREATE TABLE Users (
 	first_name varchar(50) NOT NULL,
 	last_name varchar(50) NOT NULL,
 	isActive BIT NOT NULL,
-	role_id int NOT NULL,
+	calibrationPosition int,
+	role varchar(15) NOT NULL,
 	team_id int NOT NULL,
+	-- calibrationPosition int NOT NULL,
 	CONSTRAINT PK_Users PRIMARY KEY (user_id),
-	CONSTRAINT FK_Users_Roles FOREIGN KEY (role_id) references Roles (role_id),
 	CONSTRAINT FK_Users_Teams FOREIGN KEY (team_id) references Teams (team_id),
+	CONSTRAINT UC_Users_user_id UNIQUE (user_id),
 )
 
 -- Populate default data for testing: user and admin with password of 'password'
 -- These values should not be kept when going to Production
 
 SET IDENTITY_INSERT Users ON
-INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, role_id,team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,3,5);
+INSERT INTO Users (user_id, username, password_hash, salt, first_name, last_name, isActive, calibrationPosition, role, team_id) VALUES (0,'GROUPSCORES','IMPOSSIBLE', 'NOTHAPPENING','GROUP','SCORES',0,0,'Admin',5);
 SET IDENTITY_INSERT Users OFF
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('bman','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','Boss','Man',1,1,1);
-INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, role_id, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,2,1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, calibrationPosition, role, team_id) VALUES ('sadmin','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','System','Admin',1,1,'Admin',1);
+INSERT INTO Users (username, password_hash, salt, first_name, last_name, isActive, calibrationPosition, role, team_id) VALUES ('pkonkle','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','Phillip','Konkle',1,2,'Participant',1);
 GO
 
 
 CREATE TABLE Options (
 	option_id int IDENTITY,
+	form_id int NOT NULL,
 	isCategory bit NOT NULL,
 	option_value varchar(20) NOT NULL,
 	points_earned decimal(3,2) NOT NULL,
 	CONSTRAINT PK_Options PRIMARY KEY (option_id),
 )
 
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Meets',0,0);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Does Not Meet',0,0);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('Critical',0,0);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('100%',1,1);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('75%',1,.75);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('50%',1,.5);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('0%',1,0);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('N/A',1,0);
-INSERT INTO Options (option_value,isCategory,points_earned) VALUES ('N/A',0,0);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Meets',0,0);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Does Not Meet',0,0,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Critical',0,0,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('100%',1,1,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('75%',1,.75,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('50%',1,.5,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('0%',1,0,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('N/A',1,0,1);
+INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('N/A',0,0,1);
 GO
 
 CREATE TABLE Contacts (
@@ -105,7 +97,7 @@ CREATE TABLE Forms (
 	CONSTRAINT PK_Forms PRIMARY KEY (form_id),
 )
 
-INSERT INTO Forms (form_name,isArchived) VALUES ('Zulily form',0);
+INSERT INTO Forms (form_name,isArchived) VALUES ('Phil''s Phake Phorm',0);
 GO
 
 CREATE TABLE Questions (
@@ -117,6 +109,7 @@ CREATE TABLE Questions (
 	points_possible int NOT NULL,
 	CONSTRAINT PK_Questions PRIMARY KEY (question_id),
 	CONSTRAINT FK_Questions_Forms FOREIGN KEY (form_id) references Forms (form_id),
+	CONSTRAINT UC_Questions UNIQUE (form_id, form_position),
 )
 
 INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,2,'Category1',1,30);
@@ -191,3 +184,12 @@ INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (2,2,100,100);
 INSERT INTO Scores (user_id,calibration_id,points_earned,points_possible) VALUES (1,1,32.5,50);
 GO
+
+CREATE TABLE Questions_Options (
+	question_id int NOT NULL,
+	option_id int NOT NULL,
+	order_position int NOT NULL,
+	CONSTRAINT PK_Questions_Options PRIMARY KEY (question_id, option_id),
+	CONSTRAINT FK_Questions_Options_Questions FOREIGN KEY (question_id) REFERENCES Questions (question_id),
+	CONSTRAINT FK_Questions_Options_Options FOREIGN KEY (option_id) REFERENCES Options (option_id),
+)

@@ -1,14 +1,10 @@
-import { IAnswer } from "./answer";
-
 export interface IUser {
     userId: number,
     role: string,
-    team: string,
+    teamId: number,
     username: string,
     firstName: string,
     lastName: string,
     isActive: boolean,
-    answers?:IAnswer[],
-    pointsEarned?:number,
-    pointsPossible?:number,
+    calibrationPosition: number,
 }

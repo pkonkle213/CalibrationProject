@@ -1,7 +1,9 @@
-td {
-    border: solid black 1px;
+table {
+    width: 100%;
 }
 
-/* button {
-    width: 100%;
-} */
+th, td {
+    text-align: center;
+    border: 1px solid black;
+    padding: 5px;
+}

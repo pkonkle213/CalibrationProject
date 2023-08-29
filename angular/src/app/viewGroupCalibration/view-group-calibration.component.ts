@@ -7,7 +7,6 @@ import { IScore } from 'src/interfaces/score';
 import { AuthService } from 'src/services/auth.service';
 import { IQuestion } from 'src/interfaces/question';
 import { ICalibration } from 'src/interfaces/calibration';
-import { FormService } from 'src/services/form.service';
 
 @Component({
     selector: 'view-group-calibration',
@@ -19,7 +18,6 @@ export class GroupCalibrationComponent {
     calibration: any;
     calibrationId: number;
     contactTypes: any;
-    contactType: string = "";
     questions: any;
     answers: any;
     groupSubmit: IAnswer[] = [];
@@ -38,14 +36,10 @@ export class GroupCalibrationComponent {
     ngOnInit() {
         this._calibrationService.getCalibration(this.calibrationId).subscribe(data => {
             this.calibration = data;
+        });
        
         this._calibrationService.getAllContactTypes().subscribe((data) => {
             this.contactTypes = data;
-        
-         
-            var thing = this.contactTypes.find((type:any) => type.id == this.calibration.contactChannelId);
-            this.contactType = thing.name;
-            });
         });
 
         this._calibrationService.getParticipants(this.calibrationId).subscribe(data => {
@@ -54,31 +48,57 @@ export class GroupCalibrationComponent {
         
         this._calibrationService.getQuestions(this.calibrationId).subscribe(data => {
             this.questions = data;
-        });
+        
+            this._calibrationService.getGroupAnswers(this.calibrationId).subscribe(data => {
+                this.answers = data;
 
-        this._calibrationService.getGroupAnswers(this.calibrationId).subscribe(data => {
-            this.answers = data;
-
-            if (this.answers===null || this.answers.length===0) {
-                for(let i = 0; i < this.questions.length; i++) {
-                    this.groupSubmit.push({
-                        calibrationId: this.calibrationId,
-                        questionId: this.questions[i].id,
-                        optionValue: this.questions[i].options[0].optionValue,
-                        comment: '',
-                        pointsEarned: this.questions[i].options[0].pointsEarned,
-                    })
+                if (this.IsNullOrEmpty(this.answers) && !this.IsNullOrEmpty(this.questions)) {
+                    for(let i = 0; i < this.questions.length; i++) {
+                        this.groupSubmit.push({
+                            calibrationId: this.calibrationId,
+                            questionId: this.questions[i].id,
+                            optionValue: this.questions[i].options[0].optionValue,
+                            comment: '',
+                            pointsEarned: this.questions[i].options[0].pointsEarned,
+                        })
+                    }
                 }
-            }
-            else {
-                this.groupSubmit = this.answers;
-                this.updating = true;
-            }
+                else {
+                    this.groupSubmit = this.answers;
+                }
+            });
         });
     }
 
-    CanSubmitGroupScore() {
-        return (this.auth.currentUser.user.role==="Admin" || (this.auth.currentUser.user.role==="Leader" && !this.updating));
+    GetCalibrationInfo() {
+        let calibration: ICalibration;
+        if (this.IsNullOrEmpty(this.calibration)) {
+            calibration = {
+                id: 0,
+                repFirstName: "",
+                repLastName: "",
+                leaderUserId: 0,
+                groupScoreEarned: 0,
+                groupScorePossible: 0,
+                contactChannelId: 0,
+                calibrationDate: new Date('8/20/1987'),
+                contactId: "",
+                isOpen: false,
+                formId: 0,
+            }
+        }
+        else {
+            calibration = this.calibration;
+        }
+        return calibration;
+    }
+
+    EditAnswers() {
+        this.updating = true;
+    }
+
+    SOMETHING() {
+        return (this.IsNullOrEmpty(this.groupSubmit) || this.IsNullOrEmpty(this.questions))
     }
 
     AdminCheck() {
@@ -86,18 +106,19 @@ export class GroupCalibrationComponent {
     }
 
     LeaderCheck() {
-        return (this.auth.currentUser.user.role==="Leader" || this.auth.currentUser.user.role==="Admin");
+        return (this.auth.currentUser.user.userId === this.calibration.leaderUserId || this.auth.currentUser.user.role==="Admin");
     }
 
-    Same(index:number) { //Should this be a foreach loop for simplicity? Or maybe a different linq method?
-        let count = 0;
-        for(let i = 0; i < this.participants.length; i++) {
-            if(this.participants[i].answers[index].optionValue===this.groupSubmit[index].optionValue) {
-                count++;
-            }
-        }
+    ReturnSumSame() {
+        if (this.IsNullOrEmpty(this.participants) || this.IsNullOrEmpty(this.questions))
+            return 0;
+        return (this.SumSame() / (this.participants.length * this.questions.length) * 100);
+    }
 
-        return count;
+    ReturnSumDifferent() {
+        if (this.IsNullOrEmpty(this.participants) || this.IsNullOrEmpty(this.questions))
+            return 0;
+        return (this.SumDifferent() / (this.participants.length * this.questions.length) * 100); 
     }
 
     Cancel() {
@@ -106,20 +127,41 @@ export class GroupCalibrationComponent {
 
     Complete() {
         let total = 0;
-        for(let i=0;i<this.questions.length;i++) {
-            if(this.Different(i)===0) {
-                total++;
+
+        if (!this.IsNullOrEmpty(this.questions)) {
+            for(let i=0;i<this.questions.length;i++) {
+                if(this.Different(i)===0) {
+                    total++;
+                }
+            }
+
+            return total / this.questions.length * 100;
+        }
+        return 0;
+    }
+
+    Same(index:number) { //Should this be a foreach loop for simplicity? Or maybe a different linq method?
+        let count = 0;
+
+        if (!this.IsNullOrEmpty(this.participants) && !this.IsNullOrEmpty(this.groupSubmit)) {
+            for(let i = 0; i < this.participants.length; i++) {
+                if(this.participants[i].answers[index].optionValue!=null && this.participants[i].answers[index].optionValue===this.groupSubmit[index].optionValue) {
+                    count++;
+                }
             }
         }
 
-        return total / this.questions.length * 100;
+        return count;
     }
 
     Different(index:number) {
         let count = 0;
-        for(let i=0;i<this.participants.length;i++) {
-            if(this.participants[i].answers[index].optionValue!==this.groupSubmit[index].optionValue) {
-                count++;
+
+        if (!this.IsNullOrEmpty(this.participants) && !this.IsNullOrEmpty(this.groupSubmit)) {
+            for(let i=0;i<this.participants.length;i++) {
+                if(this.participants[i].answers[index].optionValue!=null && this.participants[i].answers[index].optionValue!==this.groupSubmit[index].optionValue) {
+                    count++;
+                }
             }
         }
         return count;
@@ -127,8 +169,11 @@ export class GroupCalibrationComponent {
 
     SumSame() {
         let sum = 0;
-        for(let i=0;i < this.questions.length;i++) {
-            sum += this.Same(i);
+
+        if (!this.IsNullOrEmpty(this.questions)) {
+            for(let i=0;i < this.questions.length;i++) {
+                sum += this.Same(i);
+            }
         }
 
         return sum;
@@ -136,15 +181,30 @@ export class GroupCalibrationComponent {
 
     SumDifferent() {
         let sum = 0;
-        for(let i=0;i < this.questions.length; i++) {
-            sum += this.Different(i);
+
+        if (!this.IsNullOrEmpty(this.questions)) {
+            for(let i=0;i < this.questions.length; i++) {
+                sum += this.Different(i);
+            }
         }
 
         return sum;
     }
 
+    GetContactType() {
+        if (this.IsNullOrEmpty(this.contactTypes) || this.IsNullOrEmpty(this.calibration))
+            return "No Contact";
+
+        var contact = this.contactTypes.find((type:any) => type.id === this.calibration.contactChannelId);
+        return contact.name;
+    }
+
     Calibrated(person:any) {
+        if (this.IsNullOrEmpty(this.questions) || this.IsNullOrEmpty(this.groupSubmit))
+            return 0;
+
         let sum = 0;
+
         for(let i=0;i<this.questions.length;i++) {
             if(person.answers[i].optionValue===this.groupSubmit[i].optionValue) {
                 sum++;
@@ -154,22 +214,41 @@ export class GroupCalibrationComponent {
         return sum / this.questions.length * 100;
     }
 
+    SwitchIsOpen() {
+        this._calibrationService.switchIsOpen(this.calibrationId).subscribe((data) => {
+            if(!data) {
+                console.log("Could not switch");
+            }
+            else {
+                this.calibration.isOpen = !this.calibration.isOpen;
+            }
+        });
+    }
+
     Matching(questionId:any,answerValue:string) {
         let count = 0;
-        for(let i=0;i<this.participants.length;i++) {
-            if(this.participants[i].answers[questionId].optionValue===answerValue) {
-                count++;
+
+        if (!this.IsNullOrEmpty(this.participants)) {
+            for(let i=0;i<this.participants.length;i++) {
+                if(this.participants[i].answers[questionId].optionValue != null && this.participants[i].answers[questionId].optionValue===answerValue) {
+                    count++;
+                }
             }
         }
 
         return count;
     }
 
+    IsNullOrEmpty(array:any[]) {
+        return (array == null || array.length == 0)
+    }
+
     Earned() {
         let earned = 0;
-        
-        for(let i=0;i<this.questions.length;i++) {
-            earned += this.groupSubmit[i].pointsEarned * this.questions[i].pointsPossible;
+        if (!this.IsNullOrEmpty(this.questions) && !this.IsNullOrEmpty(this.groupSubmit)) {
+            for(let i = 0; i < this.questions.length; i++) {
+                earned += this.groupSubmit[i].pointsEarned * this.questions[i].pointsPossible;
+            }
         }
 
         return earned;
@@ -178,20 +257,15 @@ export class GroupCalibrationComponent {
     Possible() {
         let possible = 0;
 
-        this.questions.map((e:IQuestion) => possible += e.pointsPossible);
-
-        // for(let i=0;i<this.qu estions.length;i++) {
-        //     possible += this.questions[i].pointsPossible
-        // }
+        if (!this.IsNullOrEmpty(this.questions))
+            this.questions.map((e:IQuestion) => possible += e.pointsPossible);
 
         return possible;
     }
 
-    DefaultOption(options:any) {
-        
-    }
-
     CalculateScore(earned:number,possible:number) {
+        if (possible === 0)
+            return 0;
         return earned / possible * 100;
     }
 

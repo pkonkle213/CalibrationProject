@@ -5,7 +5,7 @@
     /// </summary>
     public class LoginResponse
     {
-        public ReturnUser User { get; set; }
+        public StandardUser User { get; set; }
         public string Token { get; set; }
     }
 }

@@ -1,46 +1,71 @@
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Team</th>
-                <th>Role</th>
-                <th>Active</th>
-                <th>&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of users">
+<table>
+    <thead>
+        <tr>
+            <th>Calibration Position</th>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Team</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <ng-container *ngIf="!EditCheck(user)">
+                <td>
+                    <div><img src="../../assets/arrowup.png" *ngIf="!minPosition(user)" (click)="MoveUp(user)"></div>
+                    <div><img src="../../assets/arrowblank.png" *ngIf="minPosition(user) || maxPosition(user)"></div>
+                    <div><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(user)" (click)="MoveDown(user)"></div>
+                </td>
                 <td>{{user.username}}</td>
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>
-                <td>{{user.team}}</td>
+                <td>{{FindTeam(user)}}</td>
                 <td>{{user.role}}</td>
                 <td>{{user.isActive}}</td>
-                <td><button (click)="EditUser(user.id)">Edit User</button><button (click)="DisableUser(user.id)">Disable User</button></td>
-            </tr>
-            <tr *ngIf="addUser">
-                <td><input type="text" [(ngModel)]="createUser.username"></td>
-                <td><input type="text" [(ngModel)]="createUser.firstName"></td>
-                <td><input type="text" [(ngModel)]="createUser.lastName"></td>
-                <td>          
-                    <select [(ngModel)]="createUser.team">
-                        <option *ngFor="let team of teams" value="{{team.name}}">{{team.name}}</option>
+                <td><button (click)="EditUser(user)">Edit</button><button (click)="SwitchUserIsActive(user)">{{user.isActive ? "Dis" : "En"}}able</button></td>
+            </ng-container>
+            <ng-container *ngIf="EditCheck(user)">
+                <td>&nbsp;</td>
+                <td><input type="text" [(ngModel)]="editUser.username"></td>
+                <td><input type="text" [(ngModel)]="editUser.firstName"></td>
+                <td><input type="text" [(ngModel)]="editUser.lastName"></td>
+                <td>
+                    <select [(ngModel)]="editUser.teamId">
+                        <option *ngFor="let team of teams" value="{{team.id}}">{{team.name}}</option>
                     </select>
                 </td>
                 <td>
-                    <select [(ngModel)]="createUser.role">
+                    <select [(ngModel)]="editUser.role">
                         <option *ngFor="let role of roles" value="{{role.name}}">{{role.name}}</option>
                     </select>
                 </td>
-            </tr>
-        </tbody>
-    </table>
+                <td>{{editUser.isActive}}</td>
+                <td><button (click)="SaveUserEdit(editUser)">Save</button><button (click)="CancelEdit()">Cancel</button></td>
+            </ng-container>
+        </tr>
+        <tr *ngIf="addUser">
+            <td>&nbsp;</td>
+            <td><input type="text" [(ngModel)]="createUser.username"></td>
+            <td><input type="text" [(ngModel)]="createUser.firstName"></td>
+            <td><input type="text" [(ngModel)]="createUser.lastName"></td>
+            <td>          
+                <select [(ngModel)]="createUser.teamId">
+                    <option *ngFor="let team of teams" value="{{team.id}}">{{team.name}}</option>
+                </select>
+            </td>
+            <td>
+                <select [(ngModel)]="createUser.role">
+                    <option *ngFor="let role of roles" value="{{role.name}}">{{role.name}}</option>
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-    <button *ngIf="!addUser" (click)="AddNewUser()">Create a New User</button>
+<button *ngIf="!addUser" (click)="AddNewUser()">Create a New User</button>
 
-    <button *ngIf="addUser" (click)="CreateNewUser(createUser)">Submit</button>
-    <button *ngIf="addUser" (click)="Cancel()">Cancel</button>
-</div>
+<button *ngIf="addUser" (click)="CreateNewUser(createUser)">Submit</button>
+<button *ngIf="addUser" (click)="Cancel()">Cancel</button>

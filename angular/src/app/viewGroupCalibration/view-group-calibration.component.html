@@ -1,11 +1,12 @@
 <div>
-    <h2>Calibration for: {{calibration.repFirstName}} {{calibration.repLastName}}</h2>
-    <h3>Channel: {{contactType}}</h3>
-    <h3>Date: {{calibration.calibrationDate | date}}</h3>
-    <h3>Contact Id: {{calibration.contactId}}</h3>
-    <!-- <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore(Earned(),Possible()) | number:'1.0-0'}}%)</h4>
-    <h5>Percent completely calibrated: {{Complete() | number:'1.0-0'}}%</h5> -->
-
+    <h2>Calibration for: {{GetCalibrationInfo().repFirstName}}</h2>
+    <h3>Channel: {{GetContactType()}}</h3>
+    <h3>Date: {{GetCalibrationInfo().calibrationDate | date}}</h3>
+    <h3>Contact Id: {{GetCalibrationInfo().contactId}}</h3>    
+    <h4>Current Score: {{Earned()}} / {{Possible()}} ({{CalculateScore(Earned(),Possible()) | number:'1.0-0'}}%)</h4>
+    <h5>Percent completely calibrated: {{Complete() | number:'1.0-0'}}%</h5>
+    <button (click)="EditAnswers()" *ngIf="!updating">Edit Group Answers</button>
+    
     <table>
         <thead>
             <tr>
@@ -30,21 +31,21 @@
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td>{{SumSame() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</td>
-                <td>{{SumDifferent() / (participants.length * questions.length) * 100 | number:'1.0-0'}}%</td>
+                <td>{{ReturnSumSame() | number:'1.0-0'}}%</td>
+                <td>{{ReturnSumDifferent() | number:'1.0-0'}}%</td>
                 <td *ngFor="let person of participants">{{person.pointsEarned}} / {{person.pointsPossible}} ({{CalculateScore(person.pointsEarned,person.pointsPossible)}}%)</td>
             </tr>
 
             <tr *ngFor="let question of questions; index as i">
                 <td>{{question.questionText}}</td>
                 <td class="option"><div *ngFor="let option of question.options">{{option.optionValue}} - {{Matching(i,option.optionValue)}}</div></td>
-                <td *ngIf="CanSubmitGroupScore()">
+                <td *ngIf="updating">
                     <select [(ngModel)]="groupSubmit[i].optionValue" (change)="onChange($event,i)">
                         <option *ngFor="let option of question.options" value="{{option.optionValue}}">{{option.optionValue}}</option>
                     </select>
                     <input [(ngModel)]="groupSubmit[i].comment" placeholder="Why this score was entered"/>
                 </td>
-                <td *ngIf="!CanSubmitGroupScore()">{{groupSubmit[i].optionValue}}</td>
+                <td *ngIf="!updating">{{groupSubmit[i].optionValue ? groupSubmit[i].optionValue : ""}}</td>
                 <td>{{Same(i)}}</td>
                 <td>{{Different(i)}}</td>
                 <td *ngFor="let person of participants">{{person.answers[i].optionValue}}</td>
@@ -52,7 +53,7 @@
         </tbody>
     </table>
 
-    <div *ngIf="CanSubmitGroupScore()">
+    <div *ngIf="updating">
         <button type="submit" (click)="SubmitGroupAnswer()">Submit Group Answers</button>
         <button (click)="Cancel()">Cancel</button>
     </div>
