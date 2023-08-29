@@ -14,6 +14,7 @@ export class AuthService {
             firstName: "",
             lastName: "",
             isActive: false,
+            calibrationPosition: 0,
         },
         token: "",
     }
@@ -58,6 +59,7 @@ export class AuthService {
                 firstName: "",
                 lastName: "",
                 isActive: true,
+                calibrationPosition: 0,
             },
             token: "",
         }; 

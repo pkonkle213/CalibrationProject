@@ -27,7 +27,8 @@ export class CreateUserComponent {
         teamId: 0,
         firstName: "",
         lastName: "",
-        isActive: true, 
+        isActive: true,
+        calibrationPosition: 0,
     }
     
     roles:any[] =
@@ -133,11 +134,42 @@ export class CreateUserComponent {
             firstName: "",
             lastName: "",
             isActive: true, 
+            calibrationPosition: 0,
         }
     }
 
     Cancel() {
         this.addUser = false;
         this.ResetCreateUser();
+    }
+
+    minPosition(user:IUser) {
+        var minPosition = Math.min(...this.users.map((x:IUser) => x.calibrationPosition));
+        return (user.calibrationPosition == minPosition);
+    }
+
+    maxPosition(user:IUser) {
+        var maxPosition = Math.max(...this.users.map((x:IUser) => x.calibrationPosition));
+        return (user.calibrationPosition == maxPosition);
+    }
+
+    MoveDown(user:IUser) {
+        if (this.maxPosition(user))
+            return;
+
+        this.users[user.calibrationPosition].calibrationPosition -= 1;
+        this.users[user.calibrationPosition - 1].calibrationPosition += 1;
+
+        this.users = this.users.sort((a:IUser,b:IUser) => a.calibrationPosition - b.calibrationPosition);
+    }
+
+    MoveUp(user:IUser) {
+        if (this.minPosition(user))
+            return;
+
+        this.users[user.calibrationPosition - 2].calibrationPosition += 1;
+        this.users[user.calibrationPosition - 1].calibrationPosition -= 1;
+        
+        this.users = this.users.sort((a:IUser,b:IUser) => a.calibrationPosition - b.calibrationPosition);
     }
 }

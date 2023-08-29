@@ -22,7 +22,10 @@
 
             <td *ngIf="Wait(calibration)" colspan="2">Awaiting Group Results</td>
             <td *ngIf="CanStart(calibration) && calibration.isOpen" colspan="2"><button (click)="Ready(calibration)">Close Calibration</button></td>
-            <td *ngIf="CanStart(calibration) && !calibration.isOpen" colspan="2"><button (click)="PushToGroup(calibration.id)">Click to start calibration</button></td>
+            <td *ngIf="CanStart(calibration) && !calibration.isOpen" colspan="2">
+                <button (click)="Ready(calibration)">Reopen Calibration</button>
+                <button (click)="PushToGroup(calibration.id)">Click to start calibration</button>
+            </td>
             <td *ngIf="ViewEdit(calibration)">{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
             <td *ngIf="ViewEdit(calibration)"><button (click)="PushToGroup(calibration.id)">Click to view</button></td>
 

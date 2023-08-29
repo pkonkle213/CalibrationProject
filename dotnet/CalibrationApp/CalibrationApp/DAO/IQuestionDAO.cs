@@ -5,9 +5,10 @@ namespace CalibrationApp.DAO
 {
     public interface IQuestionDAO
     {
-        List<Question> GetQuestionsByCalibrationId(int calibrationId);
-        List<Question> GetQuestionsByFormId(int formId);
-        Question NewQuestion(Question question);
-        int UpdateQuestion(Question question);
+        public List<Question> GetQuestionsByCalibrationId(int calibrationId);
+        public List<Question> GetQuestionsByFormId(int formId);
+        public Question NewQuestion(Question question);
+        public int UpdateQuestion(Question question);
+        public List<Option> GetAllOptions();
     }
 }

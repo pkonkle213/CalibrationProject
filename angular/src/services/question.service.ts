@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthService } from "./auth.service";
 import { IQuestion } from "src/interfaces/question";
-import { ISendQuestion } from "src/interfaces/questionSend";
 
 @Injectable()
 export class QuestionService {
@@ -18,13 +17,18 @@ export class QuestionService {
         return this.http.get<IQuestion>(path, this.httpOptions);
     }
 
-    submitQuestion(question:ISendQuestion) {
+    submitQuestion(question:IQuestion) {
         let path = this.url + "Question";
         return this.http.post(path, question, this.httpOptions);
     }
 
-    updateQuestions(questions:ISendQuestion[]) {
+    updateQuestions(questions:IQuestion[]) {
         let path = this.url + "Question";
         return this.http.put(path, questions, this.httpOptions);
+    }
+
+    getAllOptions() {
+        let path = this.url + "Question/Option";
+        return this.http.get(path, this.httpOptions);
     }
 }

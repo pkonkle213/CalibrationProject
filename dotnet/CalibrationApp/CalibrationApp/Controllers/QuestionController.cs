@@ -84,5 +84,23 @@ namespace CalibrationApp.Controllers
                 return BadRequest("Something went wrong, obviously: " + ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("Option")]
+        public IActionResult GetOptions()
+        {
+            try
+            {
+                var options = dao.GetAllOptions();
+                if (options != null)
+                    return Ok(options);
+
+                return BadRequest("No options found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error found while getting all options: " + ex.Message);
+            }
+        }
     }
 }

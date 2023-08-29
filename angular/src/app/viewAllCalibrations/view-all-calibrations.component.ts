@@ -62,9 +62,6 @@ export class ViewAllCalibrations {
     }
 
     CanStart(calibration:ICalibration) {
-        console.log("Leader id " + calibration.leaderUserId);
-        console.log("Current id " + this.auth.currentUser.user.userId);
-        console.log(this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
         return (this.auth.LeaderCheck(calibration.leaderUserId) && calibration.groupScorePossible === 0);
     }
 
