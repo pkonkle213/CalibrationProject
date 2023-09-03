@@ -22,7 +22,8 @@ export class CreateFormComponent {
     editFormName:boolean = false;
     editQuestion:number = 0;
     allOptions:any;
-    selectedOptions:any;
+
+    selectedOptions:any[] = [];
 
     form:IForm = {
         formId: 0,
@@ -56,13 +57,17 @@ export class CreateFormComponent {
         });
     }
 
-    FindAvailableOptions(question:IQuestion) {
-       
-    }
-
     SetOptions(question:IQuestion) {
-        this.OptionsForQuestion(question).array.forEach((option:IOption) => {
-            
+        let availableOptions = this.OptionsForQuestion(question);
+        let selectedOptions = question.options;
+
+        availableOptions.array.forEach((aOption:IOption) => {
+            if(!!selectedOptions.find((sOption:IOption) => aOption.id === sOption.id)) {
+
+            }
+            else {
+               
+            }
         });
     }
 

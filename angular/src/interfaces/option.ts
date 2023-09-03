@@ -3,4 +3,5 @@ export interface IOption {
     optionValue:string,
     pointsEarned:number,
     isCategory: boolean,
+    isEnabled:boolean,
 }
