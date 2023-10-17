@@ -2,6 +2,7 @@
 DELETE FROM Scores;
 DELETE FROM Answers;
 DELETE FROM Calibrations;
+DELETE FROM Questions_Options;
 DELETE FROM Questions;
 DELETE FROM Forms;
 DELETE FROM Contacts;
@@ -9,7 +10,6 @@ DELETE FROM Options;
 DELETE FROM Users;
 DELETE FROM Teams;
 
---Fake Teams
 SET IDENTITY_INSERT Teams ON
 
 INSERT INTO Teams (team_id, team_name) VALUES (1, 'Quality Assurance');

@@ -76,12 +76,40 @@
             <summary>
             Gets all questions linked to the calibration
             </summary>
-            <param name="calibrationId">Calibration ID</param>
+            <param name="calibrationId">The Calibration ID for the questions</param>
             <returns>A list of Questions</returns>
         </member>
         <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByFormId(System.Int32)">
             <summary>
             Gets all questions based on the form
+            </summary>
+            <param name="formId">The form ID of the questions</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.QuestionController.UpdateAllQuestions(System.Collections.Generic.IEnumerable{CalibrationApp.Models.Question})">
+            <summary>
+            Updates all questions at once
+            </summary>
+            <param name="questions">A list of questions to update</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.QuestionController.NewQuestion(CalibrationApp.Models.Question)">
+            <summary>
+            Creatres a new question
+            </summary>
+            <param name="question">The question to create</param>
+            <returns>A question with a valid ID</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.QuestionController.GetOptions(System.Int32)">
+            <summary>
+            Gets all options for a form
+            </summary>
+            <param name="formId">The form ID for the options</param>
+            <returns>A list of options</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.QuestionController.GetEditQuestions(System.Int32)">
+            <summary>
+            Get questions in an editable list by formId
             </summary>
             <param name="formId"></param>
             <returns></returns>

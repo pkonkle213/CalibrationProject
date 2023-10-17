@@ -18,7 +18,7 @@ namespace CalibrationApp.Controllers
         /// <summary>
         /// Gets all questions linked to the calibration
         /// </summary>
-        /// <param name="calibrationId">Calibration ID</param>
+        /// <param name="calibrationId">The Calibration ID for the questions</param>
         /// <returns>A list of Questions</returns>
         [HttpGet]
         [Route("Calibration/{calibrationId}")]
@@ -37,7 +37,7 @@ namespace CalibrationApp.Controllers
         /// <summary>
         /// Gets all questions based on the form
         /// </summary>
-        /// <param name="formId"></param>
+        /// <param name="formId">The form ID of the questions</param>
         /// <returns></returns>
         [HttpGet]
         [Route("Form/{formId}")]
@@ -53,16 +53,19 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates all questions at once
+        /// </summary>
+        /// <param name="questions">A list of questions to update</param>
+        /// <returns></returns>
         [HttpPut]
         public IActionResult UpdateAllQuestions(IEnumerable<Question> questions)
         {
-            int rowsAffected = 0;
             try
             {
                 foreach (Question question in questions)
-                    rowsAffected += dao.UpdateQuestion(question);
-                if (rowsAffected != questions.Count())
-                    return BadRequest($"{rowsAffected} rows affected instead of {questions.Count()}");
+                    dao.UpdateQuestion(question);
+                
                 return Created("Updated!", questions);
             }
             catch (Exception ex)
@@ -70,7 +73,11 @@ namespace CalibrationApp.Controllers
                 return BadRequest("NOT TODAY, SUCKA! " + ex.Message);
             }
         }
-
+        /// <summary>
+        /// Creatres a new question
+        /// </summary>
+        /// <param name="question">The question to create</param>
+        /// <returns>A question with a valid ID</returns>
         [HttpPost]
         public IActionResult NewQuestion(Question question)
         {
@@ -84,14 +91,18 @@ namespace CalibrationApp.Controllers
                 return BadRequest("Something went wrong, obviously: " + ex.Message);
             }
         }
-
+        /// <summary>
+        /// Gets all options for a form
+        /// </summary>
+        /// <param name="formId">The form ID for the options</param>
+        /// <returns>A list of options</returns>
         [HttpGet]
-        [Route("Option")]
-        public IActionResult GetOptions()
+        [Route("Option/{formId}")]
+        public IActionResult GetOptions(int formId)
         {
             try
             {
-                var options = dao.GetAllOptions();
+                var options = dao.GetAllOptions(formId);
                 if (options != null)
                     return Ok(options);
 
@@ -102,5 +113,29 @@ namespace CalibrationApp.Controllers
                 return BadRequest("Error found while getting all options: " + ex.Message);
             }
         }
+
+        /// <summary>
+        /// Get questions in an editable list by formId
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Edit/{formId}")]
+        public IActionResult GetEditQuestions(int formId)
+        {
+            try
+            {
+                var questions = dao.GetEditQuestionsByForm(formId);
+                if (questions != null)
+                    return Ok(questions);
+
+                return BadRequest("No questions found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error found while getting all questions: " + ex.Message);
+            }
+        }
+
     }
 }

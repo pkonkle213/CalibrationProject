@@ -10,53 +10,92 @@
         <button *ngIf="ActiveForm()" (click)="SwitchIsArchived()">{{form.isArchived ? "En" : "Dis"}}able This Form</button>
     </p>
 
-    <table *ngIf="ShowQuestionsTable()">
-        <tr *ngIf="!editFormName">
-            <th colspan="4">{{form.formName}}</th>
-            <th><button (click)="EditFormName()">Edit Form Name</button></th>
-        </tr>
-        <tr *ngIf="editFormName">
-            <th colspan="4"><input [(ngModel)]="form.formName" type="text" placeholder="Form Name" /></th>
-            <th><button (click)="SaveFormName()">Save Form Name</button></th>
-        </tr>
-        <tr>
-            <td><img src="../../assets/arrowblank.png"></td>
-            <td class="first" colspan="2">Question</td>
-            <td class="second">Maximum Points</td>
-            <td class="third">Total Points: {{TotalPoints()}}</td>
-        </tr>
-        <tr *ngFor="let question of questions">
-            <ng-container *ngIf="EditQuestion(question)">
-                <td>&nbsp;</td>
-                <td><input id="text" type="text" [(ngModel)]="createQuestion.questionText"></td>
+    <ng-container *ngIf="ShowQuestionsTable()">
+        <table>
+            <tr>
+                <td colspan="2">Edit options for this form</td>
+            </tr>
+            <tr>
                 <td>
-                <form>
-                    <ng-container *ngFor="let option of OptionsForQuestion(question)">
-                    <input id="check" type="checkbox" id="{{option.id}}" name="{{option.id}}" value="{{option.id}}"><label for="{{option.id}}">  {{option.optionValue}}</label><br>
-                    </ng-container>
-                    <div>Edit Options</div>
-                </form>
+                    <table>
+                        <tr>
+                            <th>Non-Category Options</th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                        <tr *ngFor="let option of notCategoryList">
+                            <td>{{option.optionValue}}</td>
+                        </tr>
+                    </table>
                 </td>
-                <td class="second"><input id="text" type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
-                <td class="third"><button (click)="SaveQuestion(createQuestion)">Save</button><button (click)="Cancel()">Cancel</button></td>
-            </ng-container>
-            <ng-container *ngIf="!EditQuestion(question)">
-                <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>
-                <td *ngIf="question.isCategory" class="isCategory" colspan="2">{{question.questionText}}</td>
-                <td *ngIf="!question.isCategory" colspan="2">{{question.questionText}}</td>
-                <td class="second">{{question.isCategory ? question.pointsPossible : "--"}}</td>
-                <td class="third"><button (click)="SetEditQuestion(question)">Edit</button><button (click)="Disable(question)">Delete</button></td>
-            </ng-container>
-        </tr>
-        <tr *ngIf="newQuestion">
-            <td>&nbsp;</td>
-            <td><input type="text" [(ngModel)]="createQuestion.questionText"></td>
-            <td><input type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
-            <td><button type="submit" (click)="Submit()" [disabled]="CannotSubmitQuestion()">Submit</button><button (click)="Cancel()">Cancel</button></td>
-        </tr>
-        <tr *ngIf="!newQuestion" class="bottom">
-            <td colspan="3"><button (click)="AddNewQuestion()">Add New Question</button></td>
-            <td colspan="2" class="save"><button (click)="SaveAndUpdateQuestions()">Save All Questions</button></td>
-        </tr>
-    </table>
+                <td>
+                    <table>
+                        <tr>
+                            <th colspan="2">Category Options</th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>% Value</th>
+                        </tr>
+                        <tr *ngFor="let option of isCategoryList">
+                            <td>{{option.optionValue}}</td>
+                            <td *ngIf="option.hasValue">{{option.pointsEarned * 100}}%</td>
+                            <td *ngIf="!option.hasValue">--</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr *ngIf="!editFormName">
+                <th colspan="4">{{form.formName}}</th>
+                <th><button (click)="EditFormName()">Edit Form Name</button></th>
+            </tr>
+            <tr *ngIf="editFormName">
+                <th colspan="4"><input [(ngModel)]="form.formName" type="text" placeholder="Form Name" /></th>
+                <th><button (click)="SaveFormName()">Save Form Name</button></th>
+            </tr>
+            <tr>
+                <td><img src="../../assets/arrowblank.png"></td>
+                <td class="first" colspan="2">Question</td>
+                <td class="second">Maximum Points</td>
+                <td class="third">Total Points: {{TotalPoints()}}</td>
+            </tr>
+            <tr *ngFor="let question of questions">
+                <ng-container *ngIf="EditQuestion(question)">
+                    <td>&nbsp;</td>
+                    <td><input id="text" type="text" [(ngModel)]="createQuestion.questionText"></td>
+                    <td>
+                    <form>
+                        <ng-container *ngFor="let option of OptionsForQuestion(question)">
+                        <input id="check" type="checkbox" id="{{option.id}}" name="{{option.id}}" value="{{option.id}}"><label for="{{option.id}}">  {{option.optionValue}}</label><br>
+                        </ng-container>
+                        <div>Edit Options</div>
+                    </form>
+                    </td>
+                    <td class="second"><input id="text" type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
+                    <td class="third"><button (click)="SaveQuestion(createQuestion)">Save</button><button (click)="Cancel()">Cancel</button></td>
+                </ng-container>
+                <ng-container *ngIf="!EditQuestion(question)">
+                    <td><img src="../../assets/arrowup.png" *ngIf="!minPosition(question)" (click)="MoveUp(question)"><img src="../../assets/arrowblank.png" *ngIf="minPosition(question) || maxPosition(question)"><img src="../../assets/arrowdown.png" *ngIf="!maxPosition(question)" (click)="MoveDown(question)"></td>
+                    <td *ngIf="question.isCategory" class="isCategory" colspan="2">{{question.questionText}}</td>
+                    <td *ngIf="!question.isCategory" colspan="2">{{question.questionText}}</td>
+                    <td class="second">{{question.isCategory ? question.pointsPossible : "--"}}</td>
+                    <td class="third"><button (click)="SetEditQuestion(question)">Edit</button><button (click)="Disable(question)">Delete</button></td>
+                </ng-container>
+            </tr>
+            <tr *ngIf="newQuestion">
+                <td>&nbsp;</td>
+                <td><input type="text" [(ngModel)]="createQuestion.questionText"></td>
+                <td><input type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
+                <td><button type="submit" (click)="Submit()" [disabled]="CannotSubmitQuestion()">Submit</button><button (click)="Cancel()">Cancel</button></td>
+            </tr>
+            <tr *ngIf="!newQuestion" class="bottom">
+                <td colspan="3"><button (click)="AddNewQuestion()">Add New Question</button></td>
+                <td colspan="2" class="save"><button (click)="SaveAndUpdateQuestions()">Save All Questions</button></td>
+            </tr>
+        </table>
+    </ng-container>
 </div>

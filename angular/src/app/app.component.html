@@ -2,7 +2,7 @@
   <header>
     <h1>Fernando's calibration app</h1>
     <nav id="top-nav">
-      <ul>
+      <ul> <!-- make all *ngIfs into containers -->
         <li *ngIf="!authService.isAuthenticated()"><a [routerLink]="['login']">Login</a></li>
         <li *ngIf="authService.isAuthenticated()">Welcome {{authService.currentUser.user.firstName}}!</li>
         <li *ngIf="authService.isAuthenticated()"><button (click)="logout()">Logout</button></li>
@@ -10,7 +10,7 @@
     </nav>
   </header>
   <nav id="left-nav">
-    <table>
+    <table> <!-- Would this be better as a ul with li similar to top nav? -->
       <tr *ngIf="authService.isAuthenticated()"><td><a [routerLink]="['/view']">View Calibrations</a></td></tr>
       <tr *ngIf="authService.isAuthenticated()"><td><a [routerLink]="['/stats']">View Your Calibration Stats</a></td></tr>
       <tr *ngIf="authService.AdminCheck()"><td><a [routerLink]="['/createCalibration']">Create a New Calibration</a></td></tr>

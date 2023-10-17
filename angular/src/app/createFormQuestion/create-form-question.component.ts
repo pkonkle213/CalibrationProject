@@ -22,6 +22,9 @@ export class CreateFormComponent {
     editFormName:boolean = false;
     editQuestion:number = 0;
     allOptions:any;
+    maxOptionLength:number = 0;
+    isCategoryList:any;
+    notCategoryList:any;
 
     selectedOptions:any[] = [];
 
@@ -50,10 +53,6 @@ export class CreateFormComponent {
     ngOnInit() {
         this.formService.getAllForms().subscribe((data) => {
             this.forms = data;
-        });
-
-        this.questionService.getAllOptions().subscribe((data) => {
-            this.allOptions = data;
         });
     }
 
@@ -280,6 +279,20 @@ export class CreateFormComponent {
 
         this.questionService.getQuestionsByFormId(this.form.formId).subscribe((data) => {
             this.questions = data;
+        });
+
+        this.questionService.getAllOptions(this.form.formId).subscribe((data) => {
+            this.allOptions = data;
+
+            this.isCategoryList = this.allOptions.filter((option:IOption) => option.isCategory);
+            this.notCategoryList = this.allOptions.filter((option:IOption) => !option.isCategory);
+
+            if (this.isCategoryList.length > this.notCategoryList.length) {
+                this.maxOptionLength = this.isCategoryList.length;
+            }
+            else {
+                this.maxOptionLength = this.notCategoryList.length;
+            }
         });
     }
 

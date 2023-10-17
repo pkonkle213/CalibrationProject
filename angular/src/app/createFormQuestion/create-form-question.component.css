@@ -37,11 +37,9 @@ table, td, tr, th {
     text-align: center;
 }
 
-.second > button {
-    width: 100%;
-}
-
-.third > button {
+.second > button,
+.third > button
+{
     width: 100%;
 }
 

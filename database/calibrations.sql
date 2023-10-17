@@ -59,21 +59,23 @@ GO
 CREATE TABLE Options (
 	option_id int IDENTITY,
 	form_id int NOT NULL,
+	orderPosition int NOT NULL,
 	isCategory bit NOT NULL,
+	hasValue bit NOT NULL,
 	option_value varchar(20) NOT NULL,
 	points_earned decimal(3,2) NOT NULL,
 	CONSTRAINT PK_Options PRIMARY KEY (option_id),
 )
 
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Meets',0,0);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Does Not Meet',0,0,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('Critical',0,0,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('100%',1,1,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('75%',1,.75,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('50%',1,.5,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('0%',1,0,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('N/A',1,0,1);
-INSERT INTO Options (option_value,isCategory,points_earned,form_id) VALUES ('N/A',0,0,1);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('Meets',1,0,0,1,0);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('Does Not Meet',2,0,0,1,0);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('Critical',3,0,0,1,0);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('100%',4,1,1,1,1);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('75%',5,1,.75,1,1);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('50%',6,1,.5,1,1);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('0%',7,1,0,1,1);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('N/A',8,1,0,1,0);
+INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('N/A',9,0,0,1,0);
 GO
 
 CREATE TABLE Contacts (
@@ -112,11 +114,11 @@ CREATE TABLE Questions (
 	CONSTRAINT UC_Questions UNIQUE (form_id, form_position),
 )
 
-INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,2,'Category1',1,30);
-INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,4,'Question1',0,0);
-INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,1,'Category2',1,20);
-INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,3,'Question2',0,0);
-GO
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,3,'Category2',1,20);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,1,'Category1',1,30);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,4,'Question2',0,0);
+INSERT INTO Questions (form_id,form_position,question,isCategory,points_possible) VALUES (1,2,'Question1',0,0);
+GO  
 
 CREATE TABLE Calibrations (
 	calibration_id int IDENTITY,

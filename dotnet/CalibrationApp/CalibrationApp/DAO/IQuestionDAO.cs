@@ -1,5 +1,4 @@
-﻿
-using CalibrationApp.Models;
+﻿using CalibrationApp.Models;
 
 namespace CalibrationApp.DAO
 {
@@ -8,7 +7,7 @@ namespace CalibrationApp.DAO
         public List<Question> GetQuestionsByCalibrationId(int calibrationId);
         public List<Question> GetQuestionsByFormId(int formId);
         public Question NewQuestion(Question question);
-        public int UpdateQuestion(Question question);
-        public List<Option> GetAllOptions();
+        public Question UpdateQuestion(Question question);
+        public List<Question> GetEditQuestionsByForm(int formId);
     }
 }

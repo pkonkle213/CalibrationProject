@@ -1,15 +1,53 @@
 ﻿using CalibrationApp.Models;
+using System.Data;
 using System.Data.SqlClient;
+using System.Transactions;
 
 namespace CalibrationApp.DAO
 {
     public class SqlQuestionDAO : IQuestionDAO
     {
         private readonly string connectionString;
+        private readonly IOptionDAO optionDAO;
 
-        public SqlQuestionDAO(string dbConnectionString)
+        public SqlQuestionDAO(string dbConnectionString, IOptionDAO optionDAO)
         {
             connectionString = dbConnectionString;
+            optionDAO = this.optionDAO;
+        }
+
+        public List<Question> GetEditQuestionsByForm(int formId)
+        {
+            List<Question> questions = GetQuestionsByFormId(formId);
+            List<Option> options = optionDAO.GetAllOptions(formId);
+
+            List<Option> categoryOptions = options.FindAll(x => x.IsCategory);
+            List<Option> nonCategoryOptions = options.FindAll(x => !x.IsCategory);
+
+            foreach (Question question in questions)
+            {
+                List<Option> checkOptions = question.IsCategory ? categoryOptions : nonCategoryOptions;
+
+                foreach (Option option in checkOptions)
+                {
+                    var optionExists = question.Options.Exists(x => x.Id == option.Id);
+                    if (!optionExists)
+                    {
+                        option.IsEnabled = false;
+                        question.Options.Add(option);
+                    }
+                    else
+                    {
+                        var currentQuestion = questions.Find(x => x.Id ==  question.Id);
+                        var currentOption = currentQuestion.Options.Find(x => x.Id == option.Id);
+                        currentOption.IsEnabled = true;
+                    }
+                }
+
+                question.Options = question.Options.OrderBy(x => x.OrderPosition).ToList();
+            }
+
+            return questions;
         }
 
         public List<Question> GetQuestionsByCalibrationId(int calibrationId)
@@ -52,23 +90,26 @@ namespace CalibrationApp.DAO
             question.FormPosition = Convert.ToInt32(reader["form_position"]);
             question.QuestionText = Convert.ToString(reader["question"]);
             question.PointsPossible = Convert.ToInt32(reader["points_possible"]);
-            question.Options = GetOptionsForQuestion(question.Id);
+            question.Options = optionDAO.GetEnabledOptionsForQuestion(question.Id);
 
             return question;
         }
 
-        public int UpdateQuestion(Question question)
+        public Question UpdateQuestion(Question question)
         {
+            // Does this use of a transaction work?!
+
             const string sql = "UPDATE Questions " +
                                "SET form_id = @form_id, form_position = @form_position, question = @question, isCategory = @isCategory, points_possible = @points_possible " +
-                               "WHERE question_Id = @questionId; " +
-                               "SELECT @@IDENTITY";
+                               "WHERE question_Id = @questionId";
 
             int rowsAffected;
+            var trans = new TransactionScope();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
+               
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@questionId", question.Id);
@@ -80,15 +121,26 @@ namespace CalibrationApp.DAO
 
                     rowsAffected = command.ExecuteNonQuery();
                 }
+
+                if (rowsAffected != 1)
+                {
+                    trans?.Dispose();
+                    throw new Exception("There was an issue with the SQL");
+                }
+                else
+                {
+                    trans.Complete();
+                }
             }
 
-            return rowsAffected;
+            return question;
         }
+
         public Question NewQuestion(Question question)
         {
             const string sql = "INSERT INTO Questions (form_id, form_position, question, isCategory, points_possible) " +
-                                "VALUES (@form_id, @form_position, @question, @isCategory, @points_possible); " +
-                                "SELECT @@IDENTITY";
+                               "VALUES (@form_id, @form_position, @question, @isCategory, @points_possible); " +
+                               "SELECT @@IDENTITY";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -136,81 +188,6 @@ namespace CalibrationApp.DAO
             }
 
             return questions;
-        }
-
-        public List<Option> GetAllOptions()
-        {
-            List<Option> options = new List<Option>();
-
-            const string sql = "SELECT option_id, order_position, isCategory, option_value, points_earned " +
-                               "FROM Options " +
-                               "ORDER BY isCategory, order_position";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Option option = new Option();
-
-                            option.Id = Convert.ToInt32(reader["option_id"]);
-                            option.OrderPosition = Convert.ToInt32(reader["order_position"]);
-                            option.OptionValue = Convert.ToString(reader["option_value"]);
-                            option.IsCategory = Convert.ToBoolean(reader["isCategory"]);
-                            option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
-
-                            options.Add(option);
-                        }
-                    }
-
-                }
-            }
-
-            return options;
-        }
-
-        private List<Option> GetOptionsForQuestion(int questionId)
-        {
-            List<Option> options = new List<Option>();
-
-            const string sql = "SELECT o.option_id, o.order_position, o.option_value, o.points_earned, o.isCategory " +
-                               "FROM Questions_Options qo " +
-                               "INNER JOIN Options o ON o.option_id = qo.option_id " +
-                               "WHERE qo.question_id = @questionId";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    command.Parameters.AddWithValue("@questionId", questionId);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Option option = new Option();
-
-                            option.Id = Convert.ToInt32(reader["option_id"]);
-                            option.OrderPosition = Convert.ToInt32(reader["order_position"]);
-                            option.OptionValue = Convert.ToString(reader["option_value"]);
-                            option.PointsEarned = Convert.ToDecimal(reader["points_earned"]);
-                            option.IsCategory = Convert.ToBoolean(reader["isCategory"]);
-
-                            options.Add(option);
-                        }
-                    }
-
-                }
-            }
-
-            return options;
         }
     }
 }
