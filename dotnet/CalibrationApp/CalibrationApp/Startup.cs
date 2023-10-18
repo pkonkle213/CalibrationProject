@@ -1,14 +1,7 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using CalibrationApp.DAO;
 using CalibrationApp.Security;
@@ -50,13 +43,14 @@ namespace CalibrationApp
             services.AddSingleton<IPasswordHasher>(sp => new PasswordHasher());
 
             string connectionString = Configuration.GetConnectionString("Project");
-            services.AddTransient<IUserDAO>(sp => new SqlUserDAO(connectionString));
-            services.AddTransient<IIndividualDAO>(sp => new SqlIndividualDAO(connectionString));
-            services.AddTransient<IGroupDAO>(sp => new SqlGroupDAO(connectionString));
-            services.AddTransient<IQuestionDAO>(sp => new SqlQuestionDAO(connectionString));
-            services.AddTransient<IStatsDAO>(sp => new SqlStatsDAO(connectionString));
-            services.AddTransient<ICalibrationDAO>(sp => new SqlCalibrationDAO(connectionString));
-            services.AddTransient<IFormDAO>(sp => new SqlFormDAO(connectionString));
+            services.AddTransient<IUserDAO>         (sp => new SqlUserDAO(connectionString));
+            services.AddTransient<IIndividualDAO>   (sp => new SqlIndividualDAO(connectionString));
+            services.AddTransient<IGroupDAO>        (sp => new SqlGroupDAO(connectionString));
+            services.AddTransient<IQuestionDAO>     (sp => new SqlQuestionDAO(connectionString));
+            services.AddTransient<IStatsDAO>        (sp => new SqlStatsDAO(connectionString));
+            services.AddTransient<ICalibrationDAO>  (sp => new SqlCalibrationDAO(connectionString));
+            services.AddTransient<IFormDAO>         (sp => new SqlFormDAO(connectionString));
+            services.AddTransient<IOptionDAO>       (sp => new SqlOptionDAO(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -91,29 +91,7 @@ namespace CalibrationApp.Controllers
                 return BadRequest("Something went wrong, obviously: " + ex.Message);
             }
         }
-        /// <summary>
-        /// Gets all options for a form
-        /// </summary>
-        /// <param name="formId">The form ID for the options</param>
-        /// <returns>A list of options</returns>
-        [HttpGet]
-        [Route("Option/{formId}")]
-        public IActionResult GetOptions(int formId)
-        {
-            try
-            {
-                var options = dao.GetAllOptions(formId);
-                if (options != null)
-                    return Ok(options);
-
-                return BadRequest("No options found");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error found while getting all options: " + ex.Message);
-            }
-        }
-
+      
         /// <summary>
         /// Get questions in an editable list by formId
         /// </summary>

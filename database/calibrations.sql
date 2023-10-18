@@ -78,18 +78,18 @@ INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id
 INSERT INTO Options (option_value,orderPosition,isCategory,points_earned,form_id,hasValue) VALUES ('N/A',9,0,0,1,0);
 GO
 
-CREATE TABLE Contacts (
+CREATE TABLE ContactTypes (
 	contact_id int IDENTITY,
 	type varchar(20) NOT NULL,
 	CONSTRAINT PK_Contacts PRIMARY KEY (contact_id),
 )
 
-INSERT INTO Contacts (type) VALUES ('Tier 1 - Chat');
-INSERT INTO Contacts (type) VALUES ('Tier 1 - Email');
-INSERT INTO Contacts (type) VALUES ('Tier 1 - Phone');
-INSERT INTO Contacts (type) VALUES ('Tier 2 - Back Office');
-INSERT INTO Contacts (type) VALUES ('Tier 2 - Phone');
-INSERT INTO Contacts (type) VALUES ('Tier 3');
+INSERT INTO ContactTypes (type) VALUES ('Tier 1 - Chat');
+INSERT INTO ContactTypes (type) VALUES ('Tier 2 - Phone');
+INSERT INTO ContactTypes (type) VALUES ('Tier 1 - Email');
+INSERT INTO ContactTypes (type) VALUES ('Tier 3');
+INSERT INTO ContactTypes (type) VALUES ('Tier 1 - Phone');
+INSERT INTO ContactTypes (type) VALUES ('Tier 2 - Back Office');
 GO
 
 CREATE TABLE Forms (
@@ -134,7 +134,7 @@ CREATE TABLE Calibrations (
 	isOpen BIT NOT NULL,
 	CONSTRAINT PK_Calibrations PRIMARY KEY (calibration_id),
 	CONSTRAINT FK_Calibrations_Forms FOREIGN KEY (form_id) references Forms (form_id),
-	CONSTRAINT FK_Calibrations_Contacts FOREIGN KEY (contact_type) references Contacts (contact_id),
+	CONSTRAINT FK_Calibrations_ContactTypes FOREIGN KEY (contact_type) references ContactTypes (contact_id),
 	CONSTRAINT FK_Calibrations_Users FOREIGN KEY (leader_user_id) references Users (user_id),
 )
 
@@ -190,7 +190,6 @@ GO
 CREATE TABLE Questions_Options (
 	question_id int NOT NULL,
 	option_id int NOT NULL,
-	order_position int NOT NULL,
 	CONSTRAINT PK_Questions_Options PRIMARY KEY (question_id, option_id),
 	CONSTRAINT FK_Questions_Options_Questions FOREIGN KEY (question_id) REFERENCES Questions (question_id),
 	CONSTRAINT FK_Questions_Options_Options FOREIGN KEY (option_id) REFERENCES Options (option_id),

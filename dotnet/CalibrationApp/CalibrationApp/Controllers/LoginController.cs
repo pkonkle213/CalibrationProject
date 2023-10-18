@@ -142,10 +142,7 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                int rowsAffected = userDAO.UpdateUser(user);
-
-                if (rowsAffected != 1)
-                    return BadRequest($"Seems that {rowsAffected} rows were changed...");
+                userDAO.UpdateUser(user);
 
                 return Ok(user);
             }
@@ -160,12 +157,8 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                int rowsAffected = userDAO.SwitchActive(userId);
-
-                if (rowsAffected == 1)
-                    return Ok(rowsAffected);
-
-                return BadRequest($"Seems that {rowsAffected} rows were changed...");
+                userDAO.SwitchActive(userId);
+                return Ok();
             }
             catch (Exception ex)
             {

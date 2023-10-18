@@ -72,6 +72,13 @@
             </summary>
             <param name="userParam">The new user to create</param>
         </member>
+        <member name="M:CalibrationApp.Controllers.OptionController.GetOptions(System.Int32)">
+            <summary>
+            Gets all options for a form
+            </summary>
+            <param name="formId">The form ID for the options</param>
+            <returns>A list of options</returns>
+        </member>
         <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByCalibrationId(System.Int32)">
             <summary>
             Gets all questions linked to the calibration
@@ -99,13 +106,6 @@
             </summary>
             <param name="question">The question to create</param>
             <returns>A question with a valid ID</returns>
-        </member>
-        <member name="M:CalibrationApp.Controllers.QuestionController.GetOptions(System.Int32)">
-            <summary>
-            Gets all options for a form
-            </summary>
-            <param name="formId">The form ID for the options</param>
-            <returns>A list of options</returns>
         </member>
         <member name="M:CalibrationApp.Controllers.QuestionController.GetEditQuestions(System.Int32)">
             <summary>

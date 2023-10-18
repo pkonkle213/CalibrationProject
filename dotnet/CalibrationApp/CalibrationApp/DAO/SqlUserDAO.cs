@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Transactions;
 using CalibrationApp.Models;
 using CalibrationApp.Security;
 using CalibrationApp.Security.Models;
@@ -33,7 +34,7 @@ namespace CalibrationApp.DAO
                 using (SqlCommand command = new SqlCommand(sqlGetUser, conn))
                 {
                     command.Parameters.AddWithValue("@username", username);
-                    
+
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.HasRows && reader.Read())
@@ -51,7 +52,8 @@ namespace CalibrationApp.DAO
             List<Team> teams = new List<Team>();
             string sql = "SELECT team_id, team_name " +
                          "FROM Teams " +
-                         "WHERE team_id <> 5";
+                         "WHERE team_id <> 5 " +
+                         "ORDER BY team_name";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -150,15 +152,15 @@ namespace CalibrationApp.DAO
             return newUser;
         }
 
-        public int UpdateUser(StandardUser user)
+        public StandardUser UpdateUser(StandardUser user)
         {
-            int rowsAffected; using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                const string sql = "UPDATE Users " +
-                    "SET username = @username, first_name = @firstName, last_name = @lastName, role = @role, team_id = @teamId " +
-                    "WHERE user_id = @user_id";
+                const string sql =  "UPDATE Users " +
+                                    "SET username = @username, first_name = @firstName, last_name = @lastName, role = @role, team_id = @teamId " +
+                                    "WHERE user_id = @user_id";
 
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
@@ -168,32 +170,30 @@ namespace CalibrationApp.DAO
                     command.Parameters.AddWithValue("@lastName", user.LastName);
                     command.Parameters.AddWithValue("@role", user.Role);
                     command.Parameters.AddWithValue("@teamId", user.TeamId);
-                    rowsAffected = command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
             }
 
-            return rowsAffected;
+            return user;
         }
 
-        public int SwitchActive(int userId)
+
+        public void SwitchActive(int userId)
         {
-            int rowsAffected;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                const string sql = "UPDATE Users " +
-                    "SET isActive = 1 - isActive " +
-                    "WHERE user_id = @user_id";
+                const string sql =  "UPDATE Users " +
+                                    "SET isActive = 1 - isActive " +
+                                    "WHERE user_id = @user_id";
 
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@user_id", userId);
-                    rowsAffected = command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
             }
-
-            return rowsAffected;
         }
 
         private SaltedUser GetUserFromReader(SqlDataReader reader)

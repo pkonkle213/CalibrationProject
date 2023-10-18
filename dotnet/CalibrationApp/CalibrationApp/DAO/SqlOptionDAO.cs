@@ -4,7 +4,7 @@ using System.Data;
 
 namespace CalibrationApp.DAO
 {
-    public class SqlOptionDAO
+    public class SqlOptionDAO : IOptionDAO
     {
         private readonly string connectionString;
         

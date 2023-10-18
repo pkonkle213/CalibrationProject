@@ -8,16 +8,15 @@ namespace CalibrationApp.DAO
     public class SqlQuestionDAO : IQuestionDAO
     {
         private readonly string connectionString;
-        private readonly IOptionDAO optionDAO;
 
-        public SqlQuestionDAO(string dbConnectionString, IOptionDAO optionDAO)
+        public SqlQuestionDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
-            optionDAO = this.optionDAO;
         }
 
         public List<Question> GetEditQuestionsByForm(int formId)
         {
+            SqlOptionDAO optionDAO = new SqlOptionDAO(connectionString);
             List<Question> questions = GetQuestionsByFormId(formId);
             List<Option> options = optionDAO.GetAllOptions(formId);
 
@@ -83,6 +82,7 @@ namespace CalibrationApp.DAO
 
         private Question BuildQuestionFromReader(SqlDataReader reader)
         {
+            SqlOptionDAO optionDAO = new SqlOptionDAO(connectionString);
             Question question = new Question();
 
             question.Id = Convert.ToInt32(reader["question_id"]);

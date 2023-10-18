@@ -12,7 +12,7 @@ namespace CalibrationAppTest
         {
             get
             {
-                return "Server=DESKTOP-J9CSEAD;Database=calibration_database;Trusted_Connection=True;";
+                return "Server=DESKTOP-J9CSEAD\\MSSQLSERVER01;Database=calibration_database;Trusted_Connection=True;";
             }
         }
 
