@@ -17,7 +17,7 @@ namespace CalibrationApp.DAO
             List<ContactType> contactTypes = new List<ContactType>();
 
             const string sql = "SELECT contact_id, type " +
-                               "FROM Contacts";
+                               "FROM ContactTypes";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {

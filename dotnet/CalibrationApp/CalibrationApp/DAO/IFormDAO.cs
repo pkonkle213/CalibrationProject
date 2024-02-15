@@ -9,6 +9,6 @@ namespace CalibrationApp.DAO
         public Form GetFormById(int formId);
         public Form CreateNewForm(string newFormName);
         public int UpdateFormName(Form form);
-        public int SwitchIsAchivedForm(int formId);
+        public int SwitchIsArchivedForm(int formId);
     }
 }

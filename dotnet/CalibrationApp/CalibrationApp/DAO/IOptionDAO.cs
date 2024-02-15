@@ -6,5 +6,6 @@ namespace CalibrationApp.DAO
     {
         public List<Option> GetAllOptions(int formId);
         public List<Option> GetEnabledOptionsForQuestion(int questionId);
+        public Option CreateNewOption(Option option);
     }
 }

@@ -16,6 +16,10 @@ namespace CalibrationApp.Controllers
             _dao = dao;
         }
 
+        /// <summary>
+        /// Retrieves all active forms for creating a new calibration
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("Active")]
         public IActionResult GetActiveForms()
@@ -34,6 +38,10 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves all forms
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("All")]
         public IActionResult GetAllForms()
@@ -52,6 +60,11 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new form
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult CreateNewForm(Form form)
         {
@@ -67,20 +80,18 @@ namespace CalibrationApp.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("{formId}")]
-        public IActionResult DeleteForm(int formId)
-        {
-            return BadRequest("Please don't do this to me!");
-        }
-
+        /// <summary>
+        /// Switches if a form is archived
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("Disable/{formId}")]
-        public IActionResult SwitchIsAchivedForm(int formId)
+        public IActionResult SwitchIsArchivedForm(int formId)
         {
             try
             {
-                var rowsAffected = _dao.SwitchIsAchivedForm(formId);
+                var rowsAffected = _dao.SwitchIsArchivedForm(formId);
 
                 if (rowsAffected == 1)
                 {
@@ -97,6 +108,11 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the entire form
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("UpdateName")]
         public IActionResult UpdateForm(Form form)

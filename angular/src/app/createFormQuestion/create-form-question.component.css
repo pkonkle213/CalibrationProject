@@ -50,3 +50,8 @@ table {
 th {
     text-align: center;
 }
+
+table .C,
+table .NC {
+    width: 50%;
+}

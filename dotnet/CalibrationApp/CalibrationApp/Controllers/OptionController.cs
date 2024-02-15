@@ -1,10 +1,10 @@
 ﻿using CalibrationApp.DAO;
-using Microsoft.AspNetCore.Http;
+using CalibrationApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalibrationApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class OptionController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace CalibrationApp.Controllers
         /// <param name="formId">The form ID for the options</param>
         /// <returns>A list of options</returns>
         [HttpGet]
-        [Route("Option/{formId}")]
+        [Route("{formId}")]
         public IActionResult GetOptions(int formId)
         {
             try
@@ -36,6 +36,30 @@ namespace CalibrationApp.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Error found while getting all options: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creatres a new option for a form
+        /// </summary>
+        /// <param name="option">The new option</param>
+        /// <returns>The option with an optionId</returns>
+        [HttpPost]
+        public IActionResult CreateNewOption(Option option)
+        {
+            try
+            {
+                option = dao.CreateNewOption(option);
+                if (option.Id != null)
+                {
+                    return Ok(option);
+                }
+
+                return BadRequest("Option was not given an ID");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error while attempting to create a new option: " + ex.Message);
             }
         }
     }

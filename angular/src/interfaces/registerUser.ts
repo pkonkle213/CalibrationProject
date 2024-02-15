@@ -6,4 +6,5 @@ export interface IRegisterUser {
     teamId: number,
     firstName: string,
     lastName: string,
+    calibrationPosition: number,
 }

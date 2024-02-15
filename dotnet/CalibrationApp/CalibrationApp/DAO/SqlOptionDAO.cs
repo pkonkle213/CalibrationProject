@@ -13,6 +13,33 @@ namespace CalibrationApp.DAO
             connectionString = sqlConnectionString;
         }
 
+        public Option CreateNewOption(Option option)
+        {
+            const string sql =
+                "INSERT INTO Options (form_id, orderPosition, isCategory, hasValue, option_value, points_earned) " +
+                "VALUES (@form_Id, @order_position, @isCategory, @hasValue, @option_value, @points_earned); " +
+                "SELECT @@IDENTITY";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@form_id", option.FormId);
+                    command.Parameters.AddWithValue("@order_position", option.OrderPosition);
+                    command.Parameters.AddWithValue("@option_value", option.OptionValue);
+                    command.Parameters.AddWithValue("@isCategory", option.IsCategory);
+                    command.Parameters.AddWithValue("@hasValue", option.HasValue);
+                    command.Parameters.AddWithValue("@points_earned", option.PointsEarned);
+
+                    option.Id = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+
+            return option;
+        }
+
         public List<Option> GetAllOptions(int formId)
         {
             List<Option> options = new List<Option>();

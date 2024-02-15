@@ -8,11 +8,13 @@ namespace CalibrationApp.Controllers
     [ApiController]
     public class QuestionController : ControllerBase
     {
-        private readonly IQuestionDAO dao;
+        private readonly IQuestionDAO questionDAO;
+        private readonly IOptionDAO optionDAO;
 
-        public QuestionController(IQuestionDAO questionDAO)
+        public QuestionController(IOptionDAO optionDAO, IQuestionDAO questionDAO)
         {
-            this.dao = questionDAO;
+            this.optionDAO = optionDAO;
+            this.questionDAO = questionDAO;
         }
 
         /// <summary>
@@ -22,11 +24,18 @@ namespace CalibrationApp.Controllers
         /// <returns>A list of Questions</returns>
         [HttpGet]
         [Route("Calibration/{calibrationId}")]
-        public ActionResult GetQuestionsByCalibrationId(int calibrationId)
+        public IActionResult GetQuestionsByCalibrationId(int calibrationId)
         {
             try
             {
-                return Ok(dao.GetQuestionsByCalibrationId(calibrationId));
+                var questions = questionDAO.GetQuestionsByCalibrationId(calibrationId);
+
+                foreach(Question question in questions)
+                {
+                    question.Options = optionDAO.GetEnabledOptionsForQuestion(question.Id);
+                }
+
+                return Ok(questions);
             }
             catch (Exception ex)
             {
@@ -41,11 +50,18 @@ namespace CalibrationApp.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Form/{formId}")]
-        public ActionResult GetQuestionsByFormId(int formId)
+        public IActionResult GetQuestionsByFormId(int formId)
         {
             try
             {
-                return Ok(dao.GetQuestionsByFormId(formId));
+                var questions = questionDAO.GetQuestionsByFormId(formId);
+
+                foreach (Question question in questions)
+                {
+                    question.Options = optionDAO.GetEnabledOptionsForQuestion(question.Id);
+                }
+
+                return Ok(questions);
             }
             catch (Exception ex)
             {
@@ -64,7 +80,9 @@ namespace CalibrationApp.Controllers
             try
             {
                 foreach (Question question in questions)
-                    dao.UpdateQuestion(question);
+                {
+                    questionDAO.UpdateQuestion(question);
+                }
                 
                 return Created("Updated!", questions);
             }
@@ -73,6 +91,7 @@ namespace CalibrationApp.Controllers
                 return BadRequest("NOT TODAY, SUCKA! " + ex.Message);
             }
         }
+
         /// <summary>
         /// Creatres a new question
         /// </summary>
@@ -83,8 +102,7 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                Question newQuestion = dao.NewQuestion(question);
-                return Ok(newQuestion);
+                return Ok(questionDAO.NewQuestion(question));
             }
             catch (Exception ex)
             {
@@ -103,9 +121,12 @@ namespace CalibrationApp.Controllers
         {
             try
             {
-                var questions = dao.GetEditQuestionsByForm(formId);
+                var questions = questionDAO.GetEditQuestionsByForm(formId);
+
                 if (questions != null)
+                {
                     return Ok(questions);
+                }
 
                 return BadRequest("No questions found");
             }

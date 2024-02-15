@@ -82,7 +82,6 @@ namespace CalibrationApp.DAO
 
         private Question BuildQuestionFromReader(SqlDataReader reader)
         {
-            SqlOptionDAO optionDAO = new SqlOptionDAO(connectionString);
             Question question = new Question();
 
             question.Id = Convert.ToInt32(reader["question_id"]);
@@ -90,8 +89,7 @@ namespace CalibrationApp.DAO
             question.FormPosition = Convert.ToInt32(reader["form_position"]);
             question.QuestionText = Convert.ToString(reader["question"]);
             question.PointsPossible = Convert.ToInt32(reader["points_possible"]);
-            question.Options = optionDAO.GetEnabledOptionsForQuestion(question.Id);
-
+           
             return question;
         }
 
@@ -124,7 +122,7 @@ namespace CalibrationApp.DAO
 
                 if (rowsAffected != 1)
                 {
-                    trans?.Dispose();
+                    trans.Dispose();
                     throw new Exception("There was an issue with the SQL");
                 }
                 else
@@ -145,6 +143,7 @@ namespace CalibrationApp.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
+
                 using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@form_id", question.FormId);

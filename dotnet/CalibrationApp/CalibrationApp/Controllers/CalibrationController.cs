@@ -16,9 +16,13 @@ namespace CalibrationApp.Controllers
         {
             dao = calibrationDAO;
         }
-
+        
+        /// <summary>
+        /// Gets all of the contact types associated with calibrations
+        /// </summary>
+        /// <returns>List of contact types</returns>
         [HttpGet("Types")]
-        public ActionResult<List<ContactType>> GetContactTypes()
+        public IActionResult GetContactTypes()
         {
             try
             {
@@ -30,9 +34,14 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a calibration
+        /// </summary>
+        /// <param name="calibration"></param>
+        /// <returns>The new calibration with a CalibrationID</returns>
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public ActionResult<Calibration> CreateCalibration(Calibration calibration)
+        public IActionResult CreateCalibration(Calibration calibration)
         {
             try
             {
@@ -52,7 +61,7 @@ namespace CalibrationApp.Controllers
         /// <returns>A single calibration</returns>
         [HttpGet]
         [Route("{calibrationId}")]
-        public ActionResult<Calibration> GetSingleCalibration(int calibrationId)
+        public IActionResult GetSingleCalibration(int calibrationId)
         {
             try
             {
@@ -78,7 +87,7 @@ namespace CalibrationApp.Controllers
         /// <returns>All calibrations</returns>
         [HttpGet]
         [Route("All")]
-        public ActionResult<List<Calibration>> GetAllCalibrations()
+        public IActionResult GetAllCalibrations()
         {
             try
             {
@@ -104,7 +113,7 @@ namespace CalibrationApp.Controllers
         /// <param name="calibrationId">The ID associated with the calibration</param>
         /// <returns>Confirmation that it was successful</returns>
         [HttpPut("{calibrationId}")]
-        public ActionResult SwitchCalibrationIsOpen(int calibrationId)
+        public IActionResult SwitchCalibrationIsOpen(int calibrationId)
         {
             try
             {
@@ -121,8 +130,12 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the scores from a logged in user
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Scores")]
-        public ActionResult GetMyScores()
+        public IActionResult GetMyScores()
         {
             try
             {

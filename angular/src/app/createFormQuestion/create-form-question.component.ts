@@ -51,6 +51,10 @@ export class CreateFormComponent {
     }
 
     ngOnInit() {
+        this.GetAllForms();
+    }
+
+    GetAllForms() {
         this.formService.getAllForms().subscribe((data) => {
             this.forms = data;
         });
@@ -77,6 +81,10 @@ export class CreateFormComponent {
 
     EditQuestion(question:IQuestion) {
         return (question.id === this.editQuestion);
+    }
+
+    CreateNewNonOption(){
+        console.log("Creating a new option not a category");
     }
 
     SaveQuestion(question:IQuestion) {
@@ -237,17 +245,15 @@ export class CreateFormComponent {
         }
     }
 
-    AddNewQuestion()
-    {
+    AddNewQuestion() {
         this.newQuestion = true;
     }
 
-    ActiveForm(){
+    ActiveForm() {
         return (this.form.formId > 0);
     }
 
-    Cancel()
-    {
+    Cancel() {
         this.createQuestion = {
             id: 0,
             formId: this.form.formId,

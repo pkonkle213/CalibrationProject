@@ -16,29 +16,49 @@ namespace CalibrationApp.Controllers
             this.dao = groupDAO;        
         }
 
+        /// <summary>
+        /// Submits the answers from the group for a specific calibration
+        /// </summary>
+        /// <param name="answers"></param>
+        /// <returns></returns>
         [HttpPost("Answer")]
-        public ActionResult SubmitGroupAnswers(List<Answer> answers)
+        public IActionResult SubmitGroupAnswers(List<Answer> answers)
         {
             dao.SubmitAnswers(answers);
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves the answers from the group for a specific calibration
+        /// </summary>
+        /// <param name="calibrationId"></param>
+        /// <returns></returns>
         [HttpGet("{calibrationId}")]
-        public ActionResult<List<Answer>> GetGroupAnswers(int calibrationId)
+        public IActionResult GetGroupAnswers(int calibrationId)
         {
             List<Answer> answers = dao.GetGroupAnswers(calibrationId);
             return Ok(answers);
         }
 
+        /// <summary>
+        /// Updates the score
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         [HttpPut("Score")]
-        public ActionResult UpdateScore(Score score)
+        public IActionResult UpdateScore(Score score)
         {
             dao.UpdateScore(score);
             return Ok();
         }
 
+        /// <summary>
+        /// Updates the answer given
+        /// </summary>
+        /// <param name="answers"></param>
+        /// <returns></returns>
         [HttpPut("Answer")]
-        public ActionResult UpdateAnswer(List<Answer> answers)
+        public IActionResult UpdateAnswer(List<Answer> answers)
         {
             dao.UpdateAnswers(answers);
             return Ok();

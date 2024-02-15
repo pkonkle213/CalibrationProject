@@ -23,7 +23,7 @@ namespace CalibrationApp.Controllers
         /// <param name="answers">A List of answers</param>
         /// <returns></returns>
         [HttpPost("Answer")]
-        public ActionResult SubmitAnswers(List<Answer> answers)
+        public IActionResult SubmitAnswers(List<Answer> answers)
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             int count = dao.SubmitAnswers(answers, userId);
@@ -37,8 +37,13 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Submits a score from a logged in user
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         [HttpPost("Score")]
-        public ActionResult SubmitScore(Score score)
+        public IActionResult SubmitScore(Score score)
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             dao.SubmitScore(score, userId);
@@ -51,24 +56,33 @@ namespace CalibrationApp.Controllers
         /// <param name="answers">A list of Answers</param>
         /// <returns></returns>
         [HttpPut("Answer")]
-        public ActionResult UpdateAnswers(List<Answer> answers)
+        public IActionResult UpdateAnswers(List<Answer> answers)
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             dao.UpdateAnswers(answers, userId);
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves scores for the logged in user
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         [HttpPut("Score")]
-        public ActionResult UpdateScore(Score score)
+        public IActionResult UpdateScore(Score score)
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             dao.UpdateScore(score, userId);
             return Ok();
         }
 
-
+        /// <summary>
+        /// Retrieves all participants of a specific calibration
+        /// </summary>
+        /// <param name="calibrationId">The calibration ID</param>
+        /// <returns></returns>
         [HttpGet("Participants/{calibrationId}")]
-        public ActionResult GetParticipatingUsers(int calibrationId)
+        public IActionResult GetParticipatingUsers(int calibrationId)
         {
             return Ok(dao.GetParticipatingUsers(calibrationId));
         }
@@ -79,7 +93,7 @@ namespace CalibrationApp.Controllers
         /// <param name="calibrationId">Calibration ID</param>
         /// <returns>List of Answers</returns>
         [HttpGet("{calibrationId}")]
-        public ActionResult GetMyAnswers(int calibrationId)
+        public IActionResult GetMyAnswers(int calibrationId)
         {
             int userId = commonFunctions.GetCurrentUserID(User);
             return Ok(dao.GetMyAnswers(calibrationId, userId));

@@ -18,6 +18,7 @@ export class CreateUserComponent {
         teamId: 0,
         firstName: "",
         lastName: "",
+        calibrationPosition: 0,
     }
 
     editUser:IUser = {
@@ -72,6 +73,9 @@ export class CreateUserComponent {
     }
 
     CreateNewUser(user:IRegisterUser) {
+        // this needs to be updated as a created user is not getting their calibration position
+        user.calibrationPosition = Math.max(...this.users.map((x:IUser) => x.calibrationPosition)) +1;
+
         this.userService.createUser(user).subscribe(data => {
             this.users.push(data);
             this.ResetCreateUser();
@@ -89,6 +93,7 @@ export class CreateUserComponent {
             teamId: 0,
             firstName: "",
             lastName: "",
+            calibrationPosition: 0,
         };
     }
 

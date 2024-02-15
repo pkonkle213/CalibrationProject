@@ -4,6 +4,19 @@
         <name>CalibrationApp</name>
     </assembly>
     <members>
+        <member name="M:CalibrationApp.Controllers.CalibrationController.GetContactTypes">
+            <summary>
+            Gets all of the contact types associated with calibrations
+            </summary>
+            <returns>List of contact types</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.CalibrationController.CreateCalibration(CalibrationApp.Models.Calibration)">
+            <summary>
+            Creates a calibration
+            </summary>
+            <param name="calibration"></param>
+            <returns>The new calibration with a CalibrationID</returns>
+        </member>
         <member name="M:CalibrationApp.Controllers.CalibrationController.GetSingleCalibration(System.Int32)">
             <summary>
             Gets a specific calibration by its CalibrationID number
@@ -23,6 +36,12 @@
             </summary>
             <param name="calibrationId">The ID associated with the calibration</param>
             <returns>Confirmation that it was successful</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.CalibrationController.GetMyScores">
+            <summary>
+            Retrieves the scores from a logged in user
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:CalibrationApp.Controllers.IndividualController.SubmitAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
             <summary>
@@ -113,6 +132,36 @@
             </summary>
             <param name="formId"></param>
             <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.StatsController.GetOverallCalibrated">
+            <summary>
+            Retrieves an overall calibrated score
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.StatsController.GetQuestionCalibrated">
+            <summary>
+            Retrieves a list of statistics based upon the questions in all calibrations
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.StatsController.GetCalibrationCalibrated">
+            <summary>
+            Returns a list of statistics based upon the calibrationId
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.StatsController.GetTypeCalibrated">
+            <summary>
+            Retuns a list of statistics based upon the type of calibrations
+            </summary>
+            <returns>A List of Types of Calibrations and Percentage Calibrated</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.TeamsController.GetAllTeams">
+            <summary>
+            Returns all Teams
+            </summary>
+            <returns>A List of Teams</returns>
         </member>
         <member name="T:CalibrationApp.Models.LoginResponse">
             <summary>

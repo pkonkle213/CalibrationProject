@@ -31,14 +31,24 @@ export class ViewSingleCalibrationComponent {
     }
 
     ngOnInit() {
+        this.GetCalibrationInformation();
+        this.GetAllContactTypes();
+        this.GetQuestionsAndAnswers();        
+    }
+
+    GetCalibrationInformation() {
         this.calibrationService.getCalibration(this.calibrationId).subscribe(data => {
             this.calibration = data;
         });
+    }
 
+    GetAllContactTypes() {
         this.calibrationService.getAllContactTypes().subscribe((data) => {
             this.types = data;
         });
+    }
 
+    GetQuestionsAndAnswers() {
         this.calibrationService.getQuestions(this.calibrationId).subscribe(data => {
             this.questions = data;
 

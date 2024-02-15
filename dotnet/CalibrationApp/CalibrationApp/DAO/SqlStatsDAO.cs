@@ -104,7 +104,7 @@ namespace CalibrationApp.DAO
                                 "FROM Answers a " +
                                 "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
                                 "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
-                                "INNER JOIN Contacts cs ON cs.contact_id = c.contact_type " +
+                                "INNER JOIN ContactTypes cs ON cs.contact_id = c.contact_type " +
                                 "WHERE (a.user_id = 0 AND b.user_id = @user_id) " +
                                 "AND (a.question_id = b.question_id) " +
                                 "AND (a.option_id = b.option_id) " +
@@ -114,7 +114,7 @@ namespace CalibrationApp.DAO
                                 "FROM Answers a " +
                                 "INNER JOIN Answers b ON b.calibration_id = a.calibration_id " +
                                 "INNER JOIN Calibrations c ON a.calibration_id = c.calibration_id " +
-                                "INNER JOIN Contacts cs ON cs.contact_id = c.contact_type " +
+                                "INNER JOIN ContactTypes cs ON cs.contact_id = c.contact_type " +
                                 "WHERE (a.user_id = 0 AND b.user_id = @user_id) " +
                                 "AND (a.question_id = b.question_id) " +
                                 "GROUP BY c.contact_type, cs.type";

@@ -28,7 +28,7 @@ export class QuestionService {
     }
 
     getAllOptions(formId:number) {
-        let path = this.url + "Question/Option/" + formId;
+        let path = this.url + "Option/" + formId;
         return this.http.get(path, this.httpOptions);
     }
 }

@@ -22,14 +22,8 @@ namespace CalibrationApp.Controllers
             userDAO = _userDAO;
         }
 
-        [HttpGet("Teams")]
-        public ActionResult<List<Team>> GetAllTeams()
-        {
-            return Ok(userDAO.GetTeams());
-        }
-
         [HttpGet("Users")]
-        public ActionResult<List<SaltedUser>> GetAllUsers()
+        public IActionResult GetAllUsers()
         {
             return Ok(userDAO.GetAllUsers());
         }
@@ -137,6 +131,11 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates information on the user
+        /// </summary>
+        /// <param name="user">The user information that's changing</param>
+        /// <returns></returns>
         [HttpPut]
         public IActionResult UpdateUser(StandardUser user)
         {
@@ -152,6 +151,11 @@ namespace CalibrationApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Changes the user between active and inactive
+        /// </summary>
+        /// <param name="userId">The userId that's being switched</param>
+        /// <returns>Confirmation that the action has been performed</returns>
         [HttpPut("{userId}")]
         public IActionResult ChangeActive(int userId)
         {

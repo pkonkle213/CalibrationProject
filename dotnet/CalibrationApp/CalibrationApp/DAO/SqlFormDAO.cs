@@ -11,7 +11,7 @@ namespace CalibrationApp.DAO
             connectionString = dbConnectionString;
         }
 
-        public int SwitchIsAchivedForm(int formId)
+        public int SwitchIsArchivedForm(int formId)
         {
             int rowsAffected;
 

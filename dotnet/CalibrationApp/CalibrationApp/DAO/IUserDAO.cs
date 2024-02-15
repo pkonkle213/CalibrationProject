@@ -5,7 +5,6 @@ namespace CalibrationApp.DAO
 {
     public interface IUserDAO
     {
-        public List<Team> GetTeams();
         public SaltedUser GetUser(string username);
         public StandardUser AddUser(RegisterUser user);
         public List<StandardUser> GetAllUsers();
