@@ -6,20 +6,6 @@ namespace CalibrationAppTest
     [TestClass]
     public class SqlUserDAOTests : TestBase
     {
-        //[TestMethod]
-        //public void GetTeamsShouldReturnFourTeams()
-        //{
-        //    //Arrange
-        //    SqlUserDAO dao = new SqlUserDAO(ConnectionString);
-
-        //    //Act
-        //    var teams = dao.GetTeams();
-
-        //    //Assert
-        //    Assert.IsNotNull(teams);
-        //    Assert.AreEqual(4, teams.Count);
-        //}
-
         [TestMethod]
         public void GetUserShouldReturnValidUser()
         {

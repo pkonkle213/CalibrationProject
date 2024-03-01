@@ -83,10 +83,6 @@ export class CreateFormComponent {
         return (question.id === this.editQuestion);
     }
 
-    CreateNewNonOption(){
-        console.log("Creating a new option not a category");
-    }
-
     SaveQuestion(question:IQuestion) {
         if (question.pointsPossible > 0) {
             question.isCategory = true;
@@ -100,12 +96,7 @@ export class CreateFormComponent {
                 this.questions[i] = question;
         }
 
-        let myQuestion =
-        [
-            question,
-        ]
-
-        this.questionService.updateQuestions(myQuestion).subscribe((data) => {
+        this.questionService.updateQuestions([question]).subscribe((data) => {
             if(!data) {
                 console.log("Didn't update question");
             }

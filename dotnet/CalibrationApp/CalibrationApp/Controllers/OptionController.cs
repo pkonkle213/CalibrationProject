@@ -40,7 +40,7 @@ namespace CalibrationApp.Controllers
         }
 
         /// <summary>
-        /// Creatres a new option for a form
+        /// Creates a new option for a form
         /// </summary>
         /// <param name="option">The new option</param>
         /// <returns>The option with an optionId</returns>
@@ -61,6 +61,17 @@ namespace CalibrationApp.Controllers
             {
                 return BadRequest("Error while attempting to create a new option: " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Updates the given option
+        /// </summary>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public IActionResult UpdateOption (Option option)
+        {
+            return null;
         }
     }
 }

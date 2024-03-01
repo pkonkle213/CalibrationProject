@@ -43,6 +43,67 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CalibrationApp.Controllers.FormController.GetActiveForms">
+            <summary>
+            Retrieves all active forms for creating a new calibration
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.FormController.GetAllForms">
+            <summary>
+            Retrieves all forms
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.FormController.CreateNewForm(CalibrationApp.Models.Form)">
+            <summary>
+            Creates a new form
+            </summary>
+            <param name="form"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.FormController.SwitchIsArchivedForm(System.Int32)">
+            <summary>
+            Switches if a form is archived
+            </summary>
+            <param name="formId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.FormController.UpdateForm(CalibrationApp.Models.Form)">
+            <summary>
+            Updates the entire form
+            </summary>
+            <param name="form"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.GroupController.SubmitGroupAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
+            <summary>
+            Submits the answers from the group for a specific calibration
+            </summary>
+            <param name="answers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.GroupController.GetGroupAnswers(System.Int32)">
+            <summary>
+            Retrieves the answers from the group for a specific calibration
+            </summary>
+            <param name="calibrationId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.GroupController.UpdateScore(CalibrationApp.Models.Score)">
+            <summary>
+            Updates the score
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.GroupController.UpdateAnswer(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
+            <summary>
+            Updates the answer given
+            </summary>
+            <param name="answers"></param>
+            <returns></returns>
+        </member>
         <member name="M:CalibrationApp.Controllers.IndividualController.SubmitAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
             <summary>
             Submit answers for a calibration and a user
@@ -50,11 +111,32 @@
             <param name="answers">A List of answers</param>
             <returns></returns>
         </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.SubmitScore(CalibrationApp.Models.Score)">
+            <summary>
+            Submits a score from a logged in user
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
+        </member>
         <member name="M:CalibrationApp.Controllers.IndividualController.UpdateAnswers(System.Collections.Generic.List{CalibrationApp.Models.Answer})">
             <summary>
             Updating a round of answers
             </summary>
             <param name="answers">A list of Answers</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.UpdateScore(CalibrationApp.Models.Score)">
+            <summary>
+            Retrieves scores for the logged in user
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.IndividualController.GetParticipatingUsers(System.Int32)">
+            <summary>
+            Retrieves all participants of a specific calibration
+            </summary>
+            <param name="calibrationId">The calibration ID</param>
             <returns></returns>
         </member>
         <member name="M:CalibrationApp.Controllers.IndividualController.GetMyAnswers(System.Int32)">
@@ -91,12 +173,33 @@
             </summary>
             <param name="userParam">The new user to create</param>
         </member>
+        <member name="M:CalibrationApp.Controllers.LoginController.UpdateUser(CalibrationApp.Models.StandardUser)">
+            <summary>
+            Updates information on the user
+            </summary>
+            <param name="user">The user information that's changing</param>
+            <returns></returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.LoginController.ChangeActive(System.Int32)">
+            <summary>
+            Changes the user between active and inactive
+            </summary>
+            <param name="userId">The userId that's being switched</param>
+            <returns>Confirmation that the action has been performed</returns>
+        </member>
         <member name="M:CalibrationApp.Controllers.OptionController.GetOptions(System.Int32)">
             <summary>
             Gets all options for a form
             </summary>
             <param name="formId">The form ID for the options</param>
             <returns>A list of options</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.OptionController.CreateNewOption(CalibrationApp.Models.Option)">
+            <summary>
+            Creatres a new option for a form
+            </summary>
+            <param name="option">The new option</param>
+            <returns>The option with an optionId</returns>
         </member>
         <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByCalibrationId(System.Int32)">
             <summary>
