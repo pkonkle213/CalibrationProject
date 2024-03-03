@@ -28,7 +28,7 @@ export class CreateFormComponent {
 
     selectedOptions:any[] = [];
 
-    form:IForm = {
+    form:any = {
         formId: 0,
         formName: "",
         isArchived: false,
@@ -148,9 +148,18 @@ export class CreateFormComponent {
     }
 
     NewFormInput() {
-        this.form.formId = 0;
+        this.form.formName = "Brand New Form";
+        this.formService.createForm(this.form).subscribe((data) => {
+            if (!data) {
+                console.log("Unable to create a new form");
+            }
+            else {
+                console.log("Form created!");
+                this.form = data;
+            }
+        });
+    
         this.newForm = true;
-        this.UpdateQuestionsTable();
     }
 
     SwitchIsArchived() {
@@ -206,34 +215,18 @@ export class CreateFormComponent {
     }
 
     SaveFormName() {
-        if (this.form.formId === 0) {
-            this.formService.createForm(this.form).subscribe((data) => {
-                if (!data) {
-                    console.log("Couldn't create the form");
-                }
-                else {
-                    this.formService.getAllForms().subscribe((forms) => {
-                        this.forms = forms;
-                    });   
+        this.formService.updateFormName(this.form).subscribe((data)=> {
+            if (!data) {
+                console.log("Couldn't update the form");
+            }
+            else {
+                this.formService.getAllForms().subscribe((data) => {
+                    this.forms = data;
+                });
 
-                    this.editFormName = false;
-                }
-            });
-        }
-        else {
-            this.formService.updateFormName(this.form).subscribe((data)=> {
-                if (!data) {
-                    console.log("Couldn't update the form");
-                }
-                else {
-                    this.formService.getAllForms().subscribe((data) => {
-                        this.forms = data;
-                    });
-
-                    this.editFormName = false;
-                }
-            });
-        }
+                this.editFormName = false;
+            }
+        });
     }
 
     AddNewQuestion() {

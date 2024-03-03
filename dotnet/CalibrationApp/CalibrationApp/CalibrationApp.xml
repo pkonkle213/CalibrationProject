@@ -196,10 +196,17 @@
         </member>
         <member name="M:CalibrationApp.Controllers.OptionController.CreateNewOption(CalibrationApp.Models.Option)">
             <summary>
-            Creatres a new option for a form
+            Creates a new option for a form
             </summary>
             <param name="option">The new option</param>
             <returns>The option with an optionId</returns>
+        </member>
+        <member name="M:CalibrationApp.Controllers.OptionController.UpdateOption(CalibrationApp.Models.Option)">
+            <summary>
+            Updates the given option
+            </summary>
+            <param name="option"></param>
+            <returns></returns>
         </member>
         <member name="M:CalibrationApp.Controllers.QuestionController.GetQuestionsByCalibrationId(System.Int32)">
             <summary>

@@ -22,26 +22,40 @@ export class ViewAllCalibrations {
     }
     
     ngOnInit() {
+        this.GetAllCalibrations();
+        this.GetMyScores();
+        this.GetAllContactTypes();
+    }
+
+    GetAllCalibrations() {
         this._calibrationService.getAllCalibrations().subscribe(data => {
             this.allCalibrations = data;
         });
+    }
 
+    GetMyScores() {
         this._calibrationService.getMyScores().subscribe(data => {
             this.scores = data;
         });
+    }
 
+    GetAllContactTypes(){
         this._calibrationService.getAllContactTypes().subscribe((data) => {
             this.types = data;
         });
     }
-
+    
     SwitchOpen() {
         this.isOpen = !this.isOpen
     }
 
+    CalibrationsDontExist() {
+        return (this.FilterCalibrations() === null || this.FilterCalibrations().length == 0);
+    }
+
     FilterCalibrations() {
         if (this.isOpen)
-            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.groupScorePossible === 0));
+            return (this.allCalibrations.filter((calibration:ICalibration) => calibration.isOpen === true));
         
         return (this.allCalibrations);
     }

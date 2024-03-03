@@ -31,12 +31,12 @@
                     <td>&nbsp;</td>
                     <td><input id="text" type="text" [(ngModel)]="createQuestion.questionText"></td>
                     <td>
-                    <form>
-                        <ng-container *ngFor="let option of OptionsForQuestion(question)">
-                        <input id="check" type="checkbox" id="{{option.id}}" name="{{option.id}}" value="{{option.id}}"><label for="{{option.id}}">  {{option.optionValue}}</label><br>
-                        </ng-container>
-                        <div>Edit Options</div>
-                    </form>
+                        <form>
+                            <ng-container *ngFor="let option of OptionsForQuestion(question)">
+                            <input id="check" type="checkbox" id="{{option.id}}" name="{{option.id}}" value="{{option.id}}"><label for="{{option.id}}">  {{option.optionValue}}</label><br>
+                            </ng-container>
+                            <div>Edit Options</div>
+                        </form>
                     </td>
                     <td class="second"><input id="text" type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
                     <td class="third"><button (click)="SaveQuestion(createQuestion)">Save</button><button (click)="Cancel()">Cancel</button></td>
@@ -51,7 +51,7 @@
             </tr>
             <tr *ngIf="newQuestion">
                 <td>&nbsp;</td>
-                <td><input type="text" [(ngModel)]="createQuestion.questionText"></td>
+                <td colspan="2"><input type="text" [(ngModel)]="createQuestion.questionText"></td>
                 <td><input type="number" min="0" [(ngModel)]="createQuestion.pointsPossible"></td>
                 <td><button type="submit" (click)="Submit()" [disabled]="CannotSubmitQuestion()">Submit</button><button (click)="Cancel()">Cancel</button></td>
             </tr>

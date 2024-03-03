@@ -1,37 +1,42 @@
 <div>
-    <h2>All {{isOpen ? "Open" : ""}} Calibrations</h2>
+    <h2>{{isOpen ? "Open" : "All"}} Calibrations</h2>
     <button (click)="SwitchOpen()">Switch to {{isOpen ? "All" : "Open"}}</button>
     <table>
-        <tr *ngIf="FilterCalibrations().length == 0">
-            <th>No Calibrations To Show</th>
-        </tr>
-        <tr *ngIf="FilterCalibrations().length > 0">
-            <th>Calibration Id</th>
-            <th>Calibration Date</th>
-            <th>Team Member Name</th>
-            <th>Channel</th>
-            <th colspan="2">Group Score</th>
-            <th>Your Score</th>
-            <th>Your Submission</th>
-        </tr>
-        <tr *ngFor="let calibration of FilterCalibrations()">
-            <td>{{calibration.id}}</td>
-            <td>{{calibration.calibrationDate | date}}</td>
-            <td>{{calibration.repFirstName}} {{calibration.repLastName}}</td>
-            <td>{{GetContactChannelName(calibration.contactChannelId)}}</td>
+        <div *ngIf="CalibrationsDontExist(); then content else other_content"></div>
+        <ng-template #content>
+            <tr>
+                <th>No Calibrations To Show</th>
+            </tr>
+        </ng-template>
+        <ng-template #other_content>
+            <tr>
+                <th>Calibration Id</th>
+                <th>Calibration Date</th>
+                <th>Team Member Name</th>
+                <th>Channel</th>
+                <th colspan="2">Group Score</th>
+                <th>Your Score</th>
+                <th>Your Submission</th>
+            </tr>
+            <tr *ngFor="let calibration of FilterCalibrations()">
+                <td>{{calibration.id}}</td>
+                <td>{{calibration.calibrationDate | date}}</td>
+                <td>{{calibration.repFirstName}} {{calibration.repLastName}}</td>
+                <td>{{GetContactChannelName(calibration.contactChannelId)}}</td>
 
-            <td *ngIf="Wait(calibration)" colspan="2">Awaiting Group Results</td>
-            <td *ngIf="CanStart(calibration) && calibration.isOpen" colspan="2"><button (click)="Ready(calibration)">Close Calibration</button></td>
-            <td *ngIf="CanStart(calibration) && !calibration.isOpen" colspan="2">
-                <button (click)="Ready(calibration)">Reopen Calibration</button>
-                <button (click)="PushToGroup(calibration.id)">Click to start calibration</button>
-            </td>
-            <td *ngIf="ViewEdit(calibration)">{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
-            <td *ngIf="ViewEdit(calibration)"><button (click)="PushToGroup(calibration.id)">Click to view</button></td>
+                <td *ngIf="Wait(calibration)" colspan="2">Awaiting Group Results</td>
+                <td *ngIf="CanStart(calibration) && calibration.isOpen" colspan="2"><button (click)="Ready(calibration)">Close Calibration</button></td>
+                <td *ngIf="CanStart(calibration) && !calibration.isOpen" colspan="2">
+                    <button (click)="Ready(calibration)">Reopen Calibration</button>
+                    <button (click)="PushToGroup(calibration.id)">Click to start calibration</button>
+                </td>
+                <td *ngIf="ViewEdit(calibration)">{{calibration.groupScoreEarned}}/{{calibration.groupScorePossible}} ({{ConvertToPercent(calibration.groupScoreEarned,calibration.groupScorePossible) | number:'1.0-0'}}%)</td>
+                <td *ngIf="ViewEdit(calibration)"><button (click)="PushToGroup(calibration.id)">Click to view</button></td>
 
-            <td *ngIf="!!FindPossible(calibration.id)">{{FindEarned(calibration.id)}}/{{FindPossible(calibration.id)}} ({{ConvertToPercent(FindEarned(calibration.id),FindPossible(calibration.id)) | number:'1.0-0'}}%)</td>
-            <td *ngIf="!FindPossible(calibration.id)">Awaiting participation</td>
-            <td><button (click)="PushToOne(calibration.id)">Click to {{calibration.isActive===true ? 'Edit' : 'View'}}</button></td>
-        </tr>
+                <td *ngIf="!!FindPossible(calibration.id)">{{FindEarned(calibration.id)}}/{{FindPossible(calibration.id)}} ({{ConvertToPercent(FindEarned(calibration.id),FindPossible(calibration.id)) | number:'1.0-0'}}%)</td>
+                <td *ngIf="!FindPossible(calibration.id)">Awaiting participation</td>
+                <td><button (click)="PushToOne(calibration.id)">Click to {{calibration.isActive===true ? 'Edit' : 'View'}}</button></td>
+            </tr>
+        </ng-template>
     </table>
 </div>

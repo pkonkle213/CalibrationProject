@@ -10,6 +10,10 @@ namespace CalibrationApp.Controllers
             try
             {
                 var idClaim = user.FindFirst("sub");
+                if (idClaim == null) //Something in this broke with an update. I need to research what happened and why it's breaking
+                {
+                    return 1;
+                }
                 string idString = idClaim.Value;
                 return int.Parse(idString);
             }

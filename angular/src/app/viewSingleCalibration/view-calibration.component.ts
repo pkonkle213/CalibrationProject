@@ -80,7 +80,7 @@ export class ViewSingleCalibrationComponent {
     }
 
     onChange(event:any,i:number) {
-        let q = this.questions[i].options.find((x: { optionValue: any; }) => x.optionValue===event.target.value)
+        let q = this.questions[i].options.find((x: { optionValue: any; }) => x.optionValue === event.target.value)
         this.answerSubmit[i].pointsEarned = q.pointsEarned;
     }
 
